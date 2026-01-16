@@ -1,4 +1,4 @@
-using Domain.Constants.Users;
+using Domain.Constants;
 using Domain.Entities.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

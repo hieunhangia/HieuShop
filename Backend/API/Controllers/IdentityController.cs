@@ -3,7 +3,6 @@ using System.Text;
 using System.Text.Encodings.Web;
 using Application.Interfaces;
 using Domain.Constants;
-using Domain.Constants.Users;
 using Domain.Entities.Users;
 using Google.Apis.Auth;
 using Infrastructure.Data;
