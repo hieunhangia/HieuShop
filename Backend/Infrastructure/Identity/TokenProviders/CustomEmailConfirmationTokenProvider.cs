@@ -1,4 +1,3 @@
-using Domain.Constants.Identity;
 using Domain.Entities.Users;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +17,6 @@ public class EmailConfirmationTokenProviderOptions : DataProtectionTokenProvider
     public EmailConfirmationTokenProviderOptions()
     {
         Name = "EmailDataProtectorTokenProvider";
-        TokenLifespan = TimeSpan.FromHours(TokenExpiredTime.EmailConfirmationHours);
+        TokenLifespan = TimeSpan.FromHours(Domain.Constants.Identity.TokenExpiredTime.EmailConfirmationHours);
     }
 }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
 using Application.Interfaces;
-using Domain.Constants.Identity;
+using Domain.Constants;
 using Domain.Constants.Users;
 using Domain.Entities.Users;
 using Google.Apis.Auth;
@@ -111,7 +111,7 @@ public class IdentityController(
                     statusCode: StatusCodes.Status400BadRequest);
             }
 
-            var user = await userManager.FindByLoginAsync(LoginProvider.Google, payload.Subject);
+            var user = await userManager.FindByLoginAsync(Identity.LoginProvider.Google, payload.Subject);
             if (user == null)
             {
                 await using var transaction = await dbContext.Database.BeginTransactionAsync();
@@ -139,7 +139,8 @@ public class IdentityController(
                     }
 
                     result = await userManager.AddLoginAsync(user,
-                        new UserLoginInfo(LoginProvider.Google, payload.Subject, LoginProvider.Google));
+                        new UserLoginInfo(Identity.LoginProvider.Google, payload.Subject,
+                            Identity.LoginProvider.Google));
                     if (!result.Succeeded)
                     {
                         return CreateValidationProblem(result);
@@ -148,7 +149,8 @@ public class IdentityController(
                 else
                 {
                     var result = await userManager.AddLoginAsync(user,
-                        new UserLoginInfo(LoginProvider.Google, payload.Subject, LoginProvider.Google));
+                        new UserLoginInfo(Identity.LoginProvider.Google, payload.Subject,
+                            Identity.LoginProvider.Google));
                     if (!result.Succeeded)
                     {
                         return CreateValidationProblem(result);
@@ -394,7 +396,7 @@ public class IdentityController(
              </head>
              <body>
                 Vui lòng xác nhận tài khoản của bạn bằng cách <a href='{confirmationLink}'>nhấp vào đây</a>.<br>
-                Liên kết này có hiệu lực trong {TokenExpiredTime.EmailConfirmationHours} giờ.<br>
+                Liên kết này có hiệu lực trong {Identity.TokenExpiredTime.EmailConfirmationHours} giờ.<br>
                 Nếu bạn không yêu cầu việc này, bạn có thể bỏ qua email này.
              </body>
              </html>
@@ -408,7 +410,7 @@ public class IdentityController(
              </head>
              <body>
                 Vui lòng đặt lại mật khẩu của bạn bằng cách <a href='{resetLink}'>nhấp vào đây</a>.<br>
-                Liên kết này có hiệu lực trong {TokenExpiredTime.PasswordResetCodeMinutes} phút.<br>
+                Liên kết này có hiệu lực trong {Identity.TokenExpiredTime.PasswordResetCodeMinutes} phút.<br>
                 Nếu bạn không yêu cầu việc này, bạn có thể bỏ qua email này.
              </body>
              </html>
