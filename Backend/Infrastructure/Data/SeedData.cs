@@ -7,8 +7,50 @@ namespace Infrastructure.Data;
 
 public static class SeedData
 {
-    private static IEnumerable<(string Email, string Password, bool LockoutEnabled, string[] Roles)>
-        GetUsers()
+    public static async Task InitializeAsync(IServiceProvider appService, bool dropExistDatabase = false)
+    {
+        using var scope = appService.CreateScope();
+        var scopeService = scope.ServiceProvider;
+
+        await using var dbContext = scopeService.GetRequiredService<AppDbContext>();
+
+        if (dropExistDatabase)
+        {
+            await dbContext.Database.EnsureDeletedAsync();
+        }
+
+        await dbContext.Database.EnsureCreatedAsync();
+
+        var roleManager = scopeService.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        var userManager = scopeService.GetRequiredService<UserManager<AppUser>>();
+
+        await using var transaction = await dbContext.Database.BeginTransactionAsync();
+
+        await SeedRolesAsync(roleManager);
+
+        await SeedUsersAsync(userManager);
+
+        await transaction.CommitAsync();
+    }
+
+    private static async Task SeedRolesAsync(RoleManager<IdentityRole<Guid>> roleManager)
+    {
+        foreach (var role in UserRole.All)
+        {
+            if (await roleManager.RoleExistsAsync(role))
+            {
+                continue;
+            }
+
+            var roleResult = await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+            if (!roleResult.Succeeded)
+            {
+                throw new Exception($"Create roles failed: {FormatIdentityErrors(roleResult.Errors)}");
+            }
+        }
+    }
+
+    private static async Task SeedUsersAsync(UserManager<AppUser> userManager)
     {
         ICollection<(string Email, string Password, bool LockoutEnabled, string[] Roles)> users =
         [
@@ -43,42 +85,7 @@ public static class SeedData
             users.Add(item);
         }
 
-        return users;
-    }
-
-    public static async Task InitializeAsync(IServiceProvider appService, bool dropExistDatabase = false)
-    {
-        using var scope = appService.CreateScope();
-        var scopeService = scope.ServiceProvider;
-
-        await using var dbContext = scopeService.GetRequiredService<AppDbContext>();
-
-        if (dropExistDatabase)
-        {
-            await dbContext.Database.EnsureDeletedAsync();
-        }
-
-        await dbContext.Database.EnsureCreatedAsync();
-
-        var roleManager = scopeService.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-        var userManager = scopeService.GetRequiredService<UserManager<AppUser>>();
-
-        await using var transaction = await dbContext.Database.BeginTransactionAsync();
-        foreach (var role in UserRole.All)
-        {
-            if (await roleManager.RoleExistsAsync(role))
-            {
-                continue;
-            }
-
-            var roleResult = await roleManager.CreateAsync(new IdentityRole<Guid>(role));
-            if (!roleResult.Succeeded)
-            {
-                throw new Exception($"Create roles failed: {FormatIdentityErrors(roleResult.Errors)}");
-            }
-        }
-
-        foreach (var userData in GetUsers())
+        foreach (var userData in users)
         {
             if (await userManager.FindByEmailAsync(userData.Email) != null)
             {
@@ -115,13 +122,8 @@ public static class SeedData
                 throw new Exception($"Add roles to user failed: {FormatIdentityErrors(userRoleResult.Errors)}");
             }
         }
-
-        await transaction.CommitAsync();
-        return;
-
-        static string FormatIdentityErrors(IEnumerable<IdentityError> errors)
-        {
-            return string.Join(", ", errors.Select(e => $"{e.Code}: {e.Description}"));
-        }
     }
+
+    private static string FormatIdentityErrors(IEnumerable<IdentityError> errors) =>
+        string.Join(", ", errors.Select(e => $"{e.Code}: {e.Description}"));
 }
