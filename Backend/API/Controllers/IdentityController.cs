@@ -292,6 +292,39 @@ public class IdentityController(
         return Ok();
     }
 
+    [HttpPost("validate-reset-password-request")]
+    public async Task<IActionResult> ValidateResetPasswordRequest([FromBody] ValidateResetPasswordRequest request)
+    {
+        if (await userManager.FindByEmailAsync(request.Email) is not { } user)
+        {
+            return Problem(title: "Yêu Cầu Đặt Lại Mật Khẩu Không Hợp Lệ",
+                detail: "Yêu cầu đặt lại mật khẩu không hợp lệ. Vui lòng thử lại.",
+                statusCode: StatusCodes.Status400BadRequest);
+        }
+
+        try
+        {
+            var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.ResetCode));
+            var result = await userManager.VerifyUserTokenAsync(user,
+                userManager.Options.Tokens.PasswordResetTokenProvider, UserManager<AppUser>.ResetPasswordTokenPurpose,
+                code);
+            if (!result)
+            {
+                return Problem(title: "Yêu Cầu Đặt Lại Mật Khẩu Không Hợp Lệ",
+                    detail: "Yêu cầu đặt lại mật khẩu không hợp lệ. Vui lòng thử lại.",
+                    statusCode: StatusCodes.Status400BadRequest);
+            }
+
+            return Ok();
+        }
+        catch (FormatException)
+        {
+            return Problem(title: "Yêu Cầu Đặt Lại Mật Khẩu Không Hợp Lệ",
+                detail: "Yêu cầu đặt lại mật khẩu không hợp lệ. Vui lòng thử lại.",
+                statusCode: StatusCodes.Status400BadRequest);
+        }
+    }
+
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetRequest)
     {
@@ -433,6 +466,12 @@ public class ConfirmEmailRequest
 {
     [Required] public required string Email { get; init; }
     [Required] public required string Code { get; init; }
+}
+
+public class ValidateResetPasswordRequest
+{
+    [Required] public required string Email { get; init; }
+    [Required] public required string ResetCode { get; init; }
 }
 
 public class UserInfoResponse
