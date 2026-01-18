@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
+using Application.DTOs.Identity;
 using Application.Interfaces;
 using Domain.Constants;
 using Domain.Entities.Users;
@@ -454,41 +454,4 @@ public class IdentityController(
 
         return ValidationProblem(modelState);
     }
-}
-
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-public class GoogleLoginRequest
-{
-    [Required] public required string IdToken { get; init; }
-}
-
-public class ConfirmEmailRequest
-{
-    [Required] public required string Email { get; init; }
-    [Required] public required string Code { get; init; }
-}
-
-public class ValidateResetPasswordRequest
-{
-    [Required] public required string Email { get; init; }
-    [Required] public required string ResetCode { get; init; }
-}
-
-public class UserInfoResponse
-{
-    public required string Email { get; init; }
-    public required bool EmailConfirmed { get; init; }
-    public required bool HasPassword { get; init; }
-    public required List<string> Roles { get; init; }
-}
-
-public class SetPasswordRequest
-{
-    [Required] public required string NewPassword { get; init; }
-}
-
-public class ChangePasswordRequest
-{
-    [Required] public required string OldPassword { get; init; }
-    [Required] public required string NewPassword { get; init; }
 }
