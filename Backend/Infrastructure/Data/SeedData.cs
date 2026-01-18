@@ -425,7 +425,7 @@ public static class SeedData
                 samsungBrand.Id,
                 ["Xanh Midnight", "Xanh Waterfall"]
             ),
-            
+
             // --- XIAOMI ---
             CreateProduct(
                 "Xiaomi 14 Ultra", "xiaomi-14-ultra",
@@ -568,13 +568,14 @@ public static class SeedData
                 ["3GB", "4GB"]
             ),
         };
-        
-        var notExistingProducts = products.Where(product => !dbContext.Products.Any(p => product.Slug == p.Slug)).ToList();
+
+        var notExistingProducts =
+            products.Where(product => !dbContext.Products.Any(p => product.Slug == p.Slug)).ToList();
 
         await dbContext.AddRangeAsync(notExistingProducts);
-        
+
         await dbContext.SaveChangesAsync();
-        
+
         foreach (var product in notExistingProducts)
         {
             if (product.ProductVariants == null || product.ProductVariants.Count == 0) continue;
@@ -711,6 +712,7 @@ public static class SeedData
                 }
             }
         }
+
         return product;
     }
 
