@@ -271,9 +271,7 @@ public class IdentityController(
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest resetRequest)
     {
-        var user = await userManager.FindByEmailAsync(resetRequest.Email);
-
-        if (user is not { EmailConfirmed: true })
+        if (await userManager.FindByEmailAsync(resetRequest.Email) is not { } user)
         {
             return Ok();
         }
@@ -297,9 +295,7 @@ public class IdentityController(
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetRequest)
     {
-        var user = await userManager.FindByEmailAsync(resetRequest.Email);
-
-        if (user is not { EmailConfirmed: true })
+        if (await userManager.FindByEmailAsync(resetRequest.Email) is not { } user)
         {
             return Problem(title: "Đặt Lại Mật Khẩu Thất Bại",
                 detail: "Đặt lại mật khẩu không thành công. Vui lòng thử lại.",
