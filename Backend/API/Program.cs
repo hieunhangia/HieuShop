@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Domain.Entities.Users;
 using FluentEmail.MailKitSmtp;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Infrastructure.Identity.TokenProviders;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,8 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddIdentityApiEndpoints<AppUser>()
     .AddRoles<IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<AppDbContext>();
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddErrorDescriber<CustomIdentityErrorDescriber>();
 
 builder.Services.AddFluentEmail(builder.Configuration["EmailAddress"], builder.Configuration["EmailDisplayName"])
     .AddMailKitSender(new SmtpClientOptions
