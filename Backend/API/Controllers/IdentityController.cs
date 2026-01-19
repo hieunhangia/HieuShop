@@ -398,7 +398,7 @@ public class IdentityController(
 
     [HttpPost("change-password")]
     [Authorize]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         if (await userManager.GetUserAsync(User) is not { } user)
         {
@@ -412,9 +412,58 @@ public class IdentityController(
                 statusCode: StatusCodes.Status400BadRequest);
         }
 
-        var result = await userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword,
-            changePasswordRequest.NewPassword);
-        return result.Succeeded ? Ok() : CreateValidationProblem(result);
+
+        if (request.OldPassword == request.NewPassword)
+        {
+            return Problem(title: "Đổi Mật Khẩu Thất Bại",
+                detail: "Mật khẩu mới phải khác mật khẩu cũ.",
+                statusCode: StatusCodes.Status400BadRequest);
+        }
+
+        var result = await userManager.ChangePasswordAsync(user, request.OldPassword,
+            request.NewPassword);
+
+        if (result.Succeeded) return Ok();
+
+        var errors = result.Errors.ToList();
+
+        if (errors.Any(e => e.Code == "PasswordMismatch"))
+        {
+            errors.First(e => e.Code == "PasswordMismatch").Description =
+                "Mật khẩu cũ không đúng.";
+        }
+
+        if (errors.Any(e => e.Code == "PasswordTooShort"))
+        {
+            errors.First(e => e.Code == "PasswordTooShort").Description =
+                $"Mật khẩu mới phải có ít nhất {userManager.Options.Password.RequiredLength} ký tự.";
+        }
+
+        if (errors.Any(e => e.Code == "PasswordRequiresNonAlphanumeric"))
+        {
+            errors.First(e => e.Code == "PasswordRequiresNonAlphanumeric").Description =
+                "Mật khẩu mới phải chứa ít nhất một ký tự không phải chữ hoặc số.";
+        }
+
+        if (errors.Any(e => e.Code == "PasswordRequiresDigit"))
+        {
+            errors.First(e => e.Code == "PasswordRequiresDigit").Description =
+                "Mật khẩu mới phải chứa ít nhất một chữ số ('0'-'9').";
+        }
+
+        if (errors.Any(e => e.Code == "PasswordRequiresLower"))
+        {
+            errors.First(e => e.Code == "PasswordRequiresLower").Description =
+                "Mật khẩu mới phải chứa ít nhất một chữ cái viết thường ('a'-'z').";
+        }
+
+        if (errors.Any(e => e.Code == "PasswordRequiresUpper"))
+        {
+            errors.First(e => e.Code == "PasswordRequiresUpper").Description =
+                "Mật khẩu mới phải chứa ít nhất một chữ cái viết hoa ('A'-'Z').";
+        }
+
+        return CreateValidationProblem(IdentityResult.Failed(errors.ToArray()));
     }
 
     private Task SendEmailConfirmationLinkAsync(string email, string confirmationLink) =>
