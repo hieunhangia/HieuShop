@@ -1,4 +1,5 @@
 using Domain.Entities.Users;
+using Infrastructure.Identity.Constants;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,6 @@ public class PasswordResetTokenProviderOptions : DataProtectionTokenProviderOpti
     public PasswordResetTokenProviderOptions()
     {
         Name = "PasswordResetDataProtectorTokenProvider";
-        TokenLifespan = TimeSpan.FromMinutes(Domain.Constants.Identity.TokenExpiredTime.PasswordResetCodeMinutes);
+        TokenLifespan = TimeSpan.FromMinutes(TokenExpiredTime.PasswordResetCodeMinutes);
     }
 }
