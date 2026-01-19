@@ -1,8 +1,9 @@
+using Domain.Commons;
+
 namespace Domain.Entities.Coupons;
 
-public abstract class CouponApplicable
+public abstract class CouponApplicable : BaseAuditableEntity<Guid>
 {
-    public Guid Id { get; set; }
     public Guid CouponId { get; set; }
 
     public Coupon? Coupon { get; set; }

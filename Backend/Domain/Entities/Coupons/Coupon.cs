@@ -1,10 +1,10 @@
+using Domain.Commons;
 using Domain.Enums.Coupons;
 
 namespace Domain.Entities.Coupons;
 
-public class Coupon
+public class Coupon : BaseAuditableEntity<Guid>
 {
-    public Guid Id { get; set; }
     public required string Code { get; set; }
     public required string Name { get; set; }
     public string Description { get; set; } = string.Empty;

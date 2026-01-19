@@ -81,6 +81,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
         ConfigureCouponApplicable(modelBuilder.Entity<CouponApplicable>());
 
+        ConfigureCouponApplicableProduct(modelBuilder.Entity<CouponApplicableProduct>());
+
+        ConfigureCouponApplicableCategory(modelBuilder.Entity<CouponApplicableCategory>());
+
+        ConfigureCouponApplicableBrand(modelBuilder.Entity<CouponApplicableBrand>());
+
         ConfigureIdentityTablesName(modelBuilder);
     }
 
@@ -327,7 +333,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasValue<CouponApplicableCategory>("Category")
             .HasValue<CouponApplicableBrand>("Brand");
     }
-    
+
     private static void ConfigureCouponApplicableProduct(EntityTypeBuilder<CouponApplicableProduct> builder)
     {
         builder.HasOne<Product>()
@@ -335,7 +341,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasForeignKey(cap => cap.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
     }
-    
+
     private static void ConfigureCouponApplicableCategory(EntityTypeBuilder<CouponApplicableCategory> builder)
     {
         builder.HasOne<Category>()
@@ -343,7 +349,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasForeignKey(cac => cac.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
     }
-    
+
     private static void ConfigureCouponApplicableBrand(EntityTypeBuilder<CouponApplicableBrand> builder)
     {
         builder.HasOne<Brand>()

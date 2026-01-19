@@ -1,8 +1,9 @@
+using Domain.Commons;
+
 namespace Domain.Entities.Products;
 
-public class Category
+public class Category : BaseAuditableEntity<Guid>
 {
-    public Guid Id { get; set; }
     public required string Name { get; set; }
     public required string Slug { get; set; }
     public required string ImageUrl { get; set; }

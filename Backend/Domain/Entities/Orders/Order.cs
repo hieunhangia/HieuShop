@@ -1,14 +1,14 @@
+using Domain.Commons;
 using Domain.Entities.Coupons;
 using Domain.Entities.Users;
 using Domain.Enums.Orders;
 
 namespace Domain.Entities.Orders;
 
-public class Order
+public class Order : BaseAuditableEntity<Guid>
 {
-    public Guid Id { get; set; }
     public required string OrderCode { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime OrderDate { get; set; } = DateTime.UtcNow;
     public required OrderStatus Status { get; set; }
     public required long SubTotal { get; set; }
     public required long ShippingFee { get; set; }

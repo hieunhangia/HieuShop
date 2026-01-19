@@ -1,8 +1,9 @@
+using Domain.Commons;
+
 namespace Domain.Entities.Products;
 
-public class ProductVariant
+public class ProductVariant : BaseAuditableEntity<Guid>
 {
-    public Guid Id { get; set; }
     public required long Price { get; set; }
     public long? SalePrice { get; set; }
     public required int AvailableStock { get; set; }

@@ -1,10 +1,10 @@
+using Domain.Commons;
 using Domain.Entities.Products;
 
 namespace Domain.Entities.Orders;
 
-public class OrderItem
+public class OrderItem : BaseEntity<Guid>
 {
-    public Guid Id { get; set; }
     public required int Quantity { get; set; }
     public required long UnitPrice { get; set; }
     public required string ProductName { get; set; }

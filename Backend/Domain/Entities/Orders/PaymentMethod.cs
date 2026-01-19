@@ -1,8 +1,9 @@
+using Domain.Commons;
+
 namespace Domain.Entities.Orders;
 
-public class PaymentMethod
+public class PaymentMethod : BaseAuditableEntity<Guid>
 {
-    public Guid Id { get; set; }
     public required string Code { get; set; }
     public required string Name { get; set; }
     public string Description { get; set; } = string.Empty;

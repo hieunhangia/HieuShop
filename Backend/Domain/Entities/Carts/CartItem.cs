@@ -1,11 +1,11 @@
+using Domain.Commons;
 using Domain.Entities.Products;
 using Domain.Entities.Users;
 
 namespace Domain.Entities.Carts;
 
-public class CartItem
+public class CartItem : BaseAuditableEntity<Guid>
 {
-    public Guid Id { get; set; }
     public int Quantity { get; set; }
     public Guid UserId { get; set; }
     public Guid ProductVariantId { get; set; }

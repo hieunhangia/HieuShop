@@ -1,8 +1,9 @@
+using Domain.Commons;
+
 namespace Domain.Entities.Addresses;
 
-public class Province
+public class Province : BaseEntity<int>
 {
-    public int Id { get; set; }
     public required string Name { get; set; }
 
     public ICollection<Ward>? Wards { get; set; }
