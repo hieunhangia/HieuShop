@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Moon, Sun, LogOut, Menu, X } from 'lucide-react';
+import { Moon, Sun, LogOut, Menu, X, User as UserIcon, ChevronDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { PAGES } from '../config/page';
@@ -11,11 +11,25 @@ export default function Navbar() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
+    const userMenuRef = useRef<HTMLDivElement>(null);
 
     const handleLogout = async () => {
         await logout();
         navigate(PAGES.IDENTITY.LOGIN.PATH);
     };
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+                setIsUserMenuOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     return (
         <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
@@ -47,17 +61,52 @@ export default function Navbar() {
                         </button>
 
                         {user ? (
-                            <div className="flex items-center space-x-4">
-                                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                                    {user.email}
-                                </span>
+                            <div className="relative" ref={userMenuRef}>
                                 <button
-                                    onClick={handleLogout}
-                                    className="p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors"
-                                    title="Đăng xuất"
+                                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                    className="flex items-center space-x-2 p-1 pl-2 pr-2 rounded-full border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                 >
-                                    <LogOut size={20} />
+                                    <div className="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/30 flex items-center justify-center text-brand-600 dark:text-brand-400">
+                                        <UserIcon size={18} />
+                                    </div>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200 hidden lg:block max-w-[120px] truncate">
+                                        {user.email.split('@')[0]}
+                                    </span>
+                                    <ChevronDown size={16} className={`text-gray-500 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
                                 </button>
+
+                                {isUserMenuOpen && (
+                                    <div className="absolute right-0 mt-2 w-60 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-800 py-2 ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-100 scale-100 transition-all origin-top-right">
+                                        <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 mb-1">
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Đăng nhập với</p>
+                                            <p className="text-sm font-semibold text-gray-900 dark:text-white truncate" title={user.email}>{user.email}</p>
+                                        </div>
+
+                                        <div className="py-1">
+                                            <Link
+                                                to={PAGES.ACCOUNT.INFO.PATH}
+                                                className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                                                onClick={() => setIsUserMenuOpen(false)}
+                                            >
+                                                <UserIcon size={16} className="mr-3 text-gray-400 group-hover:text-brand-500" />
+                                                {PAGES.ACCOUNT.INFO.TITLE}
+                                            </Link>
+                                        </div>
+
+                                        <div className="border-t border-gray-100 dark:border-gray-800 my-1"></div>
+
+                                        <button
+                                            onClick={() => {
+                                                setIsUserMenuOpen(false);
+                                                handleLogout();
+                                            }}
+                                            className="w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+                                        >
+                                            <LogOut size={16} className="mr-3" />
+                                            Đăng xuất
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="flex items-center space-x-2">
@@ -107,17 +156,31 @@ export default function Navbar() {
                             {PAGES.HOME.TITLE}
                         </Link>
                         {user ? (
-                            <button
-                                onClick={() => {
-                                    handleLogout();
-                                    setIsMenuOpen(false);
-                                }}
-                                className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                            >
-                                Đăng Xuất ({user.email})
-                            </button>
+                            <>
+                                <div className="border-t border-gray-100 dark:border-gray-800 my-2"></div>
+                                <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Tài khoản
+                                </div>
+                                <Link
+                                    to={PAGES.ACCOUNT.INFO.PATH}
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {PAGES.ACCOUNT.INFO.TITLE}
+                                </Link>
+                                <button
+                                    onClick={() => {
+                                        handleLogout();
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                >
+                                    Đăng Xuất
+                                </button>
+                            </>
                         ) : (
                             <>
+                                <div className="border-t border-gray-100 dark:border-gray-800 my-2"></div>
                                 <Link
                                     to={PAGES.IDENTITY.LOGIN.PATH}
                                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"

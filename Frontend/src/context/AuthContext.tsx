@@ -4,6 +4,7 @@ import { identityApi } from '../api/identityApi';
 interface User {
     email: string;
     isEmailConfirmed: boolean;
+    hasPassword: boolean;
 }
 
 interface AuthContextType {

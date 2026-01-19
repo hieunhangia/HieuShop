@@ -25,4 +25,18 @@ export const PAGES = {
             TITLE: 'Xác thực Email'
         }
     },
+    ACCOUNT: {
+        INFO: {
+            PATH: '/account/info',
+            TITLE: 'Thông tin tài khoản'
+        },
+        CHANGE_PASSWORD: {
+            PATH: '/account/change-password',
+            TITLE: 'Đổi mật khẩu'
+        },
+        SET_PASSWORD: {
+            PATH: '/account/set-password',
+            TITLE: 'Thiết lập mật khẩu'
+        }
+    },
 };
