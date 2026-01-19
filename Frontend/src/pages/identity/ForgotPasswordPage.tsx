@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link } from 'react-router-dom';
-import MainLayout from '../layouts/MainLayout';
+import MainLayout from '../../layouts/MainLayout';
 import { Mail, CheckCircle, ArrowLeft } from 'lucide-react';
-import { identityApi } from '../api/identityApi';
-import { parseApiError, type ApiError } from '../utils/error';
-import { PAGES } from '../config/page';
+import { identityApi } from '../../api/identityApi';
+import { parseApiError, type ApiError } from '../../utils/error';
+import { PAGES } from '../../config/page';
 
 const forgotPasswordSchema = z.object({
     email: z.email('Email không hợp lệ'),
@@ -17,7 +17,7 @@ type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
     React.useEffect(() => {
-        document.title = `${PAGES.FORGOT_PASSWORD.title} | HieuShop`;
+        document.title = `${PAGES.IDENTITY.FORGOT_PASSWORD.TITLE} | HieuShop`;
     }, []);
     const [isSubmitted, setIsSubmitted] = React.useState(false);
     const [error, setError] = React.useState<ApiError | null>(null);
@@ -87,7 +87,7 @@ export default function ForgotPasswordPage() {
                             </form>
 
                             <div className="mt-8 text-center">
-                                <Link to={PAGES.LOGIN.path} className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                                <Link to={PAGES.IDENTITY.LOGIN.PATH} className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Quay lại đăng nhập
                                 </Link>
@@ -102,7 +102,7 @@ export default function ForgotPasswordPage() {
                             <p className="text-gray-500 dark:text-gray-400 mb-8">
                                 Nếu email của bạn tồn tại trong hệ thống, chúng tôi đã gửi hướng dẫn đặt lại mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư đến.
                             </p>
-                            <Link to={PAGES.LOGIN.path} className="inline-flex items-center text-sm font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400 transition-colors">
+                            <Link to={PAGES.IDENTITY.LOGIN.PATH} className="inline-flex items-center text-sm font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400 transition-colors">
                                 <ArrowLeft className="w-4 h-4 mr-2" />
                                 Quay lại đăng nhập
                             </Link>

@@ -1,26 +1,28 @@
 export const PAGES = {
     HOME: {
-        path: '/',
-        title: 'Trang chủ'
+        PATH: '/',
+        TITLE: 'Trang chủ'
     },
-    LOGIN: {
-        path: '/login',
-        title: 'Đăng nhập'
+    IDENTITY: {
+        LOGIN: {
+            PATH: '/login',
+            TITLE: 'Đăng nhập'
+        },
+        REGISTER: {
+            PATH: '/register',
+            TITLE: 'Đăng ký'
+        },
+        FORGOT_PASSWORD: {
+            PATH: '/forgot-password',
+            TITLE: 'Quên mật khẩu'
+        },
+        RESET_PASSWORD: {
+            PATH: '/reset-password',
+            TITLE: 'Đặt lại mật khẩu'
+        },
+        CONFIRM_EMAIL: {
+            PATH: '/confirm-email',
+            TITLE: 'Xác thực Email'
+        }
     },
-    REGISTER: {
-        path: '/register',
-        title: 'Đăng ký'
-    },
-    FORGOT_PASSWORD: {
-        path: '/forgot-password',
-        title: 'Quên mật khẩu'
-    },
-    RESET_PASSWORD: {
-        path: '/reset-password',
-        title: 'Đặt lại mật khẩu'
-    },
-    CONFIRM_EMAIL: {
-        path: '/confirm-email',
-        title: 'Xác thực Email'
-    }
 };

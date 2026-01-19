@@ -3,12 +3,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import MainLayout from '../layouts/MainLayout';
+import { useAuth } from '../../context/AuthContext';
+import MainLayout from '../../layouts/MainLayout';
 import { UserPlus } from 'lucide-react';
-import { identityApi } from '../api/identityApi';
-import { parseApiError, type ApiError } from '../utils/error';
-import { PAGES } from '../config/page';
+import { identityApi } from '../../api/identityApi';
+import { parseApiError, type ApiError } from '../../utils/error';
+import { PAGES } from '../../config/page';
 
 const registerSchema = z.object({
     email: z.email('Email không hợp lệ'),
@@ -23,7 +23,7 @@ type RegisterForm = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
     React.useEffect(() => {
-        document.title = `${PAGES.REGISTER.title} | HieuShop`;
+        document.title = `${PAGES.IDENTITY.REGISTER.TITLE} | HieuShop`;
     }, []);
     const { register: registerUser, login } = useAuth();
     const [error, setError] = React.useState<ApiError | null>(null);
@@ -92,7 +92,7 @@ export default function RegisterPage() {
                         )}
 
                         <div className="mt-6 text-sm">
-                            <Link to={PAGES.HOME.path} className="text-brand-600 hover:underline">
+                            <Link to={PAGES.HOME.PATH} className="text-brand-600 hover:underline">
                                 Về trang chủ
                             </Link>
                         </div>
@@ -179,7 +179,7 @@ export default function RegisterPage() {
 
                     <div className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
                         Đã có tài khoản?{' '}
-                        <Link to={PAGES.LOGIN.path} className="font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400">
+                        <Link to={PAGES.IDENTITY.LOGIN.PATH} className="font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400">
                             Đăng nhập ngay
                         </Link>
                     </div>

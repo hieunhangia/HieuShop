@@ -4,10 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Lock, CheckCircle, ArrowLeft, Loader } from 'lucide-react';
-import MainLayout from '../layouts/MainLayout';
-import { identityApi } from '../api/identityApi';
-import { parseApiError, type ApiError } from '../utils/error';
-import { PAGES } from '../config/page';
+import MainLayout from '../../layouts/MainLayout';
+import { identityApi } from '../../api/identityApi';
+import { parseApiError, type ApiError } from '../../utils/error';
+import { PAGES } from '../../config/page';
 
 const resetPasswordSchema = z.object({
     password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
@@ -23,7 +23,7 @@ export default function ResetPasswordPage() {
     const [searchParams] = useSearchParams();
 
     React.useEffect(() => {
-        document.title = `${PAGES.RESET_PASSWORD.title} | HieuShop`;
+        document.title = `${PAGES.IDENTITY.RESET_PASSWORD.TITLE} | HieuShop`;
     }, []);
 
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -103,7 +103,7 @@ export default function ResetPasswordPage() {
                             Mật khẩu của bạn đã được đặt lại thành công. Bạn có thể đăng nhập ngay bây giờ.
                         </p>
                         <Link
-                            to={PAGES.LOGIN.path}
+                            to={PAGES.IDENTITY.LOGIN.PATH}
                             className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 transition w-full"
                         >
                             Đăng nhập ngay
@@ -141,7 +141,7 @@ export default function ResetPasswordPage() {
                             )}
                         </div>
                         <Link
-                            to={PAGES.FORGOT_PASSWORD.path}
+                            to={PAGES.IDENTITY.FORGOT_PASSWORD.PATH}
                             className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 transition w-full"
                         >
                             Yêu cầu liên kết mới
@@ -227,7 +227,7 @@ export default function ResetPasswordPage() {
                     </form>
 
                     <div className="mt-6 text-center">
-                        <Link to={PAGES.LOGIN.path} className="inline-flex items-center text-sm font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400 transition-colors">
+                        <Link to={PAGES.IDENTITY.LOGIN.PATH} className="inline-flex items-center text-sm font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400 transition-colors">
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Quay lại đăng nhập
                         </Link>

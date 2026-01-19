@@ -14,7 +14,7 @@ export default function Navbar() {
 
     const handleLogout = async () => {
         await logout();
-        navigate(PAGES.LOGIN.path);
+        navigate(PAGES.IDENTITY.LOGIN.PATH);
     };
 
     return (
@@ -22,7 +22,7 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
-                    <Link to={PAGES.HOME.path} className="flex items-center space-x-2">
+                    <Link to={PAGES.HOME.PATH} className="flex items-center space-x-2">
                         <img src="/logo.webp" alt="HieuShop Logo" className="w-8 h-8 object-contain" />
                         <span className="text-2xl font-bold bg-gradient-to-r from-brand-600 to-indigo-600 bg-clip-text text-transparent">
                             HieuShop
@@ -31,8 +31,8 @@ export default function Navbar() {
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-8">
-                        <Link to={PAGES.HOME.path} className="text-gray-700 dark:text-gray-200 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors">
-                            {PAGES.HOME.title}
+                        <Link to={PAGES.HOME.PATH} className="text-gray-700 dark:text-gray-200 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors">
+                            {PAGES.HOME.TITLE}
                         </Link>
                     </div>
 
@@ -62,16 +62,16 @@ export default function Navbar() {
                         ) : (
                             <div className="flex items-center space-x-2">
                                 <Link
-                                    to={PAGES.LOGIN.path}
+                                    to={PAGES.IDENTITY.LOGIN.PATH}
                                     className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
                                 >
-                                    {PAGES.LOGIN.title}
+                                    {PAGES.IDENTITY.LOGIN.TITLE}
                                 </Link>
                                 <Link
-                                    to={PAGES.REGISTER.path}
+                                    to={PAGES.IDENTITY.REGISTER.PATH}
                                     className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-sm transition-colors"
                                 >
-                                    {PAGES.REGISTER.title}
+                                    {PAGES.IDENTITY.REGISTER.TITLE}
                                 </Link>
                             </div>
                         )}
@@ -100,11 +100,11 @@ export default function Navbar() {
                 <div className="md:hidden bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
                     <div className="px-4 pt-2 pb-4 space-y-1">
                         <Link
-                            to={PAGES.HOME.path}
+                            to={PAGES.HOME.PATH}
                             className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            {PAGES.HOME.title}
+                            {PAGES.HOME.TITLE}
                         </Link>
                         {user ? (
                             <button
@@ -119,18 +119,18 @@ export default function Navbar() {
                         ) : (
                             <>
                                 <Link
-                                    to={PAGES.LOGIN.path}
+                                    to={PAGES.IDENTITY.LOGIN.PATH}
                                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
-                                    {PAGES.LOGIN.title}
+                                    {PAGES.IDENTITY.LOGIN.TITLE}
                                 </Link>
                                 <Link
-                                    to={PAGES.REGISTER.path}
+                                    to={PAGES.IDENTITY.REGISTER.PATH}
                                     className="block px-3 py-2 rounded-md text-base font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
-                                    {PAGES.REGISTER.title}
+                                    {PAGES.IDENTITY.REGISTER.TITLE}
                                 </Link>
                             </>
                         )}

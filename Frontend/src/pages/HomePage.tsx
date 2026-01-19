@@ -5,7 +5,7 @@ import { PAGES } from '../config/page';
 
 export default function HomePage() {
     React.useEffect(() => {
-        document.title = `${PAGES.HOME.title} | HieuShop`;
+        document.title = `${PAGES.HOME.TITLE} | HieuShop`;
     }, []);
     return (
         <MainLayout>

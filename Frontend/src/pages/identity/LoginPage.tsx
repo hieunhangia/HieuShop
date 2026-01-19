@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import MainLayout from '../layouts/MainLayout';
+import { useAuth } from '../../context/AuthContext';
+import MainLayout from '../../layouts/MainLayout';
 import { LogIn } from 'lucide-react';
-import { parseApiError, type ApiError } from '../utils/error';
-import { PAGES } from '../config/page';
+import { parseApiError, type ApiError } from '../../utils/error';
+import { PAGES } from '../../config/page';
 
 const loginSchema = z.object({
     email: z.email('Email không hợp lệ'),
@@ -21,7 +21,7 @@ export default function LoginPage() {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        document.title = `${PAGES.LOGIN.title} | HieuShop`;
+        document.title = `${PAGES.IDENTITY.LOGIN.TITLE} | HieuShop`;
     }, []);
     const [error, setError] = React.useState<ApiError | null>(null);
 
@@ -33,7 +33,7 @@ export default function LoginPage() {
         try {
             setError(null);
             await login(data);
-            navigate(PAGES.HOME.path);
+            navigate(PAGES.HOME.PATH);
         } catch (err: any) {
             console.error(err);
             setError(parseApiError(err, 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.'));
@@ -82,7 +82,7 @@ export default function LoginPage() {
                                     Mật khẩu
                                 </label>
                                 <Link
-                                    to={PAGES.FORGOT_PASSWORD.path}
+                                    to={PAGES.IDENTITY.FORGOT_PASSWORD.PATH}
                                     className="text-sm font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400"
                                 >
                                     Quên mật khẩu?
@@ -110,7 +110,7 @@ export default function LoginPage() {
 
                     <div className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
                         Chưa có tài khoản?{' '}
-                        <Link to={PAGES.REGISTER.path} className="font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400">
+                        <Link to={PAGES.IDENTITY.REGISTER.PATH} className="font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400">
                             Đăng ký ngay
                         </Link>
                     </div>

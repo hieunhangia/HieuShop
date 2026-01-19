@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { CheckCircle, XCircle, Loader, ArrowLeft, Send } from 'lucide-react';
-import MainLayout from '../layouts/MainLayout';
-import { identityApi } from '../api/identityApi';
-import { useAuth } from '../context/AuthContext';
-import { parseApiError, type ApiError } from '../utils/error';
-import { PAGES } from '../config/page';
+import MainLayout from '../../layouts/MainLayout';
+import { identityApi } from '../../api/identityApi';
+import { useAuth } from '../../context/AuthContext';
+import { parseApiError, type ApiError } from '../../utils/error';
+import { PAGES } from '../../config/page';
 
 export default function ConfirmEmailPage() {
     const [searchParams] = useSearchParams();
     const { isAuthenticated } = useAuth();
 
     React.useEffect(() => {
-        document.title = `${PAGES.CONFIRM_EMAIL.title} | HieuShop`;
+        document.title = `${PAGES.IDENTITY.CONFIRM_EMAIL.TITLE} | HieuShop`;
     }, []);
 
 
@@ -102,14 +102,14 @@ export default function ConfirmEmailPage() {
 
                             {isAuthenticated ? (
                                 <Link
-                                    to={PAGES.HOME.path}
+                                    to={PAGES.HOME.PATH}
                                     className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 transition"
                                 >
                                     Về trang chủ
                                 </Link>
                             ) : (
                                 <Link
-                                    to={PAGES.LOGIN.path}
+                                    to={PAGES.IDENTITY.LOGIN.PATH}
                                     className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 transition"
                                 >
                                     Đăng nhập ngay
@@ -168,7 +168,7 @@ export default function ConfirmEmailPage() {
                                     )}
                                 </div>
                             ) : (
-                                <Link to={PAGES.LOGIN.path} className="inline-flex items-center text-sm font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400 transition-colors">
+                                <Link to={PAGES.IDENTITY.LOGIN.PATH} className="inline-flex items-center text-sm font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400 transition-colors">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
                                     Quay lại đăng nhập
                                 </Link>
