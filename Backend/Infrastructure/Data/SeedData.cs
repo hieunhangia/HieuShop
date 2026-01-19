@@ -1,10 +1,17 @@
 using Domain.Constants;
 using Domain.Entities.Products;
 using Domain.Entities.Users;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Data;
+
+public static class SeedDataExtensions
+{
+    public static async Task SeedDataAsync(this WebApplication app, bool dropExistDatabase = false) =>
+        await SeedData.InitializeAsync(app.Services, dropExistDatabase);
+}
 
 public static class SeedData
 {
@@ -76,7 +83,7 @@ public static class SeedData
                 [UserRole.Customer]
             )
         ];
-        for (var i = 1; i <= 36; i++)
+        for (var i = 1; i <= 10; i++)
         {
             var item = new ValueTuple<string, string, bool, string[]>
             {
