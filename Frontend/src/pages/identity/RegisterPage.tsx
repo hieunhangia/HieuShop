@@ -9,6 +9,7 @@ import { UserPlus } from 'lucide-react';
 import { identityApi } from '../../api/identityApi';
 import { parseApiError, type ApiError } from '../../utils/error';
 import { PAGES } from '../../config/page';
+import GoogleLoginButton from '../../components/identity/GoogleLoginButton';
 
 const registerSchema = z.object({
     email: z.email('Email không hợp lệ'),
@@ -177,12 +178,27 @@ export default function RegisterPage() {
                         </button>
                     </form>
 
-                    <div className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+                    <div className="mt-6">
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">Hoặc đăng ký với</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-6">
+                            <GoogleLoginButton />
+                        </div>
+                    </div>
+
+                    <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
                         Đã có tài khoản?{' '}
                         <Link to={PAGES.IDENTITY.LOGIN.PATH} className="font-medium text-brand-600 hover:text-brand-500 dark:text-brand-400">
                             Đăng nhập ngay
                         </Link>
-                    </div>
+                    </p>
                 </div>
             </div>
         </MainLayout>

@@ -628,3 +628,6 @@ dist/
 
 # Antigravity rules
 .agent/
+
+# Local environment variables
+.env.local

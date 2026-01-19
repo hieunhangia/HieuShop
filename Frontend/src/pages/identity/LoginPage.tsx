@@ -8,6 +8,7 @@ import MainLayout from '../../layouts/MainLayout';
 import { LogIn } from 'lucide-react';
 import { parseApiError, type ApiError } from '../../utils/error';
 import { PAGES } from '../../config/page';
+import GoogleLoginButton from '../../components/identity/GoogleLoginButton';
 
 const loginSchema = z.object({
     email: z.email('Email không hợp lệ'),
@@ -107,6 +108,21 @@ export default function LoginPage() {
                             {isSubmitting ? 'Đang xử lý...' : 'Đăng Nhập'}
                         </button>
                     </form>
+
+                    <div className="mt-6">
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">Hoặc tiếp tục với</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-6">
+                            <GoogleLoginButton />
+                        </div>
+                    </div>
 
                     <div className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
                         Chưa có tài khoản?{' '}

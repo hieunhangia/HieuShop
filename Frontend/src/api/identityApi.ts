@@ -18,4 +18,6 @@ export const identityApi = {
     validateResetPassword: (data: { email: string; resetCode: string }) => axiosClient.post('/validate-reset-password-request', data),
 
     resetPassword: (data: any) => axiosClient.post('/reset-password', data),
+
+    googleLogin: (data: { idToken: string }) => axiosClient.post('/google-login?useCookies=true', data),
 };
