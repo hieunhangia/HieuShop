@@ -625,3 +625,6 @@ fabric.properties
 
 # Frontend build output
 dist/
+
+# Antigravity rules
+.agent/
