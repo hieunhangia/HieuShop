@@ -22,13 +22,5 @@ export const PAGES = {
     CONFIRM_EMAIL: {
         path: '/confirm-email',
         title: 'Xác thực Email'
-    },
-    PRODUCTS: {
-        path: '/products',
-        title: 'Sản phẩm'
-    },
-    ABOUT: {
-        path: '/about',
-        title: 'Về chúng tôi'
-    },
+    }
 };
