@@ -57,13 +57,13 @@ public class IdentityController(
                 errors.RemoveAll(e => e.Code == "DuplicateUserName");
             }
 
-            return CreateValidationProblem(IdentityResult.Failed(errors.ToArray()));
+            return CreateValidationProblem("Đăng Ký Thất Bại", IdentityResult.Failed(errors.ToArray()));
         }
 
         result = await userManager.AddToRoleAsync(user, UserRole.Customer);
         if (!result.Succeeded)
         {
-            return CreateValidationProblem(result);
+            return CreateValidationProblem("Đăng Ký Thất Bại", result);
         }
 
         await transaction.CommitAsync();
@@ -129,13 +129,13 @@ public class IdentityController(
                     var result = await userManager.CreateAsync(user);
                     if (!result.Succeeded)
                     {
-                        return CreateValidationProblem(result);
+                        return CreateValidationProblem("Đăng Nhập Bằng Google Thất Bại", result);
                     }
 
                     result = await userManager.AddToRoleAsync(user, UserRole.Customer);
                     if (!result.Succeeded)
                     {
-                        return CreateValidationProblem(result);
+                        return CreateValidationProblem("Đăng Nhập Bằng Google Thất Bại", result);
                     }
 
                     result = await userManager.AddLoginAsync(user,
@@ -143,7 +143,7 @@ public class IdentityController(
                             LoginProvider.Google));
                     if (!result.Succeeded)
                     {
-                        return CreateValidationProblem(result);
+                        return CreateValidationProblem("Đăng Nhập Bằng Google Thất Bại", result);
                     }
                 }
                 else
@@ -153,7 +153,7 @@ public class IdentityController(
                             LoginProvider.Google));
                     if (!result.Succeeded)
                     {
-                        return CreateValidationProblem(result);
+                        return CreateValidationProblem("Đăng Nhập Bằng Google Thất Bại", result);
                     }
 
                     if (!user.EmailConfirmed)
@@ -162,7 +162,7 @@ public class IdentityController(
                         result = await userManager.UpdateAsync(user);
                         if (!result.Succeeded)
                         {
-                            return CreateValidationProblem(result);
+                            return CreateValidationProblem("Đăng Nhập Bằng Google Thất Bại", result);
                         }
                     }
                 }
@@ -340,7 +340,7 @@ public class IdentityController(
         {
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(resetRequest.ResetCode));
             var result = await userManager.ResetPasswordAsync(user, code, resetRequest.NewPassword);
-            return result.Succeeded ? Ok() : CreateValidationProblem(result);
+            return result.Succeeded ? Ok() : CreateValidationProblem("Đặt Lại Mật Khẩu Thất Bại", result);
         }
         catch (FormatException)
         {
@@ -393,7 +393,7 @@ public class IdentityController(
         }
 
         var result = await userManager.AddPasswordAsync(user, setPasswordRequest.NewPassword);
-        return result.Succeeded ? Ok() : CreateValidationProblem(result);
+        return result.Succeeded ? Ok() : CreateValidationProblem("Thiết Lập Mật Khẩu Thất Bại", result);
     }
 
     [HttpPost("change-password")]
@@ -463,7 +463,7 @@ public class IdentityController(
                 "Mật khẩu mới phải chứa ít nhất một chữ cái viết hoa ('A'-'Z').";
         }
 
-        return CreateValidationProblem(IdentityResult.Failed(errors.ToArray()));
+        return CreateValidationProblem("Đổi Mật Khẩu Thất Bại", IdentityResult.Failed(errors.ToArray()));
     }
 
     private Task SendEmailConfirmationLinkAsync(string email, string confirmationLink) =>
@@ -494,7 +494,7 @@ public class IdentityController(
              </html>
              """);
 
-    private ActionResult CreateValidationProblem(IdentityResult result)
+    private ActionResult CreateValidationProblem(string title, IdentityResult result)
     {
         var modelState = new ModelStateDictionary();
         foreach (var error in result.Errors)
@@ -502,6 +502,6 @@ public class IdentityController(
             modelState.AddModelError(error.Code, error.Description);
         }
 
-        return ValidationProblem(modelState);
+        return ValidationProblem(title: title, modelStateDictionary: modelState);
     }
 }
