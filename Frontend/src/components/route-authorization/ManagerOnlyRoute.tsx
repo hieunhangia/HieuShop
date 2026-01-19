@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { PAGES } from '../config/page';
-import { USER_ROLES } from '../config/userRoles';
+import { useAuth } from '../../context/AuthContext';
+import { PAGES } from '../../config/page';
+import { USER_ROLES } from '../../config/userRoles';
 import { Loader } from 'lucide-react';
 
-export default function CustomerOnlyRoute() {
+export default function ManagerOnlyRoute() {
     const { user, isLoading } = useAuth();
 
     if (isLoading) {
@@ -15,16 +15,13 @@ export default function CustomerOnlyRoute() {
         );
     }
 
-    // Check if user is authenticated and has the Customer role
-    if (user && user.roles && user.roles.includes(USER_ROLES.CUSTOMER)) {
+    if (user && user.roles && user.roles.includes(USER_ROLES.MANAGER)) {
         return <Outlet />;
     }
 
-    // Redirect to login if not authenticated
     if (!user) {
         return <Navigate to={PAGES.IDENTITY.LOGIN.PATH} replace />;
     }
 
-    // Redirect to home if authenticated but not a customer (or unauthorized page)
     return <Navigate to={PAGES.HOME.PATH} replace />;
 }

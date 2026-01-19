@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { PAGES } from '../config/page';
-import { USER_ROLES } from '../config/userRoles';
+import { useAuth } from '../../context/AuthContext';
+import { PAGES } from '../../config/page';
+import { USER_ROLES } from '../../config/userRoles';
 import { Loader } from 'lucide-react';
 
-export default function SalesStaffOnlyRoute() {
+export default function DeliveryStaffOnlyRoute() {
     const { user, isLoading } = useAuth();
 
     if (isLoading) {
@@ -15,7 +15,7 @@ export default function SalesStaffOnlyRoute() {
         );
     }
 
-    if (user && user.roles && user.roles.includes(USER_ROLES.SALES_STAFF)) {
+    if (user && user.roles && user.roles.includes(USER_ROLES.DELIVERY_STAFF)) {
         return <Outlet />;
     }
 

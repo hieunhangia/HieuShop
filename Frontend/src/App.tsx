@@ -12,8 +12,8 @@ import UserInfo from './pages/account-management/Info';
 import ChangePasswordPage from './pages/account-management/ChangePasswordPage';
 import SetPasswordPage from './pages/account-management/SetPasswordPage';
 
-import GuestOnlyRoute from './components/GuestOnlyRoute';
-import CustomerOnlyRoute from './components/CustomerOnlyRoute';
+import GuestOnlyRoute from './components/route-authorization/GuestOnlyRoute';
+import CustomerOnlyRoute from './components/route-authorization/CustomerOnlyRoute';
 
 import { PAGES } from './config/page';
 

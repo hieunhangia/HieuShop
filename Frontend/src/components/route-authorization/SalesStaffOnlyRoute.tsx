@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { PAGES } from '../config/page';
-import { USER_ROLES } from '../config/userRoles';
+import { useAuth } from '../../context/AuthContext';
+import { PAGES } from '../../config/page';
+import { USER_ROLES } from '../../config/userRoles';
 import { Loader } from 'lucide-react';
 
-export default function AdministratorOnlyRoute() {
+export default function SalesStaffOnlyRoute() {
     const { user, isLoading } = useAuth();
 
     if (isLoading) {
@@ -15,7 +15,7 @@ export default function AdministratorOnlyRoute() {
         );
     }
 
-    if (user && user.roles && user.roles.includes(USER_ROLES.ADMINISTRATOR)) {
+    if (user && user.roles && user.roles.includes(USER_ROLES.SALES_STAFF)) {
         return <Outlet />;
     }
 

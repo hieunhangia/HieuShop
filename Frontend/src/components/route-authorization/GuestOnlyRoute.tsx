@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { PAGES } from '../config/page';
+import { useAuth } from '../../context/AuthContext';
+import { PAGES } from '../../config/page';
 import { Loader } from 'lucide-react';
 
 export default function GuestOnlyRoute() {
