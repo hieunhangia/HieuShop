@@ -12,6 +12,9 @@ import UserInfo from './pages/account-management/Info';
 import ChangePasswordPage from './pages/account-management/ChangePasswordPage';
 import SetPasswordPage from './pages/account-management/SetPasswordPage';
 
+import GuestOnlyRoute from './components/GuestOnlyRoute';
+import CustomerOnlyRoute from './components/CustomerOnlyRoute';
+
 import { PAGES } from './config/page';
 
 
@@ -22,16 +25,21 @@ function App() {
         <Router>
           <Routes>
             <Route path={PAGES.HOME.PATH} element={<HomePage />} />
-            
-            <Route path={PAGES.IDENTITY.LOGIN.PATH} element={<LoginPage />} />
-            <Route path={PAGES.IDENTITY.REGISTER.PATH} element={<RegisterPage />} />
-            <Route path={PAGES.IDENTITY.FORGOT_PASSWORD.PATH} element={<ForgotPasswordPage />} />
-            <Route path={PAGES.IDENTITY.CONFIRM_EMAIL.PATH} element={<ConfirmEmailPage />} />
-            <Route path={PAGES.IDENTITY.RESET_PASSWORD.PATH} element={<ResetPasswordPage />} />
 
-            <Route path={PAGES.ACCOUNT.INFO.PATH} element={<UserInfo />} />
-            <Route path={PAGES.ACCOUNT.CHANGE_PASSWORD.PATH} element={<ChangePasswordPage />} />
-            <Route path={PAGES.ACCOUNT.SET_PASSWORD.PATH} element={<SetPasswordPage />} />
+            <Route element={<GuestOnlyRoute />}>
+              <Route path={PAGES.IDENTITY.LOGIN.PATH} element={<LoginPage />} />
+              <Route path={PAGES.IDENTITY.REGISTER.PATH} element={<RegisterPage />} />
+              <Route path={PAGES.IDENTITY.FORGOT_PASSWORD.PATH} element={<ForgotPasswordPage />} />
+              <Route path={PAGES.IDENTITY.RESET_PASSWORD.PATH} element={<ResetPasswordPage />} />
+            </Route>
+
+            <Route path={PAGES.IDENTITY.CONFIRM_EMAIL.PATH} element={<ConfirmEmailPage />} />
+
+            <Route element={<CustomerOnlyRoute />}>
+              <Route path={PAGES.ACCOUNT.INFO.PATH} element={<UserInfo />} />
+              <Route path={PAGES.ACCOUNT.CHANGE_PASSWORD.PATH} element={<ChangePasswordPage />} />
+              <Route path={PAGES.ACCOUNT.SET_PASSWORD.PATH} element={<SetPasswordPage />} />
+            </Route>
 
 
             <Route path="*" element={<div className="flex h-screen items-center justify-center">404 - Not Found</div>} />
