@@ -412,6 +412,12 @@ public class IdentityController(
                 statusCode: StatusCodes.Status400BadRequest);
         }
 
+        if (!await userManager.CheckPasswordAsync(user, request.OldPassword))
+        {
+            return Problem(title: "Đổi Mật Khẩu Thất Bại",
+                detail: "Mật khẩu cũ không đúng.",
+                statusCode: StatusCodes.Status400BadRequest);
+        }
 
         if (request.OldPassword == request.NewPassword)
         {
@@ -426,12 +432,6 @@ public class IdentityController(
         if (result.Succeeded) return Ok();
 
         var errors = result.Errors.ToList();
-
-        if (errors.Any(e => e.Code == "PasswordMismatch"))
-        {
-            errors.First(e => e.Code == "PasswordMismatch").Description =
-                "Mật khẩu cũ không đúng.";
-        }
 
         if (errors.Any(e => e.Code == "PasswordTooShort"))
         {
