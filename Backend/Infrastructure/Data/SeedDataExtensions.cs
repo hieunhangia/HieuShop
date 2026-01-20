@@ -9,15 +9,9 @@ namespace Infrastructure.Data;
 
 public static class SeedDataExtensions
 {
-    public static async Task SeedDataAsync(this WebApplication app, bool dropExistDatabase = false) =>
-        await SeedData.InitializeAsync(app.Services, dropExistDatabase);
-}
-
-public static class SeedData
-{
-    public static async Task InitializeAsync(IServiceProvider appService, bool dropExistDatabase = false)
+    public static async Task SeedDataAsync(this WebApplication app, bool dropExistDatabase = false)
     {
-        using var scope = appService.CreateScope();
+        using var scope = app.Services.CreateScope();
         var scopeService = scope.ServiceProvider;
 
         await using var dbContext = scopeService.GetRequiredService<AppDbContext>();
