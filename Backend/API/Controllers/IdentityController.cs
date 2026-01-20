@@ -25,8 +25,7 @@ public class IdentityController(
     UserManager<AppUser> userManager,
     SignInManager<AppUser> signInManager,
     IEmailService emailService,
-    IOptionsMonitor<BearerTokenOptions> bearerTokenOptions,
-    TimeProvider timeProvider
+    IOptionsMonitor<BearerTokenOptions> bearerTokenOptions
 ) : ControllerBase
 {
     [HttpPost("register")]
@@ -191,7 +190,7 @@ public class IdentityController(
         var refreshTicket = refreshTokenProtector.Unprotect(refreshRequest.RefreshToken);
 
         if (refreshTicket?.Properties.ExpiresUtc is not { } expiresUtc ||
-            timeProvider.GetUtcNow() >= expiresUtc ||
+            DateTime.UtcNow >= expiresUtc ||
             await signInManager.ValidateSecurityStampAsync(refreshTicket.Principal) is not { } user)
         {
             return Challenge();
