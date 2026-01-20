@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Encodings.Web;
-using Application.DTOs.Identity;
-using Application.Interfaces;
+using Application.Common.Interfaces;
+using Application.Features.Identity.DTOs;
 using Domain.Constants;
 using Domain.Entities.Users;
 using Google.Apis.Auth;

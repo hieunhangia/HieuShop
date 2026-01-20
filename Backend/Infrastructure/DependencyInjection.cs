@@ -1,4 +1,4 @@
-using Application.Interfaces;
+using Application.Common.Interfaces;
 using Domain.Entities.Users;
 using FluentEmail.MailKitSmtp;
 using Infrastructure.Data;

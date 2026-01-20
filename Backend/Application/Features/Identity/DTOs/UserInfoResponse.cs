@@ -1,4 +1,4 @@
-namespace Application.DTOs.Identity;
+namespace Application.Features.Identity.DTOs;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 public class UserInfoResponse

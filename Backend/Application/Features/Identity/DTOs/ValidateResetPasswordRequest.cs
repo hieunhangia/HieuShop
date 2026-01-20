@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace Application.DTOs.Identity;
+namespace Application.Features.Identity.DTOs;
 
 public class ValidateResetPasswordRequest
 {

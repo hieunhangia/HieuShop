@@ -1,5 +1,5 @@
 using API.Services;
-using Application.Interfaces;
+using Application.Common.Interfaces;
 
 namespace API;
 
