@@ -1,4 +1,4 @@
-using Domain.Commons;
+using Domain.Common;
 using Domain.Entities.Addresses;
 
 namespace Domain.Entities.Users;

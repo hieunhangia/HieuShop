@@ -1,4 +1,4 @@
-using Domain.Commons;
+using Domain.Common;
 using Domain.Enums.Products;
 
 namespace Domain.Entities.Products;

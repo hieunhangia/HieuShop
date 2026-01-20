@@ -1,4 +1,4 @@
-using Domain.Commons;
+using Domain.Common;
 using Domain.Entities.Coupons;
 using Domain.Entities.Users;
 using Domain.Enums.Orders;
