@@ -1,5 +1,5 @@
+using Application.Features.Identity.Constants;
 using Domain.Entities.Users;
-using Infrastructure.Identity.Constants;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;

@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Identity.DTOs;
 
-public class GoogleLoginRequest
+public class RefreshTokenRequest
 {
-    [Required(ErrorMessage = "IdToken là bắt buộc.")]
-    public required string IdToken { get; init; }
+    [Required(ErrorMessage = "RefreshToken là bắt buộc.")]
+    public required string RefreshToken { get; init; }
 }

@@ -4,11 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.Identity.DTOs;
 
-public class ValidateResetPasswordRequest
+public class ForgotPasswordRequest
 {
     [Required(ErrorMessage = "Email là bắt buộc.")]
+    [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
     public required string Email { get; init; }
-
-    [Required(ErrorMessage = "ResetCode là bắt buộc.")]
-    public required string ResetCode { get; init; }
 }

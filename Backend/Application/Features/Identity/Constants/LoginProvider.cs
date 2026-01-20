@@ -1,4 +1,4 @@
-namespace Infrastructure.Identity.Constants;
+namespace Application.Features.Identity.Constants;
 
 public static class LoginProvider
 {

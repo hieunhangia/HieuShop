@@ -8,6 +8,10 @@ public static class DependencyInjection
 {
     public static void AddApiServices(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+        builder.Services.AddProblemDetails();
+
         builder.Services.AddControllers();
 
         builder.Services.AddOpenApi();

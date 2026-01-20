@@ -1,6 +1,7 @@
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace Application.Features.Identity.DTOs;
 
-// ReSharper disable UnusedAutoPropertyAccessor.Global
 public class UserInfoResponse
 {
     public required string Email { get; init; }

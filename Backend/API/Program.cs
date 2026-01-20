@@ -1,4 +1,5 @@
 using API;
+using Application;
 using Infrastructure;
 using Infrastructure.Data;
 using Scalar.AspNetCore;
@@ -6,8 +7,8 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.AddInfrastructureServices();
+builder.AddApplicationServices();
 builder.AddApiServices();
 
 var app = builder.Build();
@@ -27,6 +28,8 @@ app.UseCors("AllowClient");
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseExceptionHandler();
 
 app.MapControllers();
 
