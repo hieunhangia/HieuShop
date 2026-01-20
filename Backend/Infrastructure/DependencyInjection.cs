@@ -42,6 +42,7 @@ public static class DependencyInjection
         builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddErrorDescriber<CustomIdentityErrorDescriber>();
+        builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
 
         builder.Services.AddTransient<CustomEmailConfirmationTokenProvider>();
         builder.Services.AddTransient<CustomPasswordResetTokenProvider>();

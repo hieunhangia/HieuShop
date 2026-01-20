@@ -1,3 +1,4 @@
+using API.Infrastructure;
 using API.Services;
 using Application.Common.Interfaces;
 
@@ -10,8 +11,6 @@ public static class DependencyInjection
         builder.Services.AddControllers();
 
         builder.Services.AddOpenApi();
-
-        builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
