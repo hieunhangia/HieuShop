@@ -595,10 +595,10 @@ public static class SeedDataExtensions
     }
 
     private static Brand CreateBrand(string name, string slug) =>
-        new() { Id = Guid.NewGuid(), Name = name, Slug = slug, LogoUrl = "" };
+        new() { Id = Guid.NewGuid(), Name = name, Slug = slug, LogoUrl = "https://images.unsplash.com/photo-1670808439268-79d2cb00a46e" };
 
     private static Category CreateCategory(string name, string slug) =>
-        new() { Id = Guid.NewGuid(), Name = name, Slug = slug, ImageUrl = "" };
+        new() { Id = Guid.NewGuid(), Name = name, Slug = slug, ImageUrl = "https://images.unsplash.com/photo-1685062428514-2164290b3322" };
 
     private static Product CreateProduct(string name, string slug, string desc, long basePrice,
         ICollection<Category> categories, Guid brandId, string[]? colors = null, string[]? storages = null,
