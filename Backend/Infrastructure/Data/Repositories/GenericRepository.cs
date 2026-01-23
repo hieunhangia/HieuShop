@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories;
 
-public class GenericRepository<TKey, TEntity>(AppDbContext dbContext)
-    : IGenericRepository<TKey, TEntity> where TEntity : class
+public class GenericRepository<TEntity, TKey>(AppDbContext dbContext)
+    : IGenericRepository<TEntity, TKey> where TEntity : class
 {
     protected readonly AppDbContext dbContext = dbContext;
 
