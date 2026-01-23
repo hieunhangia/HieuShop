@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Features.Products.Validators;
 
-public class GetProductQueryValidator : AbstractValidator<GetProductsQuery>
+public class GetProductsQueryValidator : AbstractValidator<GetProductsQuery>
 {
-    public GetProductQueryValidator()
+    public GetProductsQueryValidator()
     {
         RuleFor(x => x.PageIndex)
             .GreaterThan(0).WithMessage("Trang phải lớn hơn 0.");

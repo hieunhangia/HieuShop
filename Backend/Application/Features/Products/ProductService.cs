@@ -11,12 +11,12 @@ namespace Application.Features.Products;
 
 public class ProductService(
     IUnitOfWork unitOfWork,
-    IValidator<GetProductsQuery> getProductQueryValidator) : IProductService
+    IValidator<GetProductsQuery> getProductsQueryValidator) : IProductService
 {
     public async Task<PagedAndSortedResult<ProductSummaryResponse>> QueryActiveProductsAsync(
         GetProductsQuery query)
     {
-        var validationResult = await getProductQueryValidator.ValidateAsync(query);
+        var validationResult = await getProductsQueryValidator.ValidateAsync(query);
         if (!validationResult.IsValid)
         {
             throw new ValidationException(validationResult.Errors);
