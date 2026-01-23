@@ -8,5 +8,5 @@ public interface IProductRepository : IGenericRepository<Product, Guid>
     Task<(IEnumerable<Product> Products, int TotalCount)> QueryActiveProductsReadOnlyAsync(string searchText,
         int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection);
 
-    Task<Product?> GetBySlugWithDetailsAsync(string slug);
+    Task<Product?> GetBySlugWithDetailsReadOnlyAsync(string slug);
 }

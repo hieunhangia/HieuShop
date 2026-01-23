@@ -47,7 +47,7 @@ public class ProductService(
 
     public async Task<ProductDetailResponse?> GetProductBySlugAsync(string slug)
     {
-        var product = await unitOfWork.Products.GetBySlugWithDetailsAsync(slug);
+        var product = await unitOfWork.Products.GetBySlugWithDetailsReadOnlyAsync(slug);
         if (product == null)
         {
             throw new NotFoundException("Không tìm thấy sản phẩm với slug đã cho.");

@@ -34,7 +34,7 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
             await queryable.CountAsync());
     }
 
-    public async Task<Product?> GetBySlugWithDetailsAsync(string slug) =>
+    public async Task<Product?> GetBySlugWithDetailsReadOnlyAsync(string slug) =>
         await Context.Products.AsNoTracking()
             .Include(x => x.ProductImages)
             .Include(x => x.DefaultProductVariant)
