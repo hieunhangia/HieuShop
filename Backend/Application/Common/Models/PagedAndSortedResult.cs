@@ -4,13 +4,13 @@ namespace Application.Common.Models;
 
 public class PagedAndSortedResult<T>(
     List<T> items,
-    long totalCount,
+    int totalCount,
     int pageIndex,
     int pageSize,
     SortDirection sortDirection)
 {
     public List<T> Items { get; set; } = items;
-    public long TotalCount { get; set; } = totalCount;
+    public int TotalCount { get; set; } = totalCount;
     public int PageIndex { get; set; } = pageIndex;
     public int PageSize { get; set; } = pageSize;
     public string SortDirection { get; set; } = sortDirection.ToString().ToLower();
