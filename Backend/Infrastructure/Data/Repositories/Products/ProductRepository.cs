@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories.Products;
 
-public class ProductRepository(AppDbContext dbContext) : GenericRepository<Product, Guid>(dbContext), IProductRepository
+public class ProductRepository(AppDbContext context) : GenericRepository<Product, Guid>(context), IProductRepository
 {
     public async Task<(IEnumerable<Product> Products, int TotalCount)> QueryActiveProductsReadOnlyAsync(
         string searchText, int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
     {
         searchText = searchText.Trim();
-        var queryable = dbContext.Products.AsNoTracking()
+        var queryable = Context.Products.AsNoTracking()
             .Include(p => p.DefaultProductImage)
             .Include(p => p.DefaultProductVariant)
             .Include(p => p.Brand)
@@ -35,7 +35,7 @@ public class ProductRepository(AppDbContext dbContext) : GenericRepository<Produ
     }
 
     public async Task<Product?> GetBySlugWithDetailsAsync(string slug) =>
-        await dbContext.Products.AsNoTracking()
+        await Context.Products.AsNoTracking()
             .Include(x => x.ProductImages)
             .Include(x => x.DefaultProductVariant)
             .Include(p => p.Brand)
