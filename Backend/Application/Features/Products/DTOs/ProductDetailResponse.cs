@@ -7,6 +7,7 @@ public class ProductDetailResponse
     public required string Slug { get; set; }
     public required string Description { get; set; }
     public required long Price { get; set; }
+    public long? SalePrice { get; set; }
     public BrandResponse? Brand { get; set; }
     public required List<CategoryResponse> Categories { get; set; }
     public required List<ProductOptionResponse> Options { get; set; }

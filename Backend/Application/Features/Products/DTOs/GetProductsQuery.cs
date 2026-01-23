@@ -7,7 +7,8 @@ namespace Application.Features.Products.DTOs;
 
 public class GetProductsQuery
 {
-    public int PageNumber { get; set; } = 1;
+    public string SearchText { get; set; } = string.Empty;
+    public int PageIndex { get; set; } = 1;
     public int PageSize { get; set; } = 10;
     public ProductSortColumn SortColumn { get; set; } = ProductSortColumn.CreatedAt;
     public SortDirection SortDirection { get; set; } = SortDirection.Asc;

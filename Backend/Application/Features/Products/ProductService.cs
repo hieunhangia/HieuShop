@@ -1,7 +1,7 @@
 using Application.Common.Exceptions;
+using Application.Common.Models;
 using Application.Features.Products.DTOs;
 using Application.Features.Products.Enums;
-using Domain.Common;
 using Domain.Entities.Products;
 using Domain.Interfaces;
 using FluentValidation;
@@ -13,7 +13,8 @@ public class ProductService(
     IUnitOfWork unitOfWork,
     IValidator<GetProductsQuery> getProductQueryValidator) : IProductService
 {
-    public async Task<PagedAndSortedResultEntity<ProductSummaryResponse>> GetActiveProductsAsync(GetProductsQuery query)
+    public async Task<PagedAndSortedResult<ProductSummaryResponse>> QueryActiveProductsAsync(
+        GetProductsQuery query)
     {
         var validationResult = await getProductQueryValidator.ValidateAsync(query);
         if (!validationResult.IsValid)
@@ -29,18 +30,18 @@ public class ProductService(
             _ => nameof(Product.CreatedAt)
         };
 
-        var pagedProducts =
-            await unitOfWork.Products.GetAllActiveWithDefaultVariantPagedReadOnlyAsync(query.PageNumber,
-                query.PageSize, sortColumn, query.SortDirection);
-        return new PagedAndSortedResultEntity<ProductSummaryResponse>(pagedProducts.Items.Select(product =>
-                new ProductSummaryResponse
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Slug = product.Slug,
-                    Price = product.DefaultProductVariant?.Price ?? 0
-                }).ToList(),
-            pagedProducts.TotalCount, pagedProducts.PageIndex, pagedProducts.PageSize, query.SortDirection);
+        var pagedProducts = await unitOfWork.Products.QueryActiveProductsReadOnlyAsync(query.SearchText,
+            query.PageIndex, query.PageSize, sortColumn, query.SortDirection);
+        return new PagedAndSortedResult<ProductSummaryResponse>(
+            pagedProducts.Products.Select(product => new ProductSummaryResponse
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Slug = product.Slug,
+                Price = product.DefaultProductVariant!.Price,
+                SalePrice = product.DefaultProductVariant.SalePrice
+            }).ToList(),
+            pagedProducts.TotalCount, query.PageIndex, query.PageSize, query.SortDirection);
     }
 
     public async Task<ProductDetailResponse?> GetProductBySlugAsync(string slug)
@@ -57,7 +58,8 @@ public class ProductService(
             Name = product.Name,
             Slug = product.Slug,
             Description = product.Description,
-            Price = product.DefaultProductVariant?.Price ?? 0,
+            Price = product.DefaultProductVariant!.Price,
+            SalePrice = product.DefaultProductVariant.SalePrice,
             Brand = product.Brand!.IsActive
                 ? new BrandResponse
                 {

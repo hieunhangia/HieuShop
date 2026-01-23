@@ -1,7 +1,4 @@
-using Domain.Common;
-using Domain.Enums;
 using Domain.Interfaces.Repositories;
-using Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories;
@@ -17,27 +14,6 @@ public class GenericRepository<TKey, TEntity>(AppDbContext dbContext)
 
     public async Task<IEnumerable<TEntity>> GetAllReadOnlyAsync() =>
         await dbContext.Set<TEntity>().AsNoTracking().ToListAsync();
-
-    public async Task<PagedAndSortedResultEntity<TEntity>> GetAllPagedAndSortedAsync(int pageIndex, int pageSize,
-        string sortColumn, SortDirection sortDirection) =>
-        new(await dbContext.Set<TEntity>()
-                .OrderBy(sortColumn, sortDirection)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync(),
-            await dbContext.Set<TEntity>().CountAsync(),
-            pageIndex, pageSize, sortDirection);
-
-    public async Task<PagedAndSortedResultEntity<TEntity>> GetAllPagedAndSortedReadOnlyAsync(int pageIndex,
-        int pageSize, string sortColumn, SortDirection sortDirection) =>
-        new(await dbContext.Set<TEntity>()
-                .AsNoTracking()
-                .OrderBy(sortColumn, sortDirection)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync(),
-            await dbContext.Set<TEntity>().CountAsync(),
-            pageIndex, pageSize, sortDirection);
 
     public void Add(TEntity entity) => dbContext.Set<TEntity>().Add(entity);
 

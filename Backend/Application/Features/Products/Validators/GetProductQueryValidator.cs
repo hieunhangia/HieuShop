@@ -7,7 +7,7 @@ public class GetProductQueryValidator : AbstractValidator<GetProductsQuery>
 {
     public GetProductQueryValidator()
     {
-        RuleFor(x => x.PageNumber)
+        RuleFor(x => x.PageIndex)
             .GreaterThan(0).WithMessage("Trang phải lớn hơn 0.");
 
         RuleFor(x => x.PageSize)

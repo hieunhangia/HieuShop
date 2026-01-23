@@ -1,8 +1,8 @@
 using Domain.Enums;
 
-namespace Domain.Common;
+namespace Application.Common.Models;
 
-public class PagedAndSortedResultEntity<T>(
+public class PagedAndSortedResult<T>(
     List<T> items,
     long totalCount,
     int pageIndex,

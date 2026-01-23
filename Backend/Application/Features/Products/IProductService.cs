@@ -1,10 +1,10 @@
+using Application.Common.Models;
 using Application.Features.Products.DTOs;
-using Domain.Common;
 
 namespace Application.Features.Products;
 
 public interface IProductService
 {
-    Task<PagedAndSortedResultEntity<ProductSummaryResponse>> GetActiveProductsAsync(GetProductsQuery query);
+    Task<PagedAndSortedResult<ProductSummaryResponse>> QueryActiveProductsAsync(GetProductsQuery query);
     Task<ProductDetailResponse?> GetProductBySlugAsync(string slug);
 }

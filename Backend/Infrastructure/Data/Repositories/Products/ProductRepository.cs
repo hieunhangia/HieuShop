@@ -1,4 +1,3 @@
-using Domain.Common;
 using Domain.Entities.Products;
 using Domain.Enums;
 using Domain.Interfaces.Repositories.Products;
@@ -9,28 +8,35 @@ namespace Infrastructure.Data.Repositories.Products;
 
 public class ProductRepository(AppDbContext dbContext) : GenericRepository<Guid, Product>(dbContext), IProductRepository
 {
-    public async Task<PagedAndSortedResultEntity<Product>> GetAllActiveWithDefaultVariantPagedReadOnlyAsync(
+    public async Task<(List<Product> Products, int TotalCount)> QueryActiveProductsReadOnlyAsync(string searchText,
         int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
     {
-        var query = dbContext.Products
+        searchText = searchText.Trim();
+        var queryable = dbContext.Products
             .AsNoTracking()
-            .Include(x => x.DefaultProductVariant)
-            .Where(p => p.IsActive)
+            .Include(p => p.Brand)
+            .Include(p => p.Categories)
+            .Include(p => p.DefaultProductVariant)
+            .Where(p => p.IsActive &&
+                        (
+                            p.Name.Contains(searchText) ||
+                            p.Description.Contains(searchText) ||
+                            p.Brand!.Name.Contains(searchText) ||
+                            p.Categories!.Any(c => c.Name.Contains(searchText))
+                        )
+            )
             .OrderBy(sortColumn, sortDirection);
 
-        var totalItems = await query.CountAsync();
-        var items = await query
-            .Skip((pageIndex - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        return new PagedAndSortedResultEntity<Product>(items, totalItems, pageIndex, pageSize, sortDirection);
+        return (await queryable
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(),
+            await queryable.CountAsync());
     }
 
-    public async Task<Product?>
-        GetBySlugWithDetailsAsync(string slug) =>
-        await dbContext.Products
-            .AsNoTracking()
+
+    public async Task<Product?> GetBySlugWithDetailsAsync(string slug) =>
+        await dbContext.Products.AsNoTracking()
             .Include(x => x.DefaultProductVariant)
             .Include(p => p.Categories)
             .Include(p => p.Brand)
