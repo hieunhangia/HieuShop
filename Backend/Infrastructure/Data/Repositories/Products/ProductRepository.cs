@@ -8,8 +8,8 @@ namespace Infrastructure.Data.Repositories.Products;
 
 public class ProductRepository(AppDbContext dbContext) : GenericRepository<Product, Guid>(dbContext), IProductRepository
 {
-    public async Task<(List<Product> Products, int TotalCount)> QueryActiveProductsReadOnlyAsync(string searchText,
-        int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
+    public async Task<(IEnumerable<Product> Products, int TotalCount)> QueryActiveProductsReadOnlyAsync(
+        string searchText, int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
     {
         searchText = searchText.Trim();
         var queryable = dbContext.Products.AsNoTracking()
