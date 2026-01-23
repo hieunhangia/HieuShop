@@ -9,8 +9,8 @@ namespace Infrastructure.Data.Repositories.Products;
 
 public class ProductRepository(AppDbContext dbContext) : GenericRepository<Guid, Product>(dbContext), IProductRepository
 {
-    public async Task<PagedResultEntity<Product>> GetAllActiveWithDefaultVariantPagedReadOnlyAsync(int pageIndex,
-        int pageSize, string sortColumn, SortDirection sortDirection)
+    public async Task<PagedAndSortedResultEntity<Product>> GetAllActiveWithDefaultVariantPagedReadOnlyAsync(
+        int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
     {
         var query = dbContext.Products
             .AsNoTracking()
@@ -24,7 +24,7 @@ public class ProductRepository(AppDbContext dbContext) : GenericRepository<Guid,
             .Take(pageSize)
             .ToListAsync();
 
-        return new PagedResultEntity<Product>(items, totalItems, pageIndex, pageSize);
+        return new PagedAndSortedResultEntity<Product>(items, totalItems, pageIndex, pageSize, sortDirection);
     }
 
     public async Task<Product?>

@@ -13,7 +13,7 @@ public class ProductService(
     IUnitOfWork unitOfWork,
     IValidator<GetProductsQuery> getProductQueryValidator) : IProductService
 {
-    public async Task<PagedResultEntity<ProductSummaryResponse>> GetActiveProductsAsync(GetProductsQuery query)
+    public async Task<PagedAndSortedResultEntity<ProductSummaryResponse>> GetActiveProductsAsync(GetProductsQuery query)
     {
         var validationResult = await getProductQueryValidator.ValidateAsync(query);
         if (!validationResult.IsValid)
@@ -32,7 +32,7 @@ public class ProductService(
         var pagedProducts =
             await unitOfWork.Products.GetAllActiveWithDefaultVariantPagedReadOnlyAsync(query.PageNumber,
                 query.PageSize, sortColumn, query.SortDirection);
-        return new PagedResultEntity<ProductSummaryResponse>(pagedProducts.Items.Select(product =>
+        return new PagedAndSortedResultEntity<ProductSummaryResponse>(pagedProducts.Items.Select(product =>
                 new ProductSummaryResponse
                 {
                     Id = product.Id,
@@ -40,7 +40,7 @@ public class ProductService(
                     Slug = product.Slug,
                     Price = product.DefaultProductVariant?.Price ?? 0
                 }).ToList(),
-            pagedProducts.TotalCount, pagedProducts.PageIndex, pagedProducts.PageSize);
+            pagedProducts.TotalCount, pagedProducts.PageIndex, pagedProducts.PageSize, query.SortDirection);
     }
 
     public async Task<ProductDetailResponse?> GetProductBySlugAsync(string slug)

@@ -6,8 +6,8 @@ namespace Domain.Interfaces.Repositories.Products;
 
 public interface IProductRepository : IGenericRepository<Guid, Product>
 {
-    Task<PagedResultEntity<Product>> GetAllActiveWithDefaultVariantPagedReadOnlyAsync(int pageIndex, int pageSize,
-        string sortColumn, SortDirection sortDirection);
+    Task<PagedAndSortedResultEntity<Product>> GetAllActiveWithDefaultVariantPagedReadOnlyAsync(int pageIndex,
+        int pageSize, string sortColumn, SortDirection sortDirection);
 
     Task<Product?> GetBySlugWithDetailsAsync(string slug);
 }

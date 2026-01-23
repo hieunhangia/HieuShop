@@ -5,6 +5,6 @@ namespace Application.Features.Products;
 
 public interface IProductService
 {
-    Task<PagedResultEntity<ProductSummaryResponse>> GetActiveProductsAsync(GetProductsQuery query);
+    Task<PagedAndSortedResultEntity<ProductSummaryResponse>> GetActiveProductsAsync(GetProductsQuery query);
     Task<ProductDetailResponse?> GetProductBySlugAsync(string slug);
 }

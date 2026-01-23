@@ -9,11 +9,11 @@ public interface IGenericRepository<in TKey, TEntity> where TEntity : class
     Task<IEnumerable<TEntity>> GetAllAsync();
     Task<IEnumerable<TEntity>> GetAllReadOnlyAsync();
 
-    Task<PagedResultEntity<TEntity>> GetAllPagedAndSortedAsync(int pageIndex, int pageSize, string sortColumn,
+    Task<PagedAndSortedResultEntity<TEntity>> GetAllPagedAndSortedAsync(int pageIndex, int pageSize, string sortColumn,
         SortDirection sortDirection);
 
-    Task<PagedResultEntity<TEntity>> GetAllPagedAndSortedReadOnlyAsync(int pageIndex, int pageSize, string sortColumn,
-        SortDirection sortDirection);
+    Task<PagedAndSortedResultEntity<TEntity>> GetAllPagedAndSortedReadOnlyAsync(int pageIndex, int pageSize,
+        string sortColumn, SortDirection sortDirection);
 
     void Add(TEntity entity);
     void Update(TEntity entity);
