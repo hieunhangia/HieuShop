@@ -1,8 +1,11 @@
 using Application.Common.Interfaces;
 using Domain.Entities.Users;
+using Domain.Interfaces;
+using Domain.Interfaces.Repositories.Products;
 using FluentEmail.MailKitSmtp;
 using Infrastructure.Data;
 using Infrastructure.Data.Interceptors;
+using Infrastructure.Data.Repositories.Products;
 using Infrastructure.Identity;
 using Infrastructure.Identity.TokenProviders;
 using Infrastructure.Services;
@@ -61,5 +64,8 @@ public static class DependencyInjection
         });
 
         builder.Services.AddAuthorization();
+
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        builder.Services.AddScoped<IProductRepository, ProductRepository>();
     }
 }
