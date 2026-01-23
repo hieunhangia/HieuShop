@@ -4,9 +4,10 @@ using Infrastructure.Data.Repositories.Products;
 
 namespace Infrastructure.Data;
 
-public class UnitOfWork(AppDbContext dbContext) : IUnitOfWork
+public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {
-    public IProductRepository Products => field ??= new ProductRepository(dbContext);
-
-    public Task<int> CompleteAsync() => dbContext.SaveChangesAsync();
+    public IProductRepository Products => field ??= new ProductRepository(context);
+    public IBrandRepository Brands => field ??= new BrandRepository(context);
+    public ICategoryRepository Categories => field ??= new CategoryRepository(context);
+    public Task<int> CompleteAsync() => context.SaveChangesAsync();
 }
