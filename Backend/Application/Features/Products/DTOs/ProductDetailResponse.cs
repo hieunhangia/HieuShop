@@ -11,6 +11,7 @@ public class ProductDetailResponse
     public BrandResponse? Brand { get; set; }
     public required List<CategoryResponse> Categories { get; set; }
     public required List<ProductOptionResponse> Options { get; set; }
+    public required List<string> ImageUrls { get; set; }
 }
 
 public class BrandResponse

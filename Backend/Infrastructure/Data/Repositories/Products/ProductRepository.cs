@@ -12,11 +12,11 @@ public class ProductRepository(AppDbContext dbContext) : GenericRepository<Guid,
         int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
     {
         searchText = searchText.Trim();
-        var queryable = dbContext.Products
-            .AsNoTracking()
+        var queryable = dbContext.Products.AsNoTracking()
+            .Include(p => p.DefaultProductImage)
+            .Include(p => p.DefaultProductVariant)
             .Include(p => p.Brand)
             .Include(p => p.Categories)
-            .Include(p => p.DefaultProductVariant)
             .Where(p => p.IsActive &&
                         (
                             p.Name.Contains(searchText) ||
@@ -34,12 +34,12 @@ public class ProductRepository(AppDbContext dbContext) : GenericRepository<Guid,
             await queryable.CountAsync());
     }
 
-
     public async Task<Product?> GetBySlugWithDetailsAsync(string slug) =>
         await dbContext.Products.AsNoTracking()
+            .Include(x => x.ProductImages)
             .Include(x => x.DefaultProductVariant)
-            .Include(p => p.Categories)
             .Include(p => p.Brand)
+            .Include(p => p.Categories)
             .Include(p => p.ProductOptions)!
             .ThenInclude(po => po.ProductOptionValues)
             .FirstOrDefaultAsync(p => p.Slug == slug);

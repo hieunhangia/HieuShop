@@ -580,8 +580,15 @@ public static class SeedDataExtensions
         foreach (var product in notExistingProducts)
         {
             if (product.ProductVariants == null || product.ProductVariants.Count == 0) continue;
-            var defaultVar = product.ProductVariants.First();
-            product.DefaultProductVariantId = defaultVar.Id;
+            var defaultVariant = product.ProductVariants.First();
+            product.DefaultProductVariantId = defaultVariant.Id;
+        }
+
+        foreach (var product in notExistingProducts)
+        {
+            if (product.ProductImages == null || product.ProductImages.Count == 0) continue;
+            var defaultImage = product.ProductImages.First();
+            product.DefaultProductImageId = defaultImage.Id;
         }
 
         await dbContext.SaveChangesAsync();
@@ -604,6 +611,8 @@ public static class SeedDataExtensions
             Slug = slug,
             Description = desc,
             IsActive = true,
+            ProductImages =
+                [new ProductImage { ImageUrl = "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e" }],
             BrandId = brandId,
             Categories = categories,
             ProductOptions = new List<ProductOption>(),
@@ -706,7 +715,6 @@ public static class SeedDataExtensions
                         Price = finalPrice,
                         SalePrice = salePrice,
                         AvailableStock = rd.Next(36, 169),
-                        ImageUrl = "",
                         ProductOptionValues = variantOptions
                     };
                     product.ProductVariants.Add(variant);

@@ -9,10 +9,6 @@ public class ProductVariantConfiguration : IEntityTypeConfiguration<ProductVaria
 {
     public void Configure(EntityTypeBuilder<ProductVariant> builder)
     {
-        builder.Property(v => v.ImageUrl)
-            .HasMaxLength(DataSchema.ProductVariant.ImageUrlMaxLength)
-            .IsUnicode(false);
-
         builder.HasOne<Product>()
             .WithMany(p => p.ProductVariants)
             .HasForeignKey(v => v.ProductId)

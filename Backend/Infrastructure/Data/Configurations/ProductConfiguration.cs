@@ -26,6 +26,11 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasForeignKey(p => p.BrandId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(p => p.DefaultProductImage)
+            .WithOne()
+            .HasForeignKey<Product>(p => p.DefaultProductImageId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasOne(p => p.DefaultProductVariant)
             .WithOne()
             .HasForeignKey<Product>(p => p.DefaultProductVariantId)

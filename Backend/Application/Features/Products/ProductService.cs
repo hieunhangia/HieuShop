@@ -39,7 +39,8 @@ public class ProductService(
                 Name = product.Name,
                 Slug = product.Slug,
                 Price = product.DefaultProductVariant!.Price,
-                SalePrice = product.DefaultProductVariant.SalePrice
+                SalePrice = product.DefaultProductVariant.SalePrice,
+                ImageUrl = product.DefaultProductImage!.ImageUrl
             }).ToList(),
             pagedProducts.TotalCount, query.PageIndex, query.PageSize, query.SortDirection);
     }
@@ -60,6 +61,7 @@ public class ProductService(
             Description = product.Description,
             Price = product.DefaultProductVariant!.Price,
             SalePrice = product.DefaultProductVariant.SalePrice,
+            ImageUrls = product.ProductImages!.Select(pi => pi.ImageUrl).ToList(),
             Brand = product.Brand!.IsActive
                 ? new BrandResponse
                 {

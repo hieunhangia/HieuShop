@@ -9,8 +9,11 @@ public class Product : BaseAuditableEntity<Guid>
     public required string Slug { get; set; }
     public bool IsActive { get; set; } = true;
     public Guid BrandId { get; set; }
+    public Guid? DefaultProductImageId { get; set; }
     public Guid? DefaultProductVariantId { get; set; }
 
+    public ICollection<ProductImage>? ProductImages { get; set; }
+    public ProductImage? DefaultProductImage { get; set; }
     public Brand? Brand { get; set; }
     public ICollection<Category>? Categories { get; set; }
     public ICollection<ProductVariant>? ProductVariants { get; set; }

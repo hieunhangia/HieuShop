@@ -39,7 +39,7 @@ public static class DataSchema
         public const int LogoUrlMaxLength = 500;
     }
 
-    public static class ProductVariant
+    public static class ProductImage
     {
         public const int ImageUrlMaxLength = 500;
     }
