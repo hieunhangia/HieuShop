@@ -4,5 +4,5 @@ namespace Domain.Interfaces.Repositories.Products;
 
 public interface ICategoryRepository : IGenericRepository<Category, Guid>
 {
-    Task<IEnumerable<Category>> QueryActiveCategoriesReadOnlyAsync(string searchText, int top);
+    Task<IEnumerable<Category>> QueryActiveCategoriesReadOnlyAsync(int top);
 }

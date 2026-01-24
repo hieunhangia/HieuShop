@@ -130,13 +130,14 @@ public static class SeedDataExtensions
 
     private static async Task SeedProductsDataAsync(AppDbContext dbContext)
     {
-        var appleBrand = CreateBrand("Apple", "apple");
-        var samsungBrand = CreateBrand("Samsung", "samsung");
-        var xiaomiBrand = CreateBrand("Xiaomi", "xiaomi");
-        var oppoBrand = CreateBrand("OPPO", "oppo");
-        var googleBrand = CreateBrand("Google Pixel", "google-pixel");
-        var sonyBrand = CreateBrand("Sony", "sony");
-        var nokiaBrand = CreateBrand("Nokia", "nokia");
+        var displayOrder = 1;
+        var appleBrand = CreateBrand("Apple", "apple", displayOrder++);
+        var samsungBrand = CreateBrand("Samsung", "samsung", displayOrder++);
+        var xiaomiBrand = CreateBrand("Xiaomi", "xiaomi", displayOrder++);
+        var oppoBrand = CreateBrand("OPPO", "oppo", displayOrder++);
+        var googleBrand = CreateBrand("Google Pixel", "google-pixel", displayOrder++);
+        var sonyBrand = CreateBrand("Sony", "sony", displayOrder++);
+        var nokiaBrand = CreateBrand("Nokia", "nokia", displayOrder);
         var brands = new List<Brand>
         {
             appleBrand,
@@ -149,20 +150,21 @@ public static class SeedDataExtensions
         };
         await dbContext.Brands.AddRangeAsync(brands.Where(brand => !dbContext.Brands.Any(b => brand.Slug == b.Slug)));
 
-        var iosCategory = CreateCategory("Điện thoại iPhone (iOS)", "dien-thoai-iphone");
-        var androidCategory = CreateCategory("Điện thoại Android", "dien-thoai-android");
-        var flagshipCategory = CreateCategory("Flagship - Cao cấp", "dien-thoai-cao-cap");
-        var midRangeCategory = CreateCategory("Tầm trung", "dien-thoai-tam-trung");
-        var budgetCategory = CreateCategory("Giá rẻ - Học sinh", "dien-thoai-gia-re");
-        var gamingCategory = CreateCategory("Gaming Phone", "gaming-phone");
-        var cameraCategory = CreateCategory("Camera Phone (Chụp ảnh)", "camera-phone");
-        var batteryCategory = CreateCategory("Pin khủng & Sạc nhanh", "pin-khung");
-        var category5g = CreateCategory("Hỗ trợ 5G", "ho-tro-5g");
-        var foldCategory = CreateCategory("Điện thoại gập (Fold)", "dien-thoai-gap");
-        var compactCategory = CreateCategory("Nhỏ gọn (Compact)", "dien-thoai-nho-gon");
-        var newCategory = CreateCategory("Sản phẩm mới ra mắt", "moi-ra-mat");
-        var popularCategory = CreateCategory("Điện thoại phổ thông", "dien-thoai-pho-thong");
-        var usedCategory = CreateCategory("Điện thoại cũ (Like New)", "dien-thoai-cu");
+        displayOrder = 1;
+        var iosCategory = CreateCategory("Điện thoại iPhone (iOS)", "dien-thoai-iphone", displayOrder++);
+        var androidCategory = CreateCategory("Điện thoại Android", "dien-thoai-android", displayOrder++);
+        var flagshipCategory = CreateCategory("Flagship - Cao cấp", "dien-thoai-cao-cap", displayOrder++);
+        var midRangeCategory = CreateCategory("Tầm trung", "dien-thoai-tam-trung", displayOrder++);
+        var budgetCategory = CreateCategory("Giá rẻ - Học sinh", "dien-thoai-gia-re", displayOrder++);
+        var gamingCategory = CreateCategory("Gaming Phone", "gaming-phone", displayOrder++);
+        var cameraCategory = CreateCategory("Camera Phone (Chụp ảnh)", "camera-phone", displayOrder++);
+        var batteryCategory = CreateCategory("Pin khủng & Sạc nhanh", "pin-khung", displayOrder++);
+        var category5g = CreateCategory("Hỗ trợ 5G", "ho-tro-5g", displayOrder++);
+        var foldCategory = CreateCategory("Điện thoại gập (Fold)", "dien-thoai-gap", displayOrder++);
+        var compactCategory = CreateCategory("Nhỏ gọn (Compact)", "dien-thoai-nho-gon", displayOrder++);
+        var newCategory = CreateCategory("Sản phẩm mới ra mắt", "moi-ra-mat", displayOrder++);
+        var popularCategory = CreateCategory("Điện thoại phổ thông", "dien-thoai-pho-thong", displayOrder++);
+        var usedCategory = CreateCategory("Điện thoại cũ (Like New)", "dien-thoai-cu", displayOrder);
 
         var categories = new List<Category>
         {
@@ -594,11 +596,19 @@ public static class SeedDataExtensions
         await dbContext.SaveChangesAsync();
     }
 
-    private static Brand CreateBrand(string name, string slug) =>
-        new() { Id = Guid.NewGuid(), Name = name, Slug = slug, LogoUrl = "https://images.unsplash.com/photo-1670808439268-79d2cb00a46e" };
+    private static Brand CreateBrand(string name, string slug, int displayOrder) =>
+        new()
+        {
+            Id = Guid.NewGuid(), Name = name, Slug = slug, DisplayOrder = displayOrder,
+            LogoUrl = "https://images.unsplash.com/photo-1670808439268-79d2cb00a46e"
+        };
 
-    private static Category CreateCategory(string name, string slug) =>
-        new() { Id = Guid.NewGuid(), Name = name, Slug = slug, ImageUrl = "https://images.unsplash.com/photo-1685062428514-2164290b3322" };
+    private static Category CreateCategory(string name, string slug, int displayOrder) =>
+        new()
+        {
+            Id = Guid.NewGuid(), Name = name, Slug = slug, DisplayOrder = displayOrder,
+            ImageUrl = "https://images.unsplash.com/photo-1685062428514-2164290b3322"
+        };
 
     private static Product CreateProduct(string name, string slug, string desc, long basePrice,
         ICollection<Category> categories, Guid brandId, string[]? colors = null, string[]? storages = null,

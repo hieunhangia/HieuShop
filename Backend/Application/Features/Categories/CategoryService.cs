@@ -15,7 +15,7 @@ public class CategoryService(IUnitOfWork unitOfWork, IValidator<GetCategoriesQue
             throw new ValidationException(validationResult.Errors);
         }
 
-        return (await unitOfWork.Categories.QueryActiveCategoriesReadOnlyAsync(query.SearchText, query.Top))
+        return (await unitOfWork.Categories.QueryActiveCategoriesReadOnlyAsync(query.Top))
             .Select(c => new CategoryResponse
             {
                 Id = c.Id,

@@ -15,7 +15,7 @@ public class BrandService(IUnitOfWork unitOfWork, IValidator<GetBrandsQuery> get
             throw new ValidationException(validationResult.Errors);
         }
 
-        return (await unitOfWork.Brands.QueryActiveBrandsReadOnlyAsync(query.SearchText, query.Top))
+        return (await unitOfWork.Brands.QueryActiveBrandsReadOnlyAsync(query.Top))
             .Select(brand => new BrandResponse
             {
                 Id = brand.Id,
