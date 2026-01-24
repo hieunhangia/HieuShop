@@ -9,9 +9,9 @@ namespace Infrastructure.Data.Repositories.Products;
 public class ProductRepository(AppDbContext context) : GenericRepository<Product, Guid>(context), IProductRepository
 {
     public async Task<(IEnumerable<Product> Products, int TotalCount)> QueryActiveProductsReadOnlyAsync(
-        string searchText, int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
+        string? searchText, int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
     {
-        searchText = searchText.Trim();
+        searchText = searchText?.Trim() ?? string.Empty;
         var queryable = Context.Products.AsNoTracking()
             .Include(p => p.DefaultProductImage)
             .Include(p => p.DefaultProductVariant)
@@ -20,9 +20,8 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
             .Where(p => p.IsActive &&
                         (
                             p.Name.Contains(searchText) ||
-                            p.Description.Contains(searchText) ||
-                            p.Brand!.Name.Contains(searchText) ||
-                            p.Categories!.Any(c => c.Name.Contains(searchText))
+                            (p.Brand!.IsActive && p.Brand!.Name.Contains(searchText)) ||
+                            p.Categories!.Any(c => c.IsActive && c.Name.Contains(searchText))
                         )
             )
             .OrderBy(sortColumn, sortDirection);
