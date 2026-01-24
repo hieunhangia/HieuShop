@@ -3,7 +3,7 @@ using Application.Features.Products.Enums;
 using Domain.Enums;
 using MediatR;
 
-namespace Application.Features.Products.Queries.SearchProductsPagedSortedQuery;
+namespace Application.Features.Products.Queries.SearchProductsPagedSorted;
 
 public class SearchProductsPagedSortedQuery : IRequest<PagedAndSortedResult<ProductSummaryDto>>
 {

@@ -5,7 +5,7 @@ using Domain.Enums;
 using Domain.Interfaces;
 using MediatR;
 
-namespace Application.Features.Products.Queries.SearchProductsPagedSortedQuery;
+namespace Application.Features.Products.Queries.SearchProductsPagedSorted;
 
 public class SearchProductsPagedSortedQueryHandler(IUnitOfWork unitOfWork, ProductMapper mapper)
     : IRequestHandler<SearchProductsPagedSortedQuery, PagedAndSortedResult<ProductSummaryDto>>

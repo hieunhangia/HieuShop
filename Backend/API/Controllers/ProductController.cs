@@ -1,5 +1,5 @@
 using Application.Features.Products.Queries.GetProductBySlug;
-using Application.Features.Products.Queries.SearchProductsPagedSortedQuery;
+using Application.Features.Products.Queries.SearchProductsPagedSorted;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

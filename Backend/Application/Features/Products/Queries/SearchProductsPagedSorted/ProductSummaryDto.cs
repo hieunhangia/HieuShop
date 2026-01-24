@@ -1,4 +1,4 @@
-namespace Application.Features.Products.Queries.SearchProductsPagedSortedQuery;
+namespace Application.Features.Products.Queries.SearchProductsPagedSorted;
 
 public class ProductSummaryDto
 {
