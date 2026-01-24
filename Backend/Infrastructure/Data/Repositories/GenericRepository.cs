@@ -10,12 +10,12 @@ public class GenericRepository<TEntity, TKey>(AppDbContext context)
 
     public async Task<TEntity?> GetByIdAsync(TKey id) => await Context.Set<TEntity>().FindAsync(id);
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync() => await Context.Set<TEntity>().ToListAsync();
+    public async Task<List<TEntity>> GetAllAsync() => await Context.Set<TEntity>().ToListAsync();
 
-    public async Task<IEnumerable<TEntity>> GetAllReadOnlyAsync() =>
+    public async Task<IReadOnlyList<TEntity>> GetAllReadOnlyAsync() =>
         await Context.Set<TEntity>().AsNoTracking().ToListAsync();
 
-    public async Task<(IEnumerable<TEntity> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize)
+    public async Task<(List<TEntity> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize)
     {
         var query = Context.Set<TEntity>();
         return (await query
@@ -24,7 +24,8 @@ public class GenericRepository<TEntity, TKey>(AppDbContext context)
             .ToListAsync(), await query.CountAsync());
     }
 
-    public async Task<(IEnumerable<TEntity> Items, int TotalCount)> GetPagedReadOnlyAsync(int pageNumber, int pageSize)
+    public async Task<(IReadOnlyList<TEntity> Items, int TotalCount)> GetPagedReadOnlyAsync(int pageNumber,
+        int pageSize)
     {
         var query = Context.Set<TEntity>().AsNoTracking();
         return (await query
