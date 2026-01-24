@@ -16,6 +16,8 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(c => c.Slug)
             .HasMaxLength(DataSchema.Category.SlugMaxLength)
             .IsUnicode(false);
+        
+        builder.HasIndex(c => c.DisplayOrder).IsUnique();
 
         builder.Property(c => c.ImageUrl)
             .HasMaxLength(DataSchema.Category.ImageUrlMaxLength)

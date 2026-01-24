@@ -16,6 +16,8 @@ public class BrandConfiguration : IEntityTypeConfiguration<Brand>
         builder.Property(b => b.Slug)
             .HasMaxLength(DataSchema.Brand.SlugMaxLength)
             .IsUnicode(false);
+        
+        builder.HasIndex(b => b.DisplayOrder).IsUnique();
 
         builder.Property(b => b.LogoUrl)
             .HasMaxLength(DataSchema.Brand.LogoUrlMaxLength)
