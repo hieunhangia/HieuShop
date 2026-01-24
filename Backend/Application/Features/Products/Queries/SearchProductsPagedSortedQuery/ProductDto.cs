@@ -1,6 +1,6 @@
-namespace Application.Features.Products.DTOs;
+namespace Application.Features.Products.Queries.SearchProductsPagedSortedQuery;
 
-public class ProductSummaryResponse
+public class ProductDto
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }

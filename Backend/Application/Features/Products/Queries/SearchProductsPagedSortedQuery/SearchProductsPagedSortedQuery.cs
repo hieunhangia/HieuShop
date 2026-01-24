@@ -1,11 +1,11 @@
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
+using Application.Common.Models;
 using Application.Features.Products.Enums;
 using Domain.Enums;
+using MediatR;
 
-namespace Application.Features.Products.DTOs;
+namespace Application.Features.Products.Queries.SearchProductsPagedSortedQuery;
 
-public class GetProductsQuery
+public class SearchProductsPagedSortedQuery : IRequest<PagedAndSortedResult<ProductDto>>
 {
     public string? SearchText { get; set; }
     public int? PageIndex { get; set; }
