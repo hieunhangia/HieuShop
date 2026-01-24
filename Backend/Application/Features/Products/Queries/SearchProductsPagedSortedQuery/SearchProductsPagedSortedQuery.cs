@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Application.Features.Products.Queries.SearchProductsPagedSortedQuery;
 
-public class SearchProductsPagedSortedQuery : IRequest<PagedAndSortedResult<ProductDto>>
+public class SearchProductsPagedSortedQuery : IRequest<PagedAndSortedResult<ProductSummaryDto>>
 {
     public string? SearchText { get; set; }
     public int? PageIndex { get; set; }

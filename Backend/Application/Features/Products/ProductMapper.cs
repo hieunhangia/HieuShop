@@ -7,10 +7,10 @@ namespace Application.Features.Products;
 [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ProductMapper
 {
-    [MapProperty(nameof(Product.DefaultProductVariant.Price), nameof(ProductDto.Price))]
-    [MapProperty(nameof(Product.DefaultProductVariant.SalePrice), nameof(ProductDto.SalePrice))]
-    [MapProperty(nameof(Product.DefaultProductImage.ImageUrl), nameof(ProductDto.ImageUrl))]
-    public partial ProductDto MapToSummary(Product product);
+    [MapProperty(nameof(Product.DefaultProductVariant.Price), nameof(ProductSummaryDto.Price))]
+    [MapProperty(nameof(Product.DefaultProductVariant.SalePrice), nameof(ProductSummaryDto.SalePrice))]
+    [MapProperty(nameof(Product.DefaultProductImage.ImageUrl), nameof(ProductSummaryDto.ImageUrl))]
+    public partial ProductSummaryDto MapToSummary(Product product);
 
-    public partial IReadOnlyList<ProductDto> MapToSummaryList(IEnumerable<Product> products);
+    public partial IReadOnlyList<ProductSummaryDto> MapToSummaryList(IEnumerable<Product> products);
 }

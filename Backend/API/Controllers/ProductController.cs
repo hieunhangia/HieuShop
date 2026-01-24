@@ -10,7 +10,7 @@ namespace API.Controllers;
 public class ProductController(ISender sender) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetProducts([FromQuery] SearchProductsPagedSortedQuery query) =>
+    public async Task<IActionResult> SearchProductsPagedSorted([FromQuery] SearchProductsPagedSortedQuery query) =>
         Ok(await sender.Send(query));
 
     [HttpGet("{slug}")]

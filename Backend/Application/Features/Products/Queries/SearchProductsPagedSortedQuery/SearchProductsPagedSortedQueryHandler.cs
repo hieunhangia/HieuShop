@@ -8,9 +8,9 @@ using MediatR;
 namespace Application.Features.Products.Queries.SearchProductsPagedSortedQuery;
 
 public class SearchProductsPagedSortedQueryHandler(IUnitOfWork unitOfWork, ProductMapper mapper)
-    : IRequestHandler<SearchProductsPagedSortedQuery, PagedAndSortedResult<ProductDto>>
+    : IRequestHandler<SearchProductsPagedSortedQuery, PagedAndSortedResult<ProductSummaryDto>>
 {
-    public async Task<PagedAndSortedResult<ProductDto>> Handle(SearchProductsPagedSortedQuery request,
+    public async Task<PagedAndSortedResult<ProductSummaryDto>> Handle(SearchProductsPagedSortedQuery request,
         CancellationToken cancellationToken)
     {
         var pageIndex = request.PageIndex ?? 1;
@@ -28,7 +28,7 @@ public class SearchProductsPagedSortedQueryHandler(IUnitOfWork unitOfWork, Produ
         var pagedProducts =
             await unitOfWork.Products.SearchActiveProductsReadOnlyAsync(request.SearchText, pageIndex, pageSize,
                 sortColumn, sortDirection);
-        return new PagedAndSortedResult<ProductDto>(mapper.MapToSummaryList(pagedProducts.Products),
+        return new PagedAndSortedResult<ProductSummaryDto>(mapper.MapToSummaryList(pagedProducts.Products),
             pagedProducts.TotalCount, pageIndex, pageSize, sortColumn, sortDirection);
     }
 }

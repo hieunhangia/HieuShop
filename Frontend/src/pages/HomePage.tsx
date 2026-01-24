@@ -28,7 +28,7 @@ export default function HomePage() {
                 const [brandsRes, categoriesRes, productsRes] = await Promise.all([
                     brandApi.getBrands({ top: 5 }),
                     categoryApi.getCategories({ top: 5 }),
-                    productApi.getProducts({ 
+                    productApi.searchProductsPagedSorted({ 
                         pageSize: 4, 
                         sortColumn: PRODUCT_SORT_COLUMN.CREATED_AT, 
                         sortDirection: SORT_DIRECTION.DESC 

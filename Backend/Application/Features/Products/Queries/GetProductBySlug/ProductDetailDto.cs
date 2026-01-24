@@ -1,6 +1,6 @@
 namespace Application.Features.Products.Queries.GetProductBySlug;
 
-public class ProductDto
+public class ProductDetailDto
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }

@@ -4,9 +4,9 @@ using MediatR;
 
 namespace Application.Features.Products.Queries.GetProductBySlug;
 
-public class GetProductBySlugQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetProductBySlugQuery, ProductDto>
+public class GetProductBySlugQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetProductBySlugQuery, ProductDetailDto>
 {
-    public async Task<ProductDto> Handle(GetProductBySlugQuery request, CancellationToken cancellationToken)
+    public async Task<ProductDetailDto> Handle(GetProductBySlugQuery request, CancellationToken cancellationToken)
     {
         var product = await unitOfWork.Products.GetBySlugWithDetailsReadOnlyAsync(request.Slug ?? string.Empty);
         if (product == null)
@@ -14,7 +14,7 @@ public class GetProductBySlugQueryHandler(IUnitOfWork unitOfWork) : IRequestHand
             throw new NotFoundException("Không tìm thấy sản phẩm với slug đã cho.");
         }
 
-        return new ProductDto
+        return new ProductDetailDto
         {
             Id = product.Id,
             Name = product.Name,

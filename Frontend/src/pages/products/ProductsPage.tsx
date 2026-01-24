@@ -32,7 +32,7 @@ export default function ProductsPage() {
         const fetchProducts = async () => {
             setIsLoading(true);
             try {
-                const response = await productApi.getProducts({
+                const response = await productApi.searchProductsPagedSorted({
                     searchText,
                     pageIndex,
                     pageSize,
