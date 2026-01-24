@@ -6,7 +6,7 @@ namespace Infrastructure.Data.Repositories.Products;
 
 public class BrandRepository(AppDbContext context) : GenericRepository<Brand, Guid>(context), IBrandRepository
 {
-    public async Task<IEnumerable<Brand>> QueryActiveBrandsReadOnlyAsync(int top) =>
+    public async Task<IReadOnlyList<Brand>> GetTopActiveBrandsReadOnlyAsync(int top) =>
         await Context.Brands.AsNoTracking()
             .OrderBy(b => b.DisplayOrder)
             .Take(top)

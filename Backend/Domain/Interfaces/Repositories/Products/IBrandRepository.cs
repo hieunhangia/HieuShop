@@ -4,5 +4,5 @@ namespace Domain.Interfaces.Repositories.Products;
 
 public interface IBrandRepository : IGenericRepository<Brand, Guid>
 {
-    Task<IEnumerable<Brand>> QueryActiveBrandsReadOnlyAsync(int top);
+    Task<IReadOnlyList<Brand>> GetTopActiveBrandsReadOnlyAsync(int top);
 }

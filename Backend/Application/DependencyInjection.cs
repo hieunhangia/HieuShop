@@ -24,9 +24,9 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         });
-        builder.Services.AddSingleton<ProductMapper>();
 
-        builder.Services.AddScoped<IBrandService, BrandService>();
-        builder.Services.AddScoped<ICategoryService, CategoryService>();
+        builder.Services.AddSingleton<ProductMapper>();
+        builder.Services.AddSingleton<CategoryMapper>();
+        builder.Services.AddSingleton<BrandMapper>();
     }
 }

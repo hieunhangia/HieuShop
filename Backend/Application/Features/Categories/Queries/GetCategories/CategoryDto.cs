@@ -1,6 +1,6 @@
-namespace Application.Features.Categories.DTOs;
+namespace Application.Features.Categories.Queries.GetCategories;
 
-public class CategoryResponse
+public class CategoryDto
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }

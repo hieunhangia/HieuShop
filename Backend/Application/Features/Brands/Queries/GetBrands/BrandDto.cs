@@ -1,6 +1,6 @@
-namespace Application.Features.Brands.DTOs;
+namespace Application.Features.Brands.Queries.GetBrands;
 
-public class BrandResponse
+public class BrandDto
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }
