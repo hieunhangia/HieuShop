@@ -16,7 +16,10 @@ public static class DependencyInjection
         builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         builder.Services.AddScoped<IIdentityService, IdentityService>();
+
         builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddSingleton<ProductMapper>();
+
         builder.Services.AddScoped<IBrandService, BrandService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
     }

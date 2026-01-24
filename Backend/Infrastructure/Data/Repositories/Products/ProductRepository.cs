@@ -8,29 +8,32 @@ namespace Infrastructure.Data.Repositories.Products;
 
 public class ProductRepository(AppDbContext context) : GenericRepository<Product, Guid>(context), IProductRepository
 {
-    public async Task<(IEnumerable<Product> Products, int TotalCount)> QueryActiveProductsReadOnlyAsync(
+    public async Task<(IReadOnlyList<Product> Products, int TotalCount)> QueryActiveProductsReadOnlyAsync(
         string? searchText, int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
     {
-        searchText = searchText?.Trim() ?? string.Empty;
-        var queryable = Context.Products.AsNoTracking()
-            .Include(p => p.DefaultProductImage)
-            .Include(p => p.DefaultProductVariant)
-            .Include(p => p.Brand)
-            .Include(p => p.Categories)
-            .Where(p => p.IsActive &&
-                        (
-                            p.Name.Contains(searchText) ||
-                            (p.Brand!.IsActive && p.Brand!.Name.Contains(searchText)) ||
-                            p.Categories!.Any(c => c.IsActive && c.Name.Contains(searchText))
-                        )
-            )
-            .OrderBy(sortColumn, sortDirection);
+        var query = Context.Products.AsNoTracking()
+            .Where(p => p.IsActive);
 
-        return (await queryable
+        searchText = searchText?.Trim();
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            query = query.Where(p => p.Name.Contains(searchText));
+        }
+
+        var totalCount = await query.CountAsync();
+        if (totalCount == 0)
+        {
+            return ([], 0);
+        }
+
+        return (await query
+                .Include(p => p.DefaultProductImage)
+                .Include(p => p.DefaultProductVariant)
+                .OrderBy(sortColumn, sortDirection)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(),
-            await queryable.CountAsync());
+            totalCount);
     }
 
     public async Task<Product?> GetBySlugWithDetailsReadOnlyAsync(string slug) =>

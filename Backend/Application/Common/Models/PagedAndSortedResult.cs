@@ -3,14 +3,14 @@ using Domain.Enums;
 namespace Application.Common.Models;
 
 public class PagedAndSortedResult<T>(
-    List<T> items,
+    IReadOnlyList<T> items,
     int totalCount,
     int pageIndex,
     int pageSize,
     string sortColumn,
     SortDirection sortDirection)
 {
-    public List<T> Items { get; set; } = items;
+    public IReadOnlyList<T> Items { get; set; } = items;
     public int TotalCount { get; set; } = totalCount;
     public int PageIndex { get; set; } = pageIndex;
     public int PageSize { get; set; } = pageSize;

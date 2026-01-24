@@ -3,6 +3,7 @@ using Application.Common.Models;
 using Application.Features.Products.DTOs;
 using Application.Features.Products.Enums;
 using Domain.Entities.Products;
+using Domain.Enums;
 using Domain.Interfaces;
 using FluentValidation;
 using ValidationException = Application.Common.Exceptions.ValidationException;
@@ -11,6 +12,7 @@ namespace Application.Features.Products;
 
 public class ProductService(
     IUnitOfWork unitOfWork,
+    ProductMapper mapper,
     IValidator<GetProductsQuery> getProductsQueryValidator) : IProductService
 {
     public async Task<PagedAndSortedResult<ProductSummaryResponse>> QueryActiveProductsAsync(
@@ -22,6 +24,9 @@ public class ProductService(
             throw new ValidationException(validationResult.Errors);
         }
 
+        var pageIndex = query.PageIndex ?? 1;
+        var pageSize = query.PageSize ?? 10;
+        query.SortColumn ??= ProductSortColumn.CreatedAt;
         var sortColumn = query.SortColumn switch
         {
             ProductSortColumn.Name => nameof(Product.Name),
@@ -29,21 +34,13 @@ public class ProductService(
                 $"{nameof(Product.DefaultProductVariant)}.{nameof(Product.DefaultProductVariant.Price)}",
             _ => nameof(Product.CreatedAt)
         };
+        var sortDirection = query.SortDirection ?? SortDirection.Asc;
 
-        var pagedProducts = await unitOfWork.Products.QueryActiveProductsReadOnlyAsync(query.SearchText,
-            query.PageIndex, query.PageSize, sortColumn, query.SortDirection);
-        return new PagedAndSortedResult<ProductSummaryResponse>(
-            pagedProducts.Products.Select(product => new ProductSummaryResponse
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Slug = product.Slug,
-                Price = product.DefaultProductVariant!.Price,
-                SalePrice = product.DefaultProductVariant.SalePrice,
-                ImageUrl = product.DefaultProductImage!.ImageUrl
-            }).ToList(),
-            pagedProducts.TotalCount, query.PageIndex, query.PageSize,
-            query.SortColumn.ToString(), query.SortDirection);
+        var pagedProducts =
+            await unitOfWork.Products.QueryActiveProductsReadOnlyAsync(query.SearchText, pageIndex, pageSize,
+                sortColumn, sortDirection);
+        return new PagedAndSortedResult<ProductSummaryResponse>(mapper.MapToSummaryList(pagedProducts.Products),
+            pagedProducts.TotalCount, pageIndex, pageSize, sortColumn, sortDirection);
     }
 
     public async Task<ProductDetailResponse?> GetProductBySlugAsync(string slug)
