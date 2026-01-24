@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { PAGES } from '../../config/page';
-import { USER_ROLES } from '../../types/enums/userRoles';
+import { USER_ROLES } from '../../types/common/enums/userRoles';
 import { Loader } from 'lucide-react';
 
 export default function SupportStaffOnlyRoute() {
