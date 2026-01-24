@@ -1,20 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { identityApi } from '../api/identityApi';
-
-interface User {
-    email: string;
-    isEmailConfirmed: boolean;
-    hasPassword: boolean;
-    roles: string[];
-}
+import type { LoginRequest, RegisterRequest } from '../api/identityApi';
+import type { User } from '../types/identity/User';
 
 interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
     isLoading: boolean;
-    login: (data: any) => Promise<void>;
+    login: (data: LoginRequest) => Promise<void>;
     loginWithGoogle: (token: string) => Promise<void>;
-    register: (data: any) => Promise<void>;
+    register: (data: RegisterRequest) => Promise<void>;
     logout: () => Promise<void>;
     checkAuth: () => Promise<void>;
 }
@@ -40,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         checkAuth();
     }, []);
 
-    const login = async (data: any) => {
+    const login = async (data: LoginRequest) => {
         await identityApi.cookieLogin(data);
         await checkAuth();
     };
@@ -50,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await checkAuth();
     };
 
-    const register = async (data: any) => {
+    const register = async (data: RegisterRequest) => {
         await identityApi.register(data);
     };
 
