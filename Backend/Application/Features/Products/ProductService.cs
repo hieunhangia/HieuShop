@@ -42,7 +42,8 @@ public class ProductService(
                 SalePrice = product.DefaultProductVariant.SalePrice,
                 ImageUrl = product.DefaultProductImage!.ImageUrl
             }).ToList(),
-            pagedProducts.TotalCount, query.PageIndex, query.PageSize, query.SortDirection);
+            pagedProducts.TotalCount, query.PageIndex, query.PageSize,
+            query.SortColumn.ToString(), query.SortDirection);
     }
 
     public async Task<ProductDetailResponse?> GetProductBySlugAsync(string slug)

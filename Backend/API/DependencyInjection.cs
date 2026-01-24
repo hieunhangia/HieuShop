@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using API.Infrastructure;
 using API.Services;
 using Application.Common.Interfaces;
@@ -12,7 +13,11 @@ public static class DependencyInjection
 
         builder.Services.AddProblemDetails();
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
         builder.Services.AddOpenApi();
 
