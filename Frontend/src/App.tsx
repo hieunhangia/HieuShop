@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import HomePage from './pages/HomePage';
+import ProductsPage from './pages/products/ProductsPage';
 import LoginPage from './pages/identity/LoginPage';
 import RegisterPage from './pages/identity/RegisterPage';
 import ConfirmEmailPage from './pages/identity/ConfirmEmailPage';
@@ -25,6 +26,9 @@ function App() {
         <Router>
           <Routes>
             <Route path={PAGES.HOME.PATH} element={<HomePage />} />
+            <Route path={PAGES.PRODUCTS.PATH} element={<ProductsPage />} />
+            <Route path={PAGES.BRAND_PRODUCTS.PATH} element={<ProductsPage />} />
+            <Route path={PAGES.CATEGORY_PRODUCTS.PATH} element={<ProductsPage />} />
 
             <Route element={<GuestOnlyRoute />}>
               <Route path={PAGES.IDENTITY.LOGIN.PATH} element={<LoginPage />} />

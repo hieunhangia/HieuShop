@@ -3,6 +3,18 @@ export const PAGES = {
     PATH: "/",
     TITLE: "Trang chủ",
   },
+  PRODUCTS: {
+    PATH: "/products",
+    TITLE: "Sản phẩm",
+  },
+  BRAND_PRODUCTS: {
+    PATH: "/brands/:slug/products",
+    TITLE: "Sản phẩm theo thương hiệu",
+  },
+  CATEGORY_PRODUCTS: {
+    PATH: "/categories/:slug/products",
+    TITLE: "Sản phẩm theo danh mục",
+  },
   IDENTITY: {
     LOGIN: {
       PATH: "/login",
