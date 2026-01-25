@@ -1,4 +1,5 @@
 using Application.Common.Models;
+using Application.Features.Products.DTOs;
 using Application.Features.Products.Enums;
 using Domain.Enums;
 using MediatR;

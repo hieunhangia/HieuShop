@@ -1,4 +1,4 @@
-using Application.Features.Products.Queries.SearchProductsPagedSorted;
+using Application.Features.Products.DTOs;
 using Domain.Entities.Products;
 using Riok.Mapperly.Abstractions;
 
