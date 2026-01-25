@@ -17,7 +17,11 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
         searchText = searchText?.Trim();
         if (!string.IsNullOrWhiteSpace(searchText))
         {
-            query = query.Where(p => p.Name.Contains(searchText));
+            query = query.Where(p =>
+                p.Name.Contains(searchText) ||
+                p.Brand!.Name.Contains(searchText) ||
+                p.Categories!.Any(c => c.Name.Contains(searchText))
+            );
         }
 
         var totalCount = await query.CountAsync();
