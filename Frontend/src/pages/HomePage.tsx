@@ -85,7 +85,7 @@ export default function HomePage() {
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                             {categories.map((category) => (
                                 <Link 
-                                    to={PAGES.CATEGORY_PRODUCTS.PATH.replace(':slug', category.slug)} 
+                                    to={PAGES.PRODUCTS_BY_SLUG.PATH.replace(':slug', category.slug)} 
                                     key={category.id} 
                                     className="group relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 aspect-[4/3] flex items-center justify-center p-4 hover:shadow-lg transition-all"
                                 >
@@ -110,7 +110,7 @@ export default function HomePage() {
                         <div className="flex flex-wrap gap-4 justify-center md:justify-between items-center py-4">
                             {brands.map((brand) => (
                                 <Link 
-                                    to={PAGES.BRAND_PRODUCTS.PATH.replace(':slug', brand.slug)} 
+                                    to={PAGES.PRODUCTS_BY_SLUG.PATH.replace(':slug', brand.slug)} 
                                     key={brand.id} 
                                     className="grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
                                 >

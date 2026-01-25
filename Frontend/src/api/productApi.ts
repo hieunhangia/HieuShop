@@ -17,9 +17,18 @@ interface SearchProductsPagedSortedQuery {
   sortDirection?: SortDirectionType;
 }
 
+export interface SearchProductsBySlugQuery extends SearchProductsPagedSortedQuery {
+  slug?: string;
+}
+
 export const productApi = {
   searchProductsPagedSorted: (query: SearchProductsPagedSortedQuery) =>
     axiosClient.get<PagedResult<ProductSummary>>("/products", {
+      params: query,
+    }),
+
+  getProductsBySlug: (slug: string, query: SearchProductsPagedSortedQuery) =>
+    axiosClient.get<PagedResult<ProductSummary>>(`/${slug}/products`, {
       params: query,
     }),
 

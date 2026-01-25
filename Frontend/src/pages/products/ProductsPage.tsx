@@ -5,11 +5,12 @@ import { productApi } from '../../api/productApi';
 import { type ProductSummary } from '../../types/products/product';
 import { PRODUCT_SORT_COLUMN } from '../../types/products/enums/productSortColumn';
 import { SORT_DIRECTION } from '../../types/common/enums/sortDirection';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams } from 'react-router-dom';
 import { Search, Filter, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Loader } from 'lucide-react';
 import ProductCard from '../../components/products/ProductCard';
 
 export default function ProductsPage() {
+    const { slug } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
     
     // State for data
@@ -25,20 +26,32 @@ export default function ProductsPage() {
     const sortDirection = searchParams.get('sortDir') || SORT_DIRECTION.DESC;
 
     useEffect(() => {
-        document.title = `${PAGES.PRODUCTS.TITLE} | HieuShop`;
-    }, []);
+        document.title = `${slug ? 'Danh sách sản phẩm' : PAGES.PRODUCTS.TITLE} | HieuShop`;
+    }, [slug]);
 
     useEffect(() => {
         const fetchProducts = async () => {
             setIsLoading(true);
             try {
-                const response = await productApi.searchProductsPagedSorted({
-                    searchText,
-                    pageIndex,
-                    pageSize,
-                    sortColumn: sortColumn as any,
-                    sortDirection: sortDirection as any
-                });
+                let response;
+                if (slug) {
+                    response = await productApi.getProductsBySlug(slug, {
+                         searchText,
+                         pageIndex,
+                         pageSize,
+                         sortColumn: sortColumn as any,
+                         sortDirection: sortDirection as any
+                    });
+                } else {
+                     response = await productApi.searchProductsPagedSorted({
+                        searchText,
+                        pageIndex,
+                        pageSize,
+                        sortColumn: sortColumn as any,
+                        sortDirection: sortDirection as any
+                    });
+                }
+
                 setProducts(response.data.items);
                 setTotalCount(response.data.totalCount);
             } catch (error) {
@@ -49,7 +62,7 @@ export default function ProductsPage() {
         };
 
         fetchProducts();
-    }, [searchText, pageIndex, sortColumn, sortDirection]);
+    }, [slug, searchText, pageIndex, sortColumn, sortDirection]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newText = e.target.value;

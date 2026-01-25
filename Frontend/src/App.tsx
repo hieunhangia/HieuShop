@@ -27,8 +27,7 @@ function App() {
           <Routes>
             <Route path={PAGES.HOME.PATH} element={<HomePage />} />
             <Route path={PAGES.PRODUCTS.PATH} element={<ProductsPage />} />
-            <Route path={PAGES.BRAND_PRODUCTS.PATH} element={<ProductsPage />} />
-            <Route path={PAGES.CATEGORY_PRODUCTS.PATH} element={<ProductsPage />} />
+            <Route path={PAGES.PRODUCTS_BY_SLUG.PATH} element={<ProductsPage />} />
 
             <Route element={<GuestOnlyRoute />}>
               <Route path={PAGES.IDENTITY.LOGIN.PATH} element={<LoginPage />} />

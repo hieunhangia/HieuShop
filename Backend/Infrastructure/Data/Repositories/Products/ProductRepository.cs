@@ -40,6 +40,43 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
             totalCount);
     }
 
+    public async Task<(IReadOnlyList<Product> Products, int TotalCount)> SearchActiveProductsBySlugReadOnlyAsync(
+        string slug, string? searchText, int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
+    {
+        var query = Context.Products.AsNoTracking()
+            .Where(p =>
+                p.IsActive && (
+                    p.Brand!.Slug == slug ||
+                    p.Categories!.Any(c => c.Slug == slug)
+                )
+            );
+
+        searchText = searchText?.Trim();
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            query = query.Where(p =>
+                p.Name.Contains(searchText) ||
+                p.Brand!.Name.Contains(searchText) ||
+                p.Categories!.Any(c => c.Name.Contains(searchText))
+            );
+        }
+
+        var totalCount = await query.CountAsync();
+        if (totalCount == 0)
+        {
+            return ([], 0);
+        }
+
+        return (await query
+                .Include(p => p.DefaultProductImage)
+                .Include(p => p.DefaultProductVariant)
+                .OrderBy(sortColumn, sortDirection)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(),
+            totalCount);
+    }
+
     public async Task<Product?> GetBySlugWithDetailsReadOnlyAsync(string slug) =>
         await Context.Products.AsNoTracking()
             .AsSplitQuery()

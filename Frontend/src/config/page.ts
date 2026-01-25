@@ -7,13 +7,9 @@ export const PAGES = {
     PATH: "/products",
     TITLE: "Sản phẩm",
   },
-  BRAND_PRODUCTS: {
-    PATH: "/brands/:slug/products",
-    TITLE: "Sản phẩm theo thương hiệu",
-  },
-  CATEGORY_PRODUCTS: {
-    PATH: "/categories/:slug/products",
-    TITLE: "Sản phẩm theo danh mục",
+  PRODUCTS_BY_SLUG: {
+    PATH: "/:slug/products",
+    TITLE: "Sản phẩm",
   },
   IDENTITY: {
     LOGIN: {
