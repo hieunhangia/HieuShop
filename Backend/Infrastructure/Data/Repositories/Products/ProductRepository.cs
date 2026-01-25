@@ -86,5 +86,7 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
             .Include(p => p.Categories!.Where(c => c.IsActive))
             .Include(p => p.ProductOptions!.Where(po => po.IsActive))
             .ThenInclude(po => po.ProductOptionValues!.Where(pov => pov.IsActive))
+            .Include(p => p.ProductVariants)!
+            .ThenInclude(pv => pv.ProductOptionValues)
             .FirstOrDefaultAsync(p => p.Slug == slug);
 }
