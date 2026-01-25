@@ -4,12 +4,18 @@ export const PAGES = {
     TITLE: "Trang chủ",
   },
   PRODUCTS: {
-    PATH: "/products",
-    TITLE: "Sản phẩm",
-  },
-  PRODUCTS_BY_SLUG: {
-    PATH: "/:slug/products",
-    TITLE: "Sản phẩm",
+    ALL: {
+      PATH: "/products",
+      TITLE: "Sản phẩm",
+    },
+    BY_SLUG: {
+      PATH: "/:slug/products",
+      TITLE: "Sản phẩm theo danh mục",
+    },
+    DETAIL: {
+      PATH: "/products/:slug",
+      TITLE: "Chi tiết sản phẩm",
+    },
   },
   IDENTITY: {
     LOGIN: {
