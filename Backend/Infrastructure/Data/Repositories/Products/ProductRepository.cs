@@ -31,8 +31,7 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
         }
 
         return (await query
-                .Include(p => p.DefaultProductImage)
-                .Include(p => p.DefaultProductVariant)
+                .Include(p => p.ProductImages)
                 .OrderBy(sortColumn, sortDirection)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -68,8 +67,7 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
         }
 
         return (await query
-                .Include(p => p.DefaultProductImage)
-                .Include(p => p.DefaultProductVariant)
+                .Include(p => p.ProductImages)
                 .OrderBy(sortColumn, sortDirection)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -81,7 +79,6 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
         await Context.Products.AsNoTracking()
             .AsSplitQuery()
             .Include(x => x.ProductImages)
-            .Include(x => x.DefaultProductVariant)
             .Include(p => p.Brand)
             .Include(p => p.Categories!.Where(c => c.IsActive))
             .Include(p => p.ProductOptions!.Where(po => po.IsActive))

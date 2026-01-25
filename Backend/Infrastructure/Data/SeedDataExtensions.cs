@@ -579,20 +579,6 @@ public static class SeedDataExtensions
 
         await dbContext.SaveChangesAsync();
 
-        foreach (var product in notExistingProducts)
-        {
-            if (product.ProductVariants == null || product.ProductVariants.Count == 0) continue;
-            var defaultVariant = product.ProductVariants.First();
-            product.DefaultProductVariantId = defaultVariant.Id;
-        }
-
-        foreach (var product in notExistingProducts)
-        {
-            if (product.ProductImages == null || product.ProductImages.Count == 0) continue;
-            var defaultImage = product.ProductImages.First();
-            product.DefaultProductImageId = defaultImage.Id;
-        }
-
         await dbContext.SaveChangesAsync();
     }
 
@@ -622,11 +608,17 @@ public static class SeedDataExtensions
             Description = desc,
             IsActive = true,
             ProductImages =
-                [new ProductImage { ImageUrl = "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e" }],
+            [
+                new ProductImage
+                    { ImageUrl = "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e", DisplayOrder = 1 }
+            ],
+            MainImageUrl = "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e",
             BrandId = brandId,
             Categories = categories,
             ProductOptions = new List<ProductOption>(),
-            ProductVariants = new List<ProductVariant>()
+            ProductVariants = new List<ProductVariant>(),
+            MinPrice = 0,
+            MaxPrice = 0
         };
 
         var optColor = new ProductOption
@@ -712,25 +704,22 @@ public static class SeedDataExtensions
                     if (ramVal.Value != "Null") variantOptions.Add(ramVal);
 
                     var finalPrice = basePrice + storageSurcharge + ramSurcharge;
-                    long? salePrice = null;
-                    if (rd.NextDouble() < 0.36)
-                    {
-                        var discountPercent = rd.Next(5, 36);
-                        salePrice = finalPrice - (finalPrice * discountPercent / 100);
-                    }
 
                     var variant = new ProductVariant
                     {
                         Id = Guid.NewGuid(),
                         Price = finalPrice,
-                        SalePrice = salePrice,
                         AvailableStock = rd.Next(36, 169),
+                        ImageUrl = product.MainImageUrl,
                         ProductOptionValues = variantOptions
                     };
                     product.ProductVariants.Add(variant);
                 }
             }
         }
+
+        product.MinPrice = product.ProductVariants.Min(v => v.Price);
+        product.MaxPrice = product.ProductVariants.Max(v => v.Price);
 
         return product;
     }

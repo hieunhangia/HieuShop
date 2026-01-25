@@ -20,8 +20,7 @@ public class SearchProductsPagedSortedBySlugQueryHandler(IUnitOfWork unitOfWork,
         var sortColumn = request.SortColumn switch
         {
             ProductSortColumn.Name => nameof(Product.Name),
-            ProductSortColumn.Price =>
-                $"{nameof(Product.DefaultProductVariant)}.{nameof(Product.DefaultProductVariant.Price)}",
+            ProductSortColumn.Price => $"{nameof(Product.MinPrice)}",
             _ => nameof(Product.CreatedAt)
         };
         var sortDirection = request.SortDirection ?? SortDirection.Asc;

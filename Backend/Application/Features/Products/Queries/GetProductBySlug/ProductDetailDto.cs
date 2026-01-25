@@ -6,7 +6,6 @@ public class ProductDetailDto
     public required string Name { get; set; }
     public required string Slug { get; set; }
     public required string Description { get; set; }
-    public required Guid DefaultProductVariantId { get; set; }
     public BrandDto? Brand { get; set; }
     public required List<CategoryDto> Categories { get; set; }
     public required List<ProductOptionDto> ProductOptions { get; set; }
@@ -44,8 +43,8 @@ public class ProductDetailDto
     {
         public required Guid Id { get; set; }
         public required long Price { get; set; }
-        public long? SalePrice { get; set; }
         public required int AvailableStock { get; set; }
+        public required string ImageUrl { get; set; }
         public required List<ProductOptionValueDto> ProductOptionValues { get; set; }
     }
 
@@ -53,5 +52,6 @@ public class ProductDetailDto
     {
         public required Guid Id { get; set; }
         public required string ImageUrl { get; set; }
+        public required int DisplayOrder { get; set; }
     }
 }
