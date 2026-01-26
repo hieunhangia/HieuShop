@@ -27,7 +27,4 @@ export const productApi = {
     axiosClient.get<PagedResult<ProductSummary>>(`/${slug}/products`, {
       params: query,
     }),
-
-  getProductBySlug: (slug: string) =>
-    axiosClient.get<ProductSummary>(`/products/${slug}`),
 };
