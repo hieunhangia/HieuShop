@@ -28,7 +28,7 @@ export default function HomePage() {
         const [brandsRes, categoriesRes, productsRes] = await Promise.all([
           brandApi.getBrands({ top: 5 }),
           categoryApi.getCategories({ top: 5 }),
-          productApi.searchProductsPagedSorted({
+          productApi.searchProducts({
             pageSize: 4,
             sortColumn: PRODUCT_SORT_COLUMN.CREATED_AT,
             sortDirection: SORT_DIRECTION.DESC,
@@ -85,7 +85,7 @@ export default function HomePage() {
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               {categories.map((category) => (
                 <Link
-                  to={PAGES.PRODUCTS.BY_SLUG.PATH.replace(
+                  to={PAGES.CATEGORIES.PRODUCTS.PATH.replace(
                     ":slug",
                     category.slug,
                   )}
@@ -119,7 +119,7 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-4 justify-center md:justify-between items-center py-4">
               {brands.map((brand) => (
                 <Link
-                  to={PAGES.PRODUCTS.BY_SLUG.PATH.replace(":slug", brand.slug)}
+                  to={PAGES.BRANDS.PRODUCTS.PATH.replace(":slug", brand.slug)}
                   key={brand.id}
                   className="grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
                 >

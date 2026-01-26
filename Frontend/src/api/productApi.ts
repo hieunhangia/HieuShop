@@ -10,7 +10,7 @@ type ProductSortColumnType =
   (typeof PRODUCT_SORT_COLUMN)[keyof typeof PRODUCT_SORT_COLUMN];
 type SortDirectionType = (typeof SORT_DIRECTION)[keyof typeof SORT_DIRECTION];
 
-interface SearchProductsPagedSortedQuery {
+interface SearchProductsQuery {
   searchText?: string;
   pageIndex?: number;
   pageSize?: number;
@@ -19,15 +19,11 @@ interface SearchProductsPagedSortedQuery {
 }
 
 export const productApi = {
-  searchProductsPagedSorted: (query: SearchProductsPagedSortedQuery) =>
+  searchProducts: (query: SearchProductsQuery) =>
     axiosClient.get<PagedResult<ProductSummary>>("/products", {
       params: query,
     }),
 
-  getProductsBySlug: (slug: string, query: SearchProductsPagedSortedQuery) =>
-    axiosClient.get<PagedResult<ProductSummary>>(`/${slug}/products`, {
-      params: query,
-    }),
   getProductBySlug: async (slug: string): Promise<ProductDetail> => {
     const response = await axiosClient.get(`/products/${slug}`);
     return response.data;

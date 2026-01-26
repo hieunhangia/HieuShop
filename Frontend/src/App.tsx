@@ -27,10 +27,6 @@ function App() {
             <Route path={PAGES.HOME.PATH} element={<HomePage />} />
             <Route path={PAGES.PRODUCTS.ALL.PATH} element={<ProductsPage />} />
             <Route
-              path={PAGES.PRODUCTS.BY_SLUG.PATH}
-              element={<ProductsPage />}
-            />
-            <Route
               path={PAGES.PRODUCTS.DETAIL.PATH}
               element={<ProductDetailPage />}
             />

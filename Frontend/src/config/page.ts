@@ -8,13 +8,21 @@ export const PAGES = {
       PATH: "/products",
       TITLE: "Sản phẩm",
     },
-    BY_SLUG: {
-      PATH: "/:slug/products",
-      TITLE: "Sản phẩm theo danh mục",
-    },
     DETAIL: {
       PATH: "/products/:slug",
       TITLE: "Chi tiết sản phẩm",
+    },
+  },
+  BRANDS: {
+    PRODUCTS: {
+      PATH: "/brands/:slug/products",
+      TITLE: "Sản phẩm theo thương hiệu",
+    },
+  },
+  CATEGORIES: {
+    PRODUCTS: {
+      PATH: "/categories/:slug/products",
+      TITLE: "Sản phẩm theo danh mục",
     },
   },
   IDENTITY: {
