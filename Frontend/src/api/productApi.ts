@@ -24,6 +24,21 @@ export const productApi = {
       params: query,
     }),
 
+  searchProductsByBrand: (brandSlug: string, query: SearchProductsQuery) =>
+    axiosClient.get<PagedResult<ProductSummary>>(
+      `/brands/${brandSlug}/products`,
+      { params: query },
+    ),
+
+  searchProductsByCategory: (
+    categorySlug: string,
+    query: SearchProductsQuery,
+  ) =>
+    axiosClient.get<PagedResult<ProductSummary>>(
+      `/categories/${categorySlug}/products`,
+      { params: query },
+    ),
+
   getProductBySlug: async (slug: string): Promise<ProductDetail> => {
     const response = await axiosClient.get(`/products/${slug}`);
     return response.data;

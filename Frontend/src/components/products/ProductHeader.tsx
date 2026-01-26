@@ -65,7 +65,7 @@ const ProductHeader = ({ brand, categories }: ProductHeaderProps) => {
     <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 px-1">
       {brand && (
         <Link
-          to={`/${brand.slug}/products`}
+          to={`/brands/${brand.slug}/products`}
           className="group flex items-center gap-4 w-fit p-2 -ml-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300"
         >
           {brand.logoUrl && (
@@ -109,7 +109,7 @@ const ProductHeader = ({ brand, categories }: ProductHeaderProps) => {
             {categories.map((cat) => (
               <Link
                 key={cat.id}
-                to={`/${cat.slug}/products`}
+                to={`/categories/${cat.slug}/products`}
                 onClickCapture={handleLinkClick}
                 draggable={false}
                 className="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-white border border-gray-200 pl-1.5 pr-3 py-1 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 hover:border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 transition-all select-none"

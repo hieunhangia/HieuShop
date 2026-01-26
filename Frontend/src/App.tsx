@@ -4,6 +4,8 @@ import { AuthProvider } from "./context/AuthContext";
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/products/ProductsPage";
 import ProductDetailPage from "./pages/products/ProductDetailPage";
+import ProductsByBrandPage from "./pages/products/ProductsByBrandPage";
+import ProductsByCategoryPage from "./pages/products/ProductsByCategoryPage";
 import LoginPage from "./pages/identity/LoginPage";
 import RegisterPage from "./pages/identity/RegisterPage";
 import ConfirmEmailPage from "./pages/identity/ConfirmEmailPage";
@@ -29,6 +31,14 @@ function App() {
             <Route
               path={PAGES.PRODUCTS.DETAIL.PATH}
               element={<ProductDetailPage />}
+            />
+            <Route
+              path={PAGES.BRANDS.PRODUCTS.PATH}
+              element={<ProductsByBrandPage />}
+            />
+            <Route
+              path={PAGES.CATEGORIES.PRODUCTS.PATH}
+              element={<ProductsByCategoryPage />}
             />
 
             <Route element={<GuestOnlyRoute />}>

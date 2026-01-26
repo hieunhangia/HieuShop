@@ -8,4 +8,6 @@ interface GetBrandsQuery {
 export const brandApi = {
   getBrands: (query: GetBrandsQuery) =>
     axiosClient.get<Brand[]>("/brands", { params: query }),
+
+  getBrandBySlug: (slug: string) => axiosClient.get<Brand>(`/brands/${slug}`),
 };
