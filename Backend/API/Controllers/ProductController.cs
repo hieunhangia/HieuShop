@@ -1,7 +1,7 @@
-using Application.Features.Products.DTOs;
 using Application.Features.Products.Queries.GetProductBySlug;
 using Application.Features.Products.Queries.SearchProducts;
-using Application.Features.Products.Queries.SearchProductsByCatalogSlug;
+using Application.Features.Products.Queries.SearchProductsByBrandSlug;
+using Application.Features.Products.Queries.SearchProductsByCategorySlug;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,33 +12,23 @@ namespace API.Controllers;
 public class ProductController(ISender sender) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> SearchProductsPagedSorted([FromQuery] SearchProductsPagedSortedRequest query)
+    public async Task<IActionResult> SearchProducts([FromQuery] SearchProductsQuery query) =>
+        Ok(await sender.Send(query));
+
+    [HttpGet("/brands/{brandSlug}/products")]
+    public async Task<IActionResult> SearchProductsByBrandSlug([FromRoute] string brandSlug,
+        [FromQuery] SearchProductsByBrandSlugQuery query)
     {
-        var mappedQuery = new SearchProductsQuery
-        {
-            SearchText = query.SearchText,
-            PageIndex = query.PageIndex,
-            PageSize = query.PageSize,
-            SortColumn = query.SortColumn,
-            SortDirection = query.SortDirection
-        };
-        return Ok(await sender.Send(mappedQuery));
+        query.BrandSlug = brandSlug;
+        return Ok(await sender.Send(query));
     }
 
-    [HttpGet("/{slug}/products")]
-    public async Task<IActionResult> GetProductsBySlug([FromRoute] string slug,
-        [FromQuery] SearchProductsPagedSortedRequest query)
+    [HttpGet("/categories/{categorySlug}/products")]
+    public async Task<IActionResult> SearchProductsByCategorySlug([FromRoute] string categorySlug,
+        [FromQuery] SearchProductsByCategorySlugQuery query)
     {
-        var mappedQuery = new SearchProductsBySlugQuery
-        {
-            Slug = slug,
-            SearchText = query.SearchText,
-            PageIndex = query.PageIndex,
-            PageSize = query.PageSize,
-            SortColumn = query.SortColumn,
-            SortDirection = query.SortDirection
-        };
-        return Ok(await sender.Send(mappedQuery));
+        query.CategorySlug = categorySlug;
+        return Ok(await sender.Send(query));
     }
 
     [HttpGet("{slug}")]

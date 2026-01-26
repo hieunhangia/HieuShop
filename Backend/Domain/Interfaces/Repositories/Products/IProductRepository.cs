@@ -8,8 +8,13 @@ public interface IProductRepository : IGenericRepository<Product, Guid>
     Task<(IReadOnlyList<Product> Products, int TotalCount)> SearchActiveProductsReadOnlyAsync(string? searchText,
         int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection);
 
-    Task<(IReadOnlyList<Product> Products, int TotalCount)> SearchActiveProductsBySlugReadOnlyAsync(string slug,
-        string? searchText, int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection);
+    Task<(IReadOnlyList<Product> Products, int TotalCount)> SearchActiveProductsByBrandSlugReadOnlyAsync(
+        string brandSlug, string? searchText,
+        int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection);
+
+    Task<(IReadOnlyList<Product> Products, int TotalCount)> SearchActiveProductsByCategorySlugReadOnlyAsync(
+        string categorySlug, string? searchText,
+        int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection);
 
     Task<Product?> GetBySlugWithDetailsReadOnlyAsync(string slug);
 }

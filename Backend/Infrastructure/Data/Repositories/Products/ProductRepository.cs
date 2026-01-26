@@ -39,16 +39,44 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
             totalCount);
     }
 
-    public async Task<(IReadOnlyList<Product> Products, int TotalCount)> SearchActiveProductsBySlugReadOnlyAsync(
-        string slug, string? searchText, int pageIndex, int pageSize, string sortColumn, SortDirection sortDirection)
+    public async Task<(IReadOnlyList<Product> Products, int TotalCount)> SearchActiveProductsByBrandSlugReadOnlyAsync(
+        string brandSlug, string? searchText, int pageIndex, int pageSize, string sortColumn,
+        SortDirection sortDirection)
     {
         var query = Context.Products.AsNoTracking()
-            .Where(p =>
-                p.IsActive && (
-                    p.Brand!.Slug == slug ||
-                    p.Categories!.Any(c => c.Slug == slug)
-                )
+            .Where(p => p.IsActive && p.Brand!.Slug == brandSlug);
+
+        searchText = searchText?.Trim();
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            query = query.Where(p =>
+                p.Name.Contains(searchText) ||
+                p.Brand!.Name.Contains(searchText) ||
+                p.Categories!.Any(c => c.Name.Contains(searchText))
             );
+        }
+
+        var totalCount = await query.CountAsync();
+        if (totalCount == 0)
+        {
+            return ([], 0);
+        }
+
+        return (await query
+                .Include(p => p.ProductImages)
+                .OrderBy(sortColumn, sortDirection)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(),
+            totalCount);
+    }
+
+    public async Task<(IReadOnlyList<Product> Products, int TotalCount)>
+        SearchActiveProductsByCategorySlugReadOnlyAsync(string categorySlug, string? searchText, int pageIndex,
+            int pageSize, string sortColumn, SortDirection sortDirection)
+    {
+        var query = Context.Products.AsNoTracking()
+            .Where(p => p.IsActive && p.Categories!.Any(c => c.Slug == categorySlug));
 
         searchText = searchText?.Trim();
         if (!string.IsNullOrWhiteSpace(searchText))
