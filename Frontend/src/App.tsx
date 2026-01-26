@@ -3,6 +3,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/products/ProductsPage";
+import ProductDetailPage from "./pages/products/ProductDetailPage";
 import LoginPage from "./pages/identity/LoginPage";
 import RegisterPage from "./pages/identity/RegisterPage";
 import ConfirmEmailPage from "./pages/identity/ConfirmEmailPage";
@@ -28,6 +29,10 @@ function App() {
             <Route
               path={PAGES.PRODUCTS.BY_SLUG.PATH}
               element={<ProductsPage />}
+            />
+            <Route
+              path={PAGES.PRODUCTS.DETAIL.PATH}
+              element={<ProductDetailPage />}
             />
 
             <Route element={<GuestOnlyRoute />}>

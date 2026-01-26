@@ -1,5 +1,6 @@
 import axiosClient from "./axiosClient";
 import type { ProductSummary } from "../types/products/product";
+import type { ProductDetail } from "../types/products/productDetail";
 import type { PagedResult } from "../types/common/pageResult";
 import { PRODUCT_SORT_COLUMN } from "../types/products/enums/productSortColumn";
 import { SORT_DIRECTION } from "../types/common/enums/sortDirection";
@@ -27,4 +28,8 @@ export const productApi = {
     axiosClient.get<PagedResult<ProductSummary>>(`/${slug}/products`, {
       params: query,
     }),
+  getProductBySlug: async (slug: string): Promise<ProductDetail> => {
+    const response = await axiosClient.get(`/products/${slug}`);
+    return response.data;
+  },
 };
