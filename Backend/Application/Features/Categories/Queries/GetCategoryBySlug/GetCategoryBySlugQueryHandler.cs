@@ -1,3 +1,4 @@
+using Application.Common.Exceptions;
 using Application.Features.Categories.DTOs;
 using Domain.Interfaces;
 using MediatR;
@@ -12,6 +13,6 @@ public class GetCategoryBySlugQueryHandler(IUnitOfWork unitOfWork, CategoryMappe
         var category = await unitOfWork.Categories.GetBySlugAsync(request.Slug!);
         return category != null
             ? mapper.MapToDto(category)
-            : throw new KeyNotFoundException($"Không tìm thấy danh mục với slug '{request.Slug}'.");
+            : throw new NotFoundException($"Không tìm thấy danh mục với slug '{request.Slug}'.");
     }
 }
