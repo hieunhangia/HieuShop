@@ -17,6 +17,7 @@ public class ProductDetailDto
         public required Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Slug { get; set; }
+        public required string LogoUrl { get; set; }
     }
 
     public class CategoryDto
@@ -24,6 +25,7 @@ public class ProductDetailDto
         public required Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Slug { get; set; }
+        public required string ImageUrl { get; set; }
     }
 
     public class ProductOptionDto
