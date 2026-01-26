@@ -1,3 +1,4 @@
+using Application.Features.Categories.DTOs;
 using MediatR;
 
 namespace Application.Features.Categories.Queries.GetCategories;

@@ -1,4 +1,4 @@
-using Application.Features.Categories.Queries.GetCategories;
+using Application.Features.Categories.DTOs;
 using Domain.Entities.Products;
 using Riok.Mapperly.Abstractions;
 

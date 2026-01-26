@@ -1,4 +1,4 @@
-namespace Application.Features.Brands.Queries.GetBrands;
+namespace Application.Features.Brands.DTOs;
 
 public class BrandDto
 {

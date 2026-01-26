@@ -11,4 +11,7 @@ public class CategoryRepository(AppDbContext context) : GenericRepository<Catego
             .OrderBy(c => c.DisplayOrder)
             .Take(top)
             .ToListAsync();
+
+    public async Task<Category?> GetBySlugAsync(string slug) =>
+        await Context.Categories.FirstOrDefaultAsync(c => c.Slug == slug);
 }

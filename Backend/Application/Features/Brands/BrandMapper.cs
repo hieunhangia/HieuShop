@@ -1,4 +1,4 @@
-using Application.Features.Brands.Queries.GetBrands;
+using Application.Features.Brands.DTOs;
 using Domain.Entities.Products;
 using Riok.Mapperly.Abstractions;
 

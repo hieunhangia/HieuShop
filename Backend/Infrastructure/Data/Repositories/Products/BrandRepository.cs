@@ -11,4 +11,7 @@ public class BrandRepository(AppDbContext context) : GenericRepository<Brand, Gu
             .OrderBy(b => b.DisplayOrder)
             .Take(top)
             .ToListAsync();
+
+    public async Task<Brand?> GetBySlugAsync(string slug) =>
+        await Context.Brands.FirstOrDefaultAsync(b => b.Slug == slug);
 }

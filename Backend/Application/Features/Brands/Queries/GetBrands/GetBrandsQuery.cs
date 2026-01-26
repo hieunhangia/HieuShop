@@ -1,3 +1,4 @@
+using Application.Features.Brands.DTOs;
 using MediatR;
 
 namespace Application.Features.Brands.Queries.GetBrands;
