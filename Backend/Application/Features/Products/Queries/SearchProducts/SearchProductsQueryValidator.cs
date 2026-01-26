@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace Application.Features.Products.Queries.SearchProductsPagedSorted;
+namespace Application.Features.Products.Queries.SearchProducts;
 
-public class SearchProductsPagedSortedQueryValidator : AbstractValidator<SearchProductsPagedSortedQuery>
+public class SearchProductsQueryValidator : AbstractValidator<SearchProductsQuery>
 {
-    public SearchProductsPagedSortedQueryValidator()
+    public SearchProductsQueryValidator()
     {
         RuleFor(x => x.PageIndex)
             .GreaterThan(0).WithMessage("Trang phải lớn hơn 0.");

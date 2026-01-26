@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace Application.Features.Products.Queries.SearchProductsPagedSortedBySlug;
+namespace Application.Features.Products.Queries.SearchProductsByCatalogSlug;
 
-public class SearchProductsPagedSortedBySlugQueryValidator : AbstractValidator<SearchProductsPagedSortedBySlugQuery>
+public class SearchProductsBySlugQueryValidator : AbstractValidator<SearchProductsBySlugQuery>
 {
-    public SearchProductsPagedSortedBySlugQueryValidator()
+    public SearchProductsBySlugQueryValidator()
     {
         RuleFor(x => x.PageIndex)
             .GreaterThan(0).WithMessage("Trang phải lớn hơn 0.");

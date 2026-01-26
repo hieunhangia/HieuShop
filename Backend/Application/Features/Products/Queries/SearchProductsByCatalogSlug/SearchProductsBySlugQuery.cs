@@ -4,9 +4,9 @@ using Application.Features.Products.Enums;
 using Domain.Enums;
 using MediatR;
 
-namespace Application.Features.Products.Queries.SearchProductsPagedSortedBySlug;
+namespace Application.Features.Products.Queries.SearchProductsByCatalogSlug;
 
-public class SearchProductsPagedSortedBySlugQuery : IRequest<PagedAndSortedResult<ProductSummaryDto>>
+public class SearchProductsBySlugQuery : IRequest<PagedAndSortedResult<ProductSummaryDto>>
 {
     public string? Slug { get; set; }
     public string? SearchText { get; set; }

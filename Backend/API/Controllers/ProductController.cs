@@ -1,7 +1,7 @@
 using Application.Features.Products.DTOs;
 using Application.Features.Products.Queries.GetProductBySlug;
-using Application.Features.Products.Queries.SearchProductsPagedSorted;
-using Application.Features.Products.Queries.SearchProductsPagedSortedBySlug;
+using Application.Features.Products.Queries.SearchProducts;
+using Application.Features.Products.Queries.SearchProductsByCatalogSlug;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +14,7 @@ public class ProductController(ISender sender) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> SearchProductsPagedSorted([FromQuery] SearchProductsPagedSortedRequest query)
     {
-        var mappedQuery = new SearchProductsPagedSortedQuery
+        var mappedQuery = new SearchProductsQuery
         {
             SearchText = query.SearchText,
             PageIndex = query.PageIndex,
@@ -29,7 +29,7 @@ public class ProductController(ISender sender) : ControllerBase
     public async Task<IActionResult> GetProductsBySlug([FromRoute] string slug,
         [FromQuery] SearchProductsPagedSortedRequest query)
     {
-        var mappedQuery = new SearchProductsPagedSortedBySlugQuery
+        var mappedQuery = new SearchProductsBySlugQuery
         {
             Slug = slug,
             SearchText = query.SearchText,

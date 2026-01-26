@@ -6,12 +6,12 @@ using Domain.Enums;
 using Domain.Interfaces;
 using MediatR;
 
-namespace Application.Features.Products.Queries.SearchProductsPagedSorted;
+namespace Application.Features.Products.Queries.SearchProductsByCatalogSlug;
 
-public class SearchProductsPagedSortedQueryHandler(IUnitOfWork unitOfWork, ProductMapper mapper)
-    : IRequestHandler<SearchProductsPagedSortedQuery, PagedAndSortedResult<ProductSummaryDto>>
+public class SearchProductsBySlugQueryHandler(IUnitOfWork unitOfWork, ProductMapper mapper)
+    : IRequestHandler<SearchProductsBySlugQuery, PagedAndSortedResult<ProductSummaryDto>>
 {
-    public async Task<PagedAndSortedResult<ProductSummaryDto>> Handle(SearchProductsPagedSortedQuery request,
+    public async Task<PagedAndSortedResult<ProductSummaryDto>> Handle(SearchProductsBySlugQuery request,
         CancellationToken cancellationToken)
     {
         var pageIndex = request.PageIndex ?? 1;
@@ -26,8 +26,8 @@ public class SearchProductsPagedSortedQueryHandler(IUnitOfWork unitOfWork, Produ
         var sortDirection = request.SortDirection ?? SortDirection.Asc;
 
         var pagedProducts =
-            await unitOfWork.Products.SearchActiveProductsReadOnlyAsync(request.SearchText, pageIndex, pageSize,
-                sortColumn, sortDirection);
+            await unitOfWork.Products.SearchActiveProductsBySlugReadOnlyAsync(request.Slug ?? string.Empty,
+                request.SearchText, pageIndex, pageSize, sortColumn, sortDirection);
         return new PagedAndSortedResult<ProductSummaryDto>(mapper.MapToSummaryList(pagedProducts.Products),
             pagedProducts.TotalCount, pageIndex, pageSize, sortColumn, sortDirection);
     }
