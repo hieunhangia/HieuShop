@@ -1,3 +1,4 @@
+using Application.Common.Exceptions;
 using Domain.Interfaces;
 using MediatR;
 
@@ -7,7 +8,12 @@ public class RemoveCartItemCommandHandler(IUnitOfWork unitOfWork) : IRequestHand
 {
     public async Task Handle(RemoveCartItemCommand request, CancellationToken cancellationToken)
     {
-        await unitOfWork.CartItems.RemoveCartItemAsync(request.UserId, request.ProductVariantId);
+        if (!await unitOfWork.CartItems.IsCartItemBelongToUserAsync(request.UserId, request.CartItemId))
+        {
+            throw new ForbiddenAccessException("Bạn không có quyền xóa mục giỏ hàng này.");
+        }
+
+        await unitOfWork.CartItems.RemoveCartItemAsync(request.CartItemId);
         await unitOfWork.CompleteAsync();
     }
 }

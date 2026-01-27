@@ -7,9 +7,6 @@ namespace Infrastructure.Data.Repositories.Carts;
 
 public class CartItemRepository(AppDbContext context) : GenericRepository<CartItem, Guid>(context), ICartItemRepository
 {
-    public async Task<int> CountCartItemsAsync(Guid userId) =>
-        await Context.CartItems.CountAsync(ci => ci.UserId == userId);
-
     public async Task<(IReadOnlyList<CartItem> CartItems, string? WarningMessage)> GetCartAsync(Guid userId)
     {
         var cartItems = await Context.CartItems
@@ -51,6 +48,12 @@ public class CartItemRepository(AppDbContext context) : GenericRepository<CartIt
             "Giỏ hàng của bạn đã được cập nhật do một số sản phẩm đã không còn khả dụng hoặc số lượng vượt quá tồn kho.");
     }
 
+    public async Task<int> CountCartItemsAsync(Guid userId) =>
+        await Context.CartItems.CountAsync(ci => ci.UserId == userId);
+
+    public async Task<bool> IsCartItemBelongToUserAsync(Guid userId, Guid cartItemId) =>
+        await Context.CartItems.AnyAsync(ci => ci.Id == cartItemId && ci.UserId == userId);
+
     public async Task AddProductVariantToCartAsync(Guid userId, Guid productVariantId)
     {
         if (await Context.ProductVariants.AsNoTracking()
@@ -91,26 +94,30 @@ public class CartItemRepository(AppDbContext context) : GenericRepository<CartIt
         }
         else
         {
-            throw new NotFoundException("Không tìm thấy biến thể sản phẩm.");
+            throw new NotFoundException($"Không tìm thấy biến thể sản phẩm với ID: {productVariantId}.");
         }
     }
 
-    public async Task RemoveCartItemAsync(Guid userId, Guid productVariantId)
+    public async Task RemoveCartItemAsync(Guid cartItemId)
     {
-        if (await Context.CartItems.FirstOrDefaultAsync(ci =>
-                ci.UserId == userId && ci.ProductVariantId == productVariantId) is { } cartItem)
+        if (await Context.CartItems.FirstOrDefaultAsync(ci => ci.Id == cartItemId) is { } cartItem)
         {
             Context.CartItems.Remove(cartItem);
         }
     }
 
-    public async Task UpdateCartItemQuantityAsync(Guid userId, Guid productVariantId, int quantity)
+    public async Task UpdateCartItemQuantityAsync(Guid cartItemId, int quantity)
     {
         if (await Context.CartItems
                 .Include(ci => ci.ProductVariant)
-                .FirstOrDefaultAsync(ci => ci.UserId == userId && ci.ProductVariantId == productVariantId) is
-            { } cartItem)
+                .ThenInclude(pv => pv!.Product)
+                .FirstOrDefaultAsync(ci => ci.Id == cartItemId) is { } cartItem)
         {
+            if (!cartItem.ProductVariant!.Product!.IsActive || !cartItem.ProductVariant.IsActive)
+            {
+                throw new BadRequestException("Không thể cập nhật số lượng sản phẩm vì sản phẩm không khả dụng.");
+            }
+
             if (quantity > cartItem.ProductVariant!.AvailableStock)
             {
                 throw new BadRequestException("Không thể cập nhật số lượng sản phẩm vì vượt quá tồn kho.");

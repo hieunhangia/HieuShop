@@ -1,4 +1,4 @@
-using System.Security.Claims;
+using API.Extensions;
 using Application.Features.Carts.Commands.AddProductVariantToCart;
 using Application.Features.Carts.Commands.RemoveCartItem;
 using Application.Features.Carts.Commands.UpdateCartItemQuantity;
@@ -17,79 +17,44 @@ namespace API.Controllers;
 public class CartController(ISender sender) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetCart()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-        {
-            return Unauthorized();
-        }
+    public async Task<IActionResult> GetCart() => Ok(await sender.Send(new GetCartQuery { UserId = User.GetUserId() }));
 
-        return Ok(await sender.Send(new GetCartQuery { UserId = Guid.Parse(userId) }));
-    }
-
-    [HttpGet]
-    [Route("count")]
-    public async Task<IActionResult> CountCartItems()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-        {
-            return Unauthorized();
-        }
-
-        return Ok(await sender.Send(new CountCartItemsQuery { UserId = Guid.Parse(userId) }));
-    }
+    [HttpGet("count")]
+    public async Task<IActionResult> CountCartItems() =>
+        Ok(await sender.Send(new CountCartItemsQuery { UserId = User.GetUserId() }));
 
     [HttpPost]
-    public async Task<IActionResult> AddProductVariantToCart([FromBody] Guid productVariantId)
+    public async Task<IActionResult> AddProductVariantToCart([FromBody] AddProductVariantToCartRequest request)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-        {
-            return Unauthorized();
-        }
-
         await sender.Send(new AddProductVariantToCartCommand
         {
-            UserId = Guid.Parse(userId),
-            ProductVariantId = productVariantId
+            UserId = User.GetUserId(),
+            ProductVariantId = request.ProductVariantId
         });
         return Ok();
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> RemoveCartItem([FromBody] Guid productVariantId)
+    [HttpPut("{cartItemId:guid}/quantity")]
+    public async Task<IActionResult> UpdateCartItemQuantity([FromRoute] Guid cartItemId,
+        [FromBody] UpdateCartItemQuantityRequest request)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-        {
-            return Unauthorized();
-        }
-
-        await sender.Send(new RemoveCartItemCommand
-        {
-            UserId = Guid.Parse(userId),
-            ProductVariantId = productVariantId
-        });
-        return Ok();
-    }
-
-    [HttpPut]
-    public async Task<IActionResult> UpdateCartItemQuantity([FromBody] UpdateCartItemQuantityCommand command)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-        {
-            return Unauthorized();
-        }
-
         await sender.Send(new UpdateCartItemQuantityCommand
         {
-            UserId = Guid.Parse(userId),
-            ProductVariantId = command.ProductVariantId,
-            NewQuantity = command.NewQuantity
+            UserId = User.GetUserId(),
+            CartItemId = cartItemId,
+            Quantity = request.Quantity
         });
         return Ok();
+    }
+
+    [HttpDelete("{cartItemId:guid}")]
+    public async Task<IActionResult> RemoveCartItem([FromRoute] Guid cartItemId)
+    {
+        await sender.Send(new RemoveCartItemCommand
+        {
+            UserId = User.GetUserId(),
+            CartItemId = cartItemId
+        });
+        return NoContent();
     }
 }

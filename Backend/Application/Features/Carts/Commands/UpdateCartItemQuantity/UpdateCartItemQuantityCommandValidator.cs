@@ -6,9 +6,7 @@ public class UpdateCartItemQuantityCommandValidator : AbstractValidator<UpdateCa
 {
     public UpdateCartItemQuantityCommandValidator()
     {
-        RuleFor(x => x.ProductVariantId)
-            .NotEmpty().WithMessage("ProductVariantId là bắt buộc.");
-        RuleFor(x => x.NewQuantity)
-            .GreaterThan(0).WithMessage("NewQuantity phải lớn hơn 0.");
+        RuleFor(x => x.Quantity)
+            .GreaterThan(0).WithMessage("Quantity phải lớn hơn 0.");
     }
 }

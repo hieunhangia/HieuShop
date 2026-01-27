@@ -1,3 +1,4 @@
+using Application.Common.Exceptions;
 using Domain.Interfaces;
 using MediatR;
 
@@ -8,8 +9,12 @@ public class UpdateCartItemQuantityCommandHandler(IUnitOfWork unitOfWork)
 {
     public async Task Handle(UpdateCartItemQuantityCommand request, CancellationToken cancellationToken)
     {
-        await unitOfWork.CartItems.UpdateCartItemQuantityAsync(request.UserId, request.ProductVariantId,
-            request.NewQuantity);
+        if (!await unitOfWork.CartItems.IsCartItemBelongToUserAsync(request.UserId, request.CartItemId))
+        {
+            throw new ForbiddenAccessException("Bạn không có quyền thay đổi mục giỏ hàng này.");
+        }
+
+        await unitOfWork.CartItems.UpdateCartItemQuantityAsync(request.CartItemId, request.Quantity);
         await unitOfWork.CompleteAsync();
     }
 }
