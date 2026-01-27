@@ -9,13 +9,17 @@ public class ProductVariantConfiguration : IEntityTypeConfiguration<ProductVaria
 {
     public void Configure(EntityTypeBuilder<ProductVariant> builder)
     {
-        builder.HasOne<Product>()
+        builder.Property(pv => pv.ImageUrl)
+            .HasMaxLength(DataSchema.ProductVariant.ImageUrlMaxLength)
+            .IsUnicode(false);
+
+        builder.HasOne(pv => pv.Product)
             .WithMany(p => p.ProductVariants)
-            .HasForeignKey(v => v.ProductId)
+            .HasForeignKey(pv => pv.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasMany(v => v.ProductOptionValues)
+        builder.HasMany(pv => pv.ProductOptionValues)
             .WithMany()
-            .UsingEntity(vov => vov.ToTable("ProductVariantOptionsValues"));
+            .UsingEntity(pvov => pvov.ToTable("ProductVariantOptionsValues"));
     }
 }

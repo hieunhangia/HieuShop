@@ -54,6 +54,11 @@ public static class DataSchema
         public const int ValueMaxLength = 50;
     }
 
+    public static class ProductVariant
+    {
+        public const int ImageUrlMaxLength = ProductImage.ImageUrlMaxLength;
+    }
+
     public static class Order
     {
         public const int OrderCodeLength = 12;
