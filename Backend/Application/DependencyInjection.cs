@@ -1,9 +1,6 @@
 ﻿using System.Reflection;
 using Application.Common.Behaviors;
-using Application.Features.Brands;
-using Application.Features.Categories;
 using Application.Features.Identity;
-using Application.Features.Products;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +22,18 @@ public static class DependencyInjection
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         });
 
-        builder.Services.AddSingleton<ProductMapper>();
-        builder.Services.AddSingleton<CategoryMapper>();
-        builder.Services.AddSingleton<BrandMapper>();
+        builder.Services.AddMappers();
+    }
+}
+
+public static class DependencyInjectionExtensions
+{
+    public static void AddMappers(this IServiceCollection services)
+    {
+        foreach (var type in Assembly.GetExecutingAssembly().GetTypes()
+                     .Where(t => t is { IsClass: true, IsAbstract: false } && t.Name.EndsWith("Mapper")))
+        {
+            services.AddSingleton(type);
+        }
     }
 }
