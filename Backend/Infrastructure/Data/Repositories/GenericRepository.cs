@@ -38,5 +38,12 @@ public class GenericRepository<TEntity, TKey>(AppDbContext context)
 
     public void Update(TEntity entity) => Context.Set<TEntity>().Update(entity);
 
-    public void Delete(TEntity entity) => Context.Set<TEntity>().Remove(entity);
+    public void Delete(TKey id)
+    {
+        var entity = Context.Set<TEntity>().Find(id);
+        if (entity != null)
+        {
+            Context.Set<TEntity>().Remove(entity);
+        }
+    }
 }

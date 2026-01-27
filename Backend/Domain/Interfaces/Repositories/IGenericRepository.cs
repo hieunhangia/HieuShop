@@ -9,5 +9,5 @@ public interface IGenericRepository<TEntity, in TKey> where TEntity : class
     Task<(IReadOnlyList<TEntity> Items, int TotalCount)> GetPagedReadOnlyAsync(int pageNumber, int pageSize);
     void Add(TEntity entity);
     void Update(TEntity entity);
-    void Delete(TEntity entity);
+    void Delete(TKey id);
 }
