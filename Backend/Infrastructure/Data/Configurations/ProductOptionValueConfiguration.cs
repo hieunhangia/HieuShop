@@ -9,12 +9,12 @@ public class ProductOptionValueConfiguration : IEntityTypeConfiguration<ProductO
 {
     public void Configure(EntityTypeBuilder<ProductOptionValue> builder)
     {
-        builder.Property(ov => ov.Value)
+        builder.Property(pov => pov.Value)
             .HasMaxLength(DataSchema.ProductOptionValue.ValueMaxLength);
 
-        builder.HasOne<ProductOption>()
-            .WithMany(o => o.ProductOptionValues)
-            .HasForeignKey(ov => ov.ProductOptionId)
+        builder.HasOne(pov => pov.ProductOption)
+            .WithMany(po => po.ProductOptionValues)
+            .HasForeignKey(pov => pov.ProductOptionId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
