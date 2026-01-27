@@ -1,4 +1,4 @@
-using Application.Features.Carts.Queries.GetCart;
+using Application.Features.Carts.DTOs;
 using Domain.Entities.Carts;
 using Domain.Entities.Products;
 using Riok.Mapperly.Abstractions;

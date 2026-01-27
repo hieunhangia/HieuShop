@@ -9,6 +9,7 @@ namespace Infrastructure.Data;
 public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {
     public IProductRepository Products => field ??= new ProductRepository(context);
+    public IProductVariantRepository ProductVariants => field ??= new ProductVariantRepository(context);
     public IBrandRepository Brands => field ??= new BrandRepository(context);
     public ICategoryRepository Categories => field ??= new CategoryRepository(context);
     public ICartItemRepository CartItems => field ??= new CartItemRepository(context);

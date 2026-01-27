@@ -8,12 +8,16 @@ public class RemoveCartItemCommandHandler(IUnitOfWork unitOfWork) : IRequestHand
 {
     public async Task Handle(RemoveCartItemCommand request, CancellationToken cancellationToken)
     {
-        if (!await unitOfWork.CartItems.IsCartItemBelongToUserAsync(request.UserId, request.CartItemId))
+        var cartItem = await unitOfWork.CartItems.GetByIdAsync(request.CartItemId);
+        if (cartItem != null)
         {
-            throw new ForbiddenAccessException("Bạn không có quyền xóa mục giỏ hàng này.");
-        }
+            if (cartItem.UserId != request.UserId)
+            {
+                throw new ForbiddenAccessException("Bạn không có quyền xóa mục giỏ hàng này.");
+            }
 
-        await unitOfWork.CartItems.RemoveCartItemAsync(request.CartItemId);
-        await unitOfWork.CompleteAsync();
+            unitOfWork.CartItems.Remove(cartItem);
+            await unitOfWork.CompleteAsync();
+        }
     }
 }

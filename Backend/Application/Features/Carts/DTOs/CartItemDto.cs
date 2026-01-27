@@ -1,16 +1,10 @@
-namespace Application.Features.Carts.Queries.GetCart;
-
-public class CartDto
-{
-    public required IReadOnlyList<CartItemDto> CartItems { get; set; }
-    public string? WarningMessage { get; set; }
-}
+namespace Application.Features.Carts.DTOs;
 
 public class CartItemDto
 {
+    public required Guid Id { get; set; }
     public required ProductVariantDto ProductVariant { get; set; }
     public required int Quantity { get; set; }
-
 
     public class ProductVariantDto
     {

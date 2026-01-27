@@ -1,9 +1,9 @@
 using API.Extensions;
 using Application.Features.Carts.Commands.AddProductVariantToCart;
 using Application.Features.Carts.Commands.RemoveCartItem;
+using Application.Features.Carts.Commands.SyncCart;
 using Application.Features.Carts.Commands.UpdateCartItemQuantity;
 using Application.Features.Carts.Queries.CountCartItems;
-using Application.Features.Carts.Queries.GetCart;
 using Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,8 +16,9 @@ namespace API.Controllers;
 [Authorize(Roles = UserRole.Customer)]
 public class CartController(ISender sender) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetCart() => Ok(await sender.Send(new GetCartQuery { UserId = User.GetUserId() }));
+    [HttpPost("sync")]
+    public async Task<IActionResult> SyncCart() =>
+        Ok(await sender.Send(new SyncCartCommand { UserId = User.GetUserId() }));
 
     [HttpGet("count")]
     public async Task<IActionResult> CountCartItems() =>
