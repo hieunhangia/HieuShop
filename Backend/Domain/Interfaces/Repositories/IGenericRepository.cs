@@ -8,6 +8,9 @@ public interface IGenericRepository<TEntity, in TKey> where TEntity : class
     Task<(List<TEntity> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize);
     Task<(IReadOnlyList<TEntity> Items, int TotalCount)> GetPagedReadOnlyAsync(int pageNumber, int pageSize);
     void Add(TEntity entity);
+    void AddRange(IEnumerable<TEntity> entities);
     void Update(TEntity entity);
-    void Delete(TKey id);
+    void Remove(TEntity entity);
+    void RemoveRange(IEnumerable<TEntity> entities);
+    void Remove(TKey id);
 }
