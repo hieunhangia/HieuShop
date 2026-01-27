@@ -8,6 +8,7 @@ public class BrandRepository(AppDbContext context) : GenericRepository<Brand, Gu
 {
     public async Task<IReadOnlyList<Brand>> GetTopActiveBrandsReadOnlyAsync(int top) =>
         await Context.Brands.AsNoTracking()
+            .Where(b => b.IsActive)
             .OrderBy(b => b.DisplayOrder)
             .Take(top)
             .ToListAsync();

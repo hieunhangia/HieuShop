@@ -8,6 +8,7 @@ public class CategoryRepository(AppDbContext context) : GenericRepository<Catego
 {
     public async Task<IReadOnlyList<Category>> GetTopActiveCategoriesReadOnlyAsync(int top) =>
         await Context.Categories.AsNoTracking()
+            .Where(c => c.IsActive)
             .OrderBy(c => c.DisplayOrder)
             .Take(top)
             .ToListAsync();

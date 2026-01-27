@@ -103,15 +103,17 @@ public class ProductRepository(AppDbContext context) : GenericRepository<Product
             totalCount);
     }
 
-    public async Task<Product?> GetBySlugWithDetailsReadOnlyAsync(string slug) =>
-        await Context.Products.AsNoTracking()
+    public async Task<Product?> GetBySlugWithDetailsReadOnlyAsync(string slug)
+    {
+        return await Context.Products.AsNoTracking()
             .AsSplitQuery()
             .Include(x => x.ProductImages)
             .Include(p => p.Brand)
             .Include(p => p.Categories!.Where(c => c.IsActive))
             .Include(p => p.ProductOptions!.Where(po => po.IsActive))
             .ThenInclude(po => po.ProductOptionValues!.Where(pov => pov.IsActive))
-            .Include(p => p.ProductVariants)!
+            .Include(p => p.ProductVariants!.Where(pv => pv.IsActive))
             .ThenInclude(pv => pv.ProductOptionValues)
             .FirstOrDefaultAsync(p => p.Slug == slug);
+    }
 }
