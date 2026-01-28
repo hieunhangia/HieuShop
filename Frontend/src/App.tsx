@@ -8,15 +8,15 @@ import ProductsPage from "./pages/products/ProductsPage";
 import ProductDetailPage from "./pages/products/ProductDetailPage";
 import ProductsByBrandPage from "./pages/products/ProductsByBrandPage";
 import ProductsByCategoryPage from "./pages/products/ProductsByCategoryPage";
-import CartPage from "./pages/carts/CartPage";
+import CartPage from "./pages/user/carts/CartPage";
 import LoginPage from "./pages/identity/LoginPage";
 import RegisterPage from "./pages/identity/RegisterPage";
 import ConfirmEmailPage from "./pages/identity/ConfirmEmailPage";
 import ForgotPasswordPage from "./pages/identity/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/identity/ResetPasswordPage";
-import InfoPage from "./pages/account-management/InfoPage";
-import ChangePasswordPage from "./pages/account-management/ChangePasswordPage";
-import SetPasswordPage from "./pages/account-management/SetPasswordPage";
+import InfoPage from "./pages/user/account-management/InfoPage";
+import ChangePasswordPage from "./pages/user/account-management/ChangePasswordPage";
+import SetPasswordPage from "./pages/user/account-management/SetPasswordPage";
 
 import GuestOnlyRoute from "./components/route-authorization/GuestOnlyRoute";
 import CustomerOnlyRoute from "./components/route-authorization/CustomerOnlyRoute";
@@ -73,16 +73,16 @@ function App() {
               />
 
               <Route element={<CustomerOnlyRoute />}>
-                <Route path={PAGES.ACCOUNT.INFO.PATH} element={<InfoPage />} />
+                <Route path={PAGES.USER.ACCOUNT_MANAGEMENT.INFO.PATH} element={<InfoPage />} />
                 <Route
-                  path={PAGES.ACCOUNT.CHANGE_PASSWORD.PATH}
+                  path={PAGES.USER.ACCOUNT_MANAGEMENT.CHANGE_PASSWORD.PATH}
                   element={<ChangePasswordPage />}
                 />
                 <Route
-                  path={PAGES.ACCOUNT.SET_PASSWORD.PATH}
+                  path={PAGES.USER.ACCOUNT_MANAGEMENT.SET_PASSWORD.PATH}
                   element={<SetPasswordPage />}
                 />
-                <Route path={PAGES.CART.PATH} element={<CartPage />} />
+                <Route path={PAGES.USER.CARTS.PATH} element={<CartPage />} />
               </Route>
 
               <Route

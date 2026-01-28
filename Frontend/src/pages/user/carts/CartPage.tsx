@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Trash2, Minus, Plus, ShoppingBag, ArrowRight } from "lucide-react";
-import MainLayout from "../../layouts/MainLayout";
-import { cartApi } from "../../api/cartApi";
-import type { CartItem } from "../../types/carts/dtos/CartItem";
-import { useCart } from "../../context/CartContext";
+import MainLayout from "../../../layouts/MainLayout";
+import { cartApi } from "../../../api/cartApi";
+import type { CartItem } from "../../../types/carts/dtos/CartItem";
+import { useCart } from "../../../context/CartContext";
 import toast from "react-hot-toast";
-import { parseApiError } from "../../utils/error";
-import { PAGES } from "../../config/page";
+import { parseApiError } from "../../../utils/error";
+import { PAGES } from "../../../config/page";
 
 const CartPage = () => {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -31,7 +31,7 @@ const CartPage = () => {
       }
     };
     fetchCart();
-    document.title = `${PAGES.CART.TITLE} | HieuShop`;
+    document.title = `${PAGES.USER.CARTS.TITLE} | HieuShop`;
   }, []);
 
   const handleQuantityChange = async (id: string, newQuantity: number) => {
@@ -139,7 +139,7 @@ const CartPage = () => {
     <MainLayout>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-          {PAGES.CART.TITLE}
+          {PAGES.USER.CARTS.TITLE}
         </h1>
 
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">

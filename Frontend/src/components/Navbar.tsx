@@ -83,7 +83,7 @@ export default function Navbar() {
 
             {user && user.roles && user.roles.includes(USER_ROLES.CUSTOMER) && (
               <Link
-                to={PAGES.CART.PATH}
+                to={PAGES.USER.CARTS.PATH}
                 className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 transition-colors relative"
                 aria-label="Shopping Cart"
               >
@@ -131,7 +131,7 @@ export default function Navbar() {
                     {user.roles && user.roles.includes(USER_ROLES.CUSTOMER) && (
                       <div className="py-1">
                         <Link
-                          to={PAGES.ACCOUNT.INFO.PATH}
+                          to={PAGES.USER.ACCOUNT_MANAGEMENT.INFO.PATH}
                           className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
                           onClick={() => setIsUserMenuOpen(false)}
                         >
@@ -139,7 +139,7 @@ export default function Navbar() {
                             size={16}
                             className="mr-3 text-gray-400 group-hover:text-brand-500"
                           />
-                          {PAGES.ACCOUNT.INFO.TITLE}
+                          {PAGES.USER.ACCOUNT_MANAGEMENT.INFO.TITLE}
                         </Link>
                       </div>
                     )}
@@ -214,11 +214,11 @@ export default function Navbar() {
                 </div>
                 {user.roles && user.roles.includes(USER_ROLES.CUSTOMER) && (
                   <Link
-                    to={PAGES.ACCOUNT.INFO.PATH}
+                    to={PAGES.USER.ACCOUNT_MANAGEMENT.INFO.PATH}
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {PAGES.ACCOUNT.INFO.TITLE}
+                    {PAGES.USER.ACCOUNT_MANAGEMENT.INFO.TITLE}
                   </Link>
                 )}
                 <button

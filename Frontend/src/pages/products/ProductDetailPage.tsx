@@ -285,7 +285,7 @@ const ProductDetailPage = () => {
                       <span>
                         Thêm vào giỏ hàng thành công!{" "}
                         <Link
-                          to={PAGES.CART.PATH}
+                          to={PAGES.USER.CARTS.PATH}
                           className="font-bold underline"
                         >
                           Xem giỏ hàng

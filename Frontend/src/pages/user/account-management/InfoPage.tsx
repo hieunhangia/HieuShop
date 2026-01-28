@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
-import MainLayout from "../../layouts/MainLayout";
-import { PAGES } from "../../config/page";
+import { useAuth } from "../../../context/AuthContext";
+import MainLayout from "../../../layouts/MainLayout";
+import { PAGES } from "../../../config/page";
 import { Link } from "react-router-dom";
 import { User, Shield, Key, AlertTriangle, Send } from "lucide-react";
-import { identityApi } from "../../api/identityApi";
+import { identityApi } from "../../../api/identityApi";
 import toast from "react-hot-toast";
 
 export default function InfoPage() {
@@ -12,7 +12,7 @@ export default function InfoPage() {
   const [isSending, setIsSending] = useState(false);
 
   React.useEffect(() => {
-    document.title = `${PAGES.ACCOUNT.INFO.TITLE} | HieuShop`;
+    document.title = `${PAGES.USER.ACCOUNT_MANAGEMENT.INFO.TITLE} | HieuShop`;
   }, []);
 
   const handleSendVerificationEmail = async () => {
@@ -121,7 +121,7 @@ export default function InfoPage() {
                 <dd className="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
                   {user.hasPassword ? (
                     <Link
-                      to={PAGES.ACCOUNT.CHANGE_PASSWORD.PATH}
+                      to={PAGES.USER.ACCOUNT_MANAGEMENT.CHANGE_PASSWORD.PATH}
                       className="inline-flex items-center text-brand-600 hover:text-brand-500 font-medium"
                     >
                       <Key className="w-4 h-4 mr-1" />
@@ -129,7 +129,7 @@ export default function InfoPage() {
                     </Link>
                   ) : (
                     <Link
-                      to={PAGES.ACCOUNT.SET_PASSWORD.PATH}
+                      to={PAGES.USER.ACCOUNT_MANAGEMENT.SET_PASSWORD.PATH}
                       className="inline-flex items-center text-brand-600 hover:text-brand-500 font-medium"
                     >
                       <Key className="w-4 h-4 mr-1" />

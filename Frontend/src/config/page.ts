@@ -13,10 +13,6 @@ export const PAGES = {
       TITLE: "Chi tiết sản phẩm",
     },
   },
-  CART: {
-    PATH: "/cart",
-    TITLE: "Giỏ hàng",
-  },
   BRANDS: {
     PRODUCTS: {
       PATH: "/brands/:slug/products",
@@ -51,18 +47,24 @@ export const PAGES = {
       TITLE: "Xác thực Email",
     },
   },
-  ACCOUNT: {
-    INFO: {
-      PATH: "/account/info",
-      TITLE: "Thông tin tài khoản",
+  USER: {
+    ACCOUNT_MANAGEMENT: {
+      INFO: {
+        PATH: "/account/info",
+        TITLE: "Thông tin tài khoản",
+      },
+      CHANGE_PASSWORD: {
+        PATH: "/account/change-password",
+        TITLE: "Đổi mật khẩu",
+      },
+      SET_PASSWORD: {
+        PATH: "/account/set-password",
+        TITLE: "Thiết lập mật khẩu",
+      },
     },
-    CHANGE_PASSWORD: {
-      PATH: "/account/change-password",
-      TITLE: "Đổi mật khẩu",
-    },
-    SET_PASSWORD: {
-      PATH: "/account/set-password",
-      TITLE: "Thiết lập mật khẩu",
+    CARTS: {
+      PATH: "/cart",
+      TITLE: "Giỏ hàng",
     },
   },
 } as const;
