@@ -28,16 +28,16 @@ public static class SeedDataExtensions
 
         await using var transaction = await dbContext.Database.BeginTransactionAsync();
 
-        await SeedRolesAsync(roleManager);
-
-        await SeedUsersAsync(userManager);
+        await SeedIdentityDataAsync(roleManager, userManager);
 
         await SeedProductsDataAsync(dbContext);
 
+        await dbContext.SaveChangesAsync();
         await transaction.CommitAsync();
     }
 
-    private static async Task SeedRolesAsync(RoleManager<IdentityRole<Guid>> roleManager)
+    private static async Task SeedIdentityDataAsync(RoleManager<IdentityRole<Guid>> roleManager,
+        UserManager<AppUser> userManager)
     {
         foreach (var role in UserRole.All)
         {
@@ -52,10 +52,7 @@ public static class SeedDataExtensions
                 throw new Exception($"Create roles failed: {FormatIdentityErrors(roleResult.Errors)}");
             }
         }
-    }
 
-    private static async Task SeedUsersAsync(UserManager<AppUser> userManager)
-    {
         ICollection<(string Email, string Password, bool LockoutEnabled, string[] Roles)> users =
         [
             (
@@ -126,6 +123,11 @@ public static class SeedDataExtensions
                 throw new Exception($"Add roles to user failed: {FormatIdentityErrors(userRoleResult.Errors)}");
             }
         }
+
+        return;
+
+        static string FormatIdentityErrors(IEnumerable<IdentityError> errors) =>
+            string.Join(", ", errors.Select(e => $"{e.Code}: {e.Description}"));
     }
 
     private static async Task SeedProductsDataAsync(AppDbContext dbContext)
@@ -194,7 +196,7 @@ public static class SeedDataExtensions
                 "iPhone 15 Pro Max", "iphone-15-pro-max", "Vỏ Titan, Chip A17 Pro, Nút Action.",
                 34_990_000,
                 [iosCategory, flagshipCategory, cameraCategory, category5g, newCategory],
-                appleBrand.Id,
+                appleBrand,
                 ["Titan Tự Nhiên", "Titan Xanh", "Titan Đen", "Titan Trắng"],
                 ["256GB", "512GB", "1TB"]
             ),
@@ -202,7 +204,7 @@ public static class SeedDataExtensions
                 "iPhone 15 Pro", "iphone-15-pro", "Nhỏ gọn, mạnh mẽ, Titan Grade 5.",
                 29_990_000,
                 [iosCategory, flagshipCategory, cameraCategory, category5g, newCategory],
-                appleBrand.Id,
+                appleBrand,
                 ["Titan Tự Nhiên", "Titan Xanh"],
                 ["128GB", "256GB", "512GB"]
             ),
@@ -210,7 +212,7 @@ public static class SeedDataExtensions
                 "iPhone 15 Plus", "iphone-15-plus", "Màn hình lớn, Pin trâu nhất dòng iPhone.",
                 24_990_000,
                 [iosCategory, flagshipCategory, batteryCategory, category5g, newCategory],
-                appleBrand.Id,
+                appleBrand,
                 ["Hồng", "Vàng", "Xanh lá", "Đen"],
                 ["128GB", "256GB"]
             ),
@@ -218,7 +220,7 @@ public static class SeedDataExtensions
                 "iPhone 15", "iphone-15", "Dynamic Island, Camera 48MP, USB-C.",
                 19_990_000,
                 [iosCategory, flagshipCategory, cameraCategory, category5g, newCategory],
-                appleBrand.Id,
+                appleBrand,
                 ["Hồng", "Xanh Blue", "Đen"],
                 ["128GB", "256GB"]
             ),
@@ -226,7 +228,7 @@ public static class SeedDataExtensions
                 "iPhone 14 Pro Max", "iphone-14-pro-max", "Flagship đời trước, vẫn cực mạnh.",
                 23_990_000,
                 [iosCategory, flagshipCategory, cameraCategory, category5g],
-                appleBrand.Id,
+                appleBrand,
                 ["Tím Deep Purple", "Vàng Gold", "Đen"],
                 ["128GB", "256GB", "512GB", "1TB"]
             ),
@@ -234,7 +236,7 @@ public static class SeedDataExtensions
                 "iPhone 14", "iphone-14", "Thiết kế bền bỉ, pin ổn định.",
                 14_990_000,
                 [iosCategory, midRangeCategory, category5g],
-                appleBrand.Id,
+                appleBrand,
                 ["Tím", "Đỏ", "Xanh", "Trắng"],
                 ["128GB", "256GB"]
             ),
@@ -242,7 +244,7 @@ public static class SeedDataExtensions
                 "iPhone 13", "iphone-13", "Chiếc iPhone quốc dân, giá tốt nhất.",
                 11_990_000,
                 [iosCategory, midRangeCategory, category5g],
-                appleBrand.Id,
+                appleBrand,
                 ["Hồng", "Trắng", "Xanh Midnight"],
                 ["64GB", "128GB"]
             ),
@@ -250,7 +252,7 @@ public static class SeedDataExtensions
                 "iPhone 12", "iphone-12", "Thiết kế vuông vức, màn hình OLED.",
                 9_990_000,
                 [iosCategory, midRangeCategory, category5g],
-                appleBrand.Id,
+                appleBrand,
                 ["Tím", "Xanh Mint", "Đen"],
                 ["64GB", "128GB"]
             ),
@@ -258,7 +260,7 @@ public static class SeedDataExtensions
                 "iPhone SE 2022", "iphone-se-2022", "Nhỏ gọn, nút Home, Chip A15.",
                 7_490_000,
                 [iosCategory, budgetCategory, compactCategory, category5g],
-                appleBrand.Id,
+                appleBrand,
                 ["Đỏ", "Trắng", "Đen"],
                 ["64GB", "128GB", "256GB"]
             ),
@@ -273,7 +275,7 @@ public static class SeedDataExtensions
                 "Quyền năng Galaxy AI, Khung viền Titan, Camera 200MP zoom 100x.",
                 29_990_000,
                 [androidCategory, flagshipCategory, cameraCategory, category5g, newCategory],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xám Titan", "Đen Titan", "Tím Titan", "Vàng Titan"],
                 ["256GB", "512GB", "1TB"]
             ),
@@ -282,7 +284,7 @@ public static class SeedDataExtensions
                 "Màn hình QHD+ sắc nét, Galaxy AI, Pin 4900mAh.",
                 23_990_000,
                 [androidCategory, flagshipCategory, category5g, newCategory],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Đen Onyx", "Xám Marble", "Tím Cobalt", "Vàng Amber"],
                 ["256GB", "512GB"]
             ),
@@ -291,7 +293,7 @@ public static class SeedDataExtensions
                 "Thiết kế nhỏ gọn, hiệu năng mạnh mẽ với Exynos 2400.",
                 19_990_000,
                 [androidCategory, flagshipCategory, compactCategory, category5g],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Đen Onyx", "Xám Marble", "Tím Cobalt", "Vàng Amber"],
                 ["256GB", "512GB"]
             ),
@@ -300,7 +302,7 @@ public static class SeedDataExtensions
                 "Siêu phẩm mắt thần bóng đêm, bút S-Pen quyền năng.",
                 21_990_000,
                 [androidCategory, flagshipCategory, cameraCategory, category5g],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh Botanic", "Đen Phantom", "Tím Lilac", "Kem Cotton"],
                 ["256GB", "512GB"]
             ),
@@ -309,7 +311,7 @@ public static class SeedDataExtensions
                 "Phiên bản Fan Edition, thiết kế cao cấp, hiệu năng ổn định.",
                 11_890_000,
                 [androidCategory, midRangeCategory, category5g],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh Mint", "Trắng Cream", "Xám Graphite", "Tím Purple"],
                 ["128GB", "256GB"]
             ),
@@ -318,7 +320,7 @@ public static class SeedDataExtensions
                 "Gập mở quyền năng AI, thiết kế mỏng nhẹ nhất dòng Fold.",
                 41_990_000,
                 [androidCategory, foldCategory, flagshipCategory, category5g, newCategory],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xám Metal", "Hồng Rosé", "Xanh Navy"],
                 ["256GB", "512GB", "1TB"]
             ),
@@ -327,7 +329,7 @@ public static class SeedDataExtensions
                 "Biểu tượng thời trang, Camera 50MP, FlexCam thông minh.",
                 26_990_000,
                 [androidCategory, foldCategory, compactCategory, flagshipCategory, newCategory],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh Maya", "Vàng Solar", "Xám Metal", "Xanh Mint"],
                 ["256GB", "512GB"]
             ),
@@ -336,7 +338,7 @@ public static class SeedDataExtensions
                 "Bản lề Flex không kẽ hở, đa nhiệm cực đỉnh.",
                 30_990_000,
                 [androidCategory, foldCategory, flagshipCategory, category5g],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh Icy", "Đen Phantom", "Kem Ivory"],
                 ["256GB", "512GB"]
             ),
@@ -345,7 +347,7 @@ public static class SeedDataExtensions
                 "Màn hình phụ Flex Window lớn 3.4 inch tiện lợi.",
                 16_990_000,
                 [androidCategory, foldCategory, compactCategory, midRangeCategory],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh Mint", "Tím Fancy", "Kem Latte", "Xám Indie"],
                 ["256GB", "512GB"]
             ),
@@ -354,7 +356,7 @@ public static class SeedDataExtensions
                 "Viền kim loại sang trọng, chụp đêm Nightography ấn tượng.",
                 9_690_000,
                 [androidCategory, midRangeCategory, category5g, cameraCategory],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Tím Lilac", "Xanh Iceblue", "Xanh Navy"],
                 ["128GB", "256GB"],
                 ["8GB", "12GB"]
@@ -364,7 +366,7 @@ public static class SeedDataExtensions
                 "Mặt lưng kính cao cấp, màn hình Super AMOLED 120Hz.",
                 7_990_000,
                 [androidCategory, midRangeCategory, category5g],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh Iceblue", "Tím Lilac", "Xanh Navy"],
                 ["128GB", "256GB"]
             ),
@@ -373,7 +375,7 @@ public static class SeedDataExtensions
                 "Màn hình Super AMOLED, Camera chống rung OIS.",
                 6_290_000,
                 [androidCategory, midRangeCategory, budgetCategory, category5g],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Vàng", "Xanh", "Đen", "Xanh Nhạt"],
                 rams: ["6GB", "8GB"]
             ),
@@ -382,7 +384,7 @@ public static class SeedDataExtensions
                 "Điện thoại 5G giá rẻ nhất, hiệu năng ổn định.",
                 5_490_000,
                 [androidCategory, budgetCategory, category5g],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Vàng", "Xanh", "Đen"]
             ),
             CreateProduct(
@@ -390,7 +392,7 @@ public static class SeedDataExtensions
                 "Màn hình Super AMOLED sống động, pin 5000mAh.",
                 4_490_000,
                 [androidCategory, budgetCategory, batteryCategory],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Vàng", "Xanh", "Đen"],
                 rams: ["4GB", "6GB", "8GB"]
             ),
@@ -399,7 +401,7 @@ public static class SeedDataExtensions
                 "Chip Snapdragon 680 mạnh mẽ trong tầm giá, màn hình 90Hz.",
                 3_590_000,
                 [androidCategory, budgetCategory, popularCategory],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh", "Bạc", "Đen"],
                 rams: ["4GB", "6GB"]
             ),
@@ -408,7 +410,7 @@ public static class SeedDataExtensions
                 "Màn hình lớn 6.7 inch, sạc nhanh 25W.",
                 2_890_000,
                 [androidCategory, budgetCategory, popularCategory, batteryCategory],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh", "Bạc", "Đen"],
                 rams: ["4GB", "6GB"]
             ),
@@ -417,7 +419,7 @@ public static class SeedDataExtensions
                 "Mãnh thú pin 6000mAh, Camera 108MP chống rung OIS.",
                 8_990_000,
                 [androidCategory, midRangeCategory, batteryCategory, category5g],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh Navy", "Bạc"]
             ),
             CreateProduct(
@@ -425,7 +427,7 @@ public static class SeedDataExtensions
                 "Pin khủng 6000mAh dùng thả ga, màn hình 120Hz.",
                 6_990_000,
                 [androidCategory, budgetCategory, batteryCategory, category5g],
-                samsungBrand.Id,
+                samsungBrand,
                 ["Xanh Midnight", "Xanh Waterfall"]
             ),
 
@@ -435,7 +437,7 @@ public static class SeedDataExtensions
                 "Ống kính Leica huyền thoại, cảm biến 1 inch, quay 8K.",
                 29_990_000,
                 [androidCategory, flagshipCategory, cameraCategory, category5g, newCategory],
-                xiaomiBrand.Id,
+                xiaomiBrand,
                 ["Đen", "Trắng", "Xanh Dragon Crystal"],
                 ["256GB", "512GB"]
             ),
@@ -444,7 +446,7 @@ public static class SeedDataExtensions
                 "Camera 200MP, màn hình cong 1.5K, sạc 120W.",
                 10_990_000,
                 [androidCategory, midRangeCategory, category5g],
-                xiaomiBrand.Id,
+                xiaomiBrand,
                 ["Đen Bán Dạ", "Trắng Ngọc", "Tím Cực Quang"],
                 rams: ["8GB", "12GB"]
             ),
@@ -453,7 +455,7 @@ public static class SeedDataExtensions
                 "Thiết kế lưng kính sang trọng trong tầm giá rẻ, màn hình 90Hz.",
                 2_490_000,
                 [androidCategory, budgetCategory, popularCategory, batteryCategory],
-                xiaomiBrand.Id,
+                xiaomiBrand,
                 ["Xanh", "Đen", "Xanh Lá"],
                 ["32GB", "64GB", "128GB"]
             ),
@@ -464,7 +466,7 @@ public static class SeedDataExtensions
                 "Bậc thầy gập mở, Camera Hasselblad chuyên nghiệp.",
                 41_990_000,
                 [androidCategory, foldCategory, flagshipCategory, cameraCategory, category5g],
-                oppoBrand.Id,
+                oppoBrand,
                 ["Vàng Cổ Điển", "Đen Kim Cương"],
                 ["512GB", "1TB"]
             ),
@@ -473,7 +475,7 @@ public static class SeedDataExtensions
                 "Chuyên gia chân dung, thiết kế mặt lưng vân đá tự nhiên.",
                 8_990_000,
                 [androidCategory, midRangeCategory, category5g, cameraCategory],
-                oppoBrand.Id,
+                oppoBrand,
                 ["Xanh Dương", "Tím", "Xanh Đen"]
             ),
             CreateProduct(
@@ -481,7 +483,7 @@ public static class SeedDataExtensions
                 "Thiết kế rực rỡ, pin lớn 5000mAh, hoạt động mượt mà.",
                 3_290_000,
                 [androidCategory, budgetCategory, batteryCategory, popularCategory],
-                oppoBrand.Id,
+                oppoBrand,
                 ["Xanh", "Đen"],
                 ["64GB", "128GB"]
             ),
@@ -492,7 +494,7 @@ public static class SeedDataExtensions
                 "Sức mạnh AI từ Google Tensor G3, camera chụp đêm đỉnh cao.",
                 22_500_000,
                 [androidCategory, flagshipCategory, cameraCategory, category5g, newCategory],
-                googleBrand.Id,
+                googleBrand,
                 ["Xanh Bay", "Đen Obsidian", "Kem Porcelain"],
                 ["128GB", "256GB", "512GB"]
             ),
@@ -501,7 +503,7 @@ public static class SeedDataExtensions
                 "Nhỏ gọn, mạnh mẽ, cập nhật Android sớm nhất.",
                 15_900_000,
                 [androidCategory, flagshipCategory, compactCategory, category5g],
-                googleBrand.Id,
+                googleBrand,
                 ["Hồng Rose", "Xám Hazel", "Đen Obsidian"],
                 ["128GB", "256GB"]
             ),
@@ -510,7 +512,7 @@ public static class SeedDataExtensions
                 "Vua tầm trung, camera xuất sắc nhất phân khúc.",
                 9_500_000,
                 [androidCategory, midRangeCategory, compactCategory, cameraCategory],
-                googleBrand.Id,
+                googleBrand,
                 ["Xanh Sea", "Cam Coral", "Trắng", "Đen"]
             ),
 
@@ -520,7 +522,7 @@ public static class SeedDataExtensions
                 "Cảm biến Exmor T mới, màn hình 4K OLED tỉ lệ 21:9.",
                 29_990_000,
                 [androidCategory, flagshipCategory, cameraCategory, category5g],
-                sonyBrand.Id,
+                sonyBrand,
                 ["Đen", "Bạc Platinum", "Xanh Khaki"],
                 ["256GB", "512GB"]
             ),
@@ -529,7 +531,7 @@ public static class SeedDataExtensions
                 "Flagship nhỏ gọn, pin trâu, âm thanh Hi-Res.",
                 22_490_000,
                 [androidCategory, flagshipCategory, compactCategory, category5g],
-                sonyBrand.Id,
+                sonyBrand,
                 ["Đen", "Xanh", "Bạc"],
                 ["128GB", "256GB"]
             ),
@@ -538,7 +540,7 @@ public static class SeedDataExtensions
                 "Siêu nhẹ 159g, pin 5000mAh dùng 2 ngày.",
                 10_490_000,
                 [androidCategory, midRangeCategory, batteryCategory, compactCategory],
-                sonyBrand.Id,
+                sonyBrand,
                 ["Tím Lavender", "Xanh Sage", "Trắng", "Đen"]
             ),
 
@@ -548,7 +550,7 @@ public static class SeedDataExtensions
                 "Siêu bền chuẩn quân đội, chống nước IP69K, chịu va đập.",
                 12_990_000,
                 [androidCategory, midRangeCategory, category5g, batteryCategory],
-                nokiaBrand.Id,
+                nokiaBrand,
                 ["Đen Midnight", "Xanh Pine"]
             ),
             CreateProduct(
@@ -556,7 +558,7 @@ public static class SeedDataExtensions
                 "Thiết kế QuickFix dễ sửa chữa, bảo hành 3 năm.",
                 4_990_000,
                 [androidCategory, budgetCategory, category5g],
-                nokiaBrand.Id,
+                nokiaBrand,
                 ["Tím So Purple", "Xám So Grey"],
                 ["128GB", "256GB"]
             ),
@@ -565,7 +567,7 @@ public static class SeedDataExtensions
                 "Mặt lưng kính cường lực, pin 3 ngày, giá siêu rẻ.",
                 2_190_000,
                 [androidCategory, budgetCategory, popularCategory, batteryCategory],
-                nokiaBrand.Id,
+                nokiaBrand,
                 ["Xanh Beach", "Hồng", "Đen Charcoal"],
                 ["32GB", "64GB", "128GB"],
                 ["3GB", "4GB"]
@@ -576,154 +578,130 @@ public static class SeedDataExtensions
             products.Where(product => !dbContext.Products.Any(p => product.Slug == p.Slug)).ToList();
 
         await dbContext.AddRangeAsync(notExistingProducts);
+        return;
 
-        await dbContext.SaveChangesAsync();
-
-        await dbContext.SaveChangesAsync();
-    }
-
-    private static Brand CreateBrand(string name, string slug, int displayOrder) =>
-        new()
-        {
-            Id = Guid.NewGuid(), Name = name, Slug = slug, DisplayOrder = displayOrder,
-            LogoUrl = "https://images.unsplash.com/photo-1670808439268-79d2cb00a46e"
-        };
-
-    private static Category CreateCategory(string name, string slug, int displayOrder) =>
-        new()
-        {
-            Id = Guid.NewGuid(), Name = name, Slug = slug, DisplayOrder = displayOrder,
-            ImageUrl = "https://images.unsplash.com/photo-1685062428514-2164290b3322"
-        };
-
-    private static Product CreateProduct(string name, string slug, string desc, long basePrice,
-        ICollection<Category> categories, Guid brandId, string[]? colors = null, string[]? storages = null,
-        string[]? rams = null)
-    {
-        var product = new Product
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Slug = slug,
-            Description = desc,
-            IsActive = true,
-            ProductImages =
-            [
-                new ProductImage
-                    { ImageUrl = "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e", DisplayOrder = 1 }
-            ],
-            MainImageUrl = "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e",
-            BrandId = brandId,
-            Categories = categories,
-            ProductOptions = new List<ProductOption>(),
-            ProductVariants = new List<ProductVariant>(),
-            MinPrice = 0,
-            MaxPrice = 0
-        };
-
-        var optColor = new ProductOption
-        {
-            Id = Guid.NewGuid(), Name = "Màu sắc"
-        };
-        if (colors != null)
-        {
-            optColor.ProductOptionValues = colors.Select(color => new ProductOptionValue
+        static Brand CreateBrand(string name, string slug, int displayOrder) =>
+            new()
             {
-                Id = Guid.NewGuid(),
-                Value = color
-            }).ToList();
-            product.ProductOptions.Add(optColor);
-        }
-        else
-        {
-            optColor.ProductOptionValues = [new ProductOptionValue { Value = "Null" }];
-        }
+                Name = name, Slug = slug, DisplayOrder = displayOrder,
+                LogoUrl = "https://images.unsplash.com/photo-1670808439268-79d2cb00a46e"
+            };
 
-        var optStorage = new ProductOption { Id = Guid.NewGuid(), Name = "Dung lượng" };
-        if (storages != null)
-        {
-            optStorage.ProductOptionValues = storages.Select(storage => new ProductOptionValue
+        static Category CreateCategory(string name, string slug, int displayOrder) =>
+            new()
             {
-                Id = Guid.NewGuid(),
-                Value = storage
-            }).ToList();
-            product.ProductOptions.Add(optStorage);
-        }
-        else
-        {
-            optStorage.ProductOptionValues = [new ProductOptionValue { Value = "Null" }];
-        }
+                Name = name, Slug = slug, DisplayOrder = displayOrder,
+                ImageUrl = "https://images.unsplash.com/photo-1685062428514-2164290b3322"
+            };
 
-        var optRam = new ProductOption
+        static Product CreateProduct(string name, string slug, string desc, long basePrice,
+            ICollection<Category> categories, Brand brand, string[]? colors = null, string[]? storages = null,
+            string[]? rams = null)
         {
-            Id = Guid.NewGuid(), Name = "RAM"
-        };
-        if (rams != null)
-        {
-            optRam.ProductOptionValues = rams.Select(ram => new ProductOptionValue
+            var product = new Product
             {
-                Id = Guid.NewGuid(),
-                Value = ram
-            }).ToList();
-            product.ProductOptions.Add(optRam);
-        }
-        else
-        {
-            optRam.ProductOptionValues = [new ProductOptionValue { Value = "Null" }];
-        }
+                Name = name,
+                Slug = slug,
+                Description = desc,
+                IsActive = true,
+                ProductImages =
+                [
+                    new ProductImage
+                        { ImageUrl = "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e", DisplayOrder = 1 }
+                ],
+                MainImageUrl = "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e",
+                Brand = brand,
+                Categories = categories,
+                ProductOptions = new List<ProductOption>(),
+                ProductVariants = new List<ProductVariant>(),
+                MinPrice = 0,
+                MaxPrice = 0
+            };
 
-        var rd = new Random();
-        foreach (var colorVal in optColor.ProductOptionValues)
-        {
-            foreach (var storageVal in optStorage.ProductOptionValues)
+            var optColor = new ProductOption { Name = "Màu sắc" };
+            if (colors != null)
             {
-                var storageSurcharge = storageVal.Value switch
+                optColor.ProductOptionValues =
+                    colors.Select(color => new ProductOptionValue { Value = color }).ToList();
+                product.ProductOptions.Add(optColor);
+            }
+            else
+            {
+                optColor.ProductOptionValues = [new ProductOptionValue { Value = "Null" }];
+            }
+
+            var optStorage = new ProductOption { Name = "Dung lượng" };
+            if (storages != null)
+            {
+                optStorage.ProductOptionValues =
+                    storages.Select(storage => new ProductOptionValue { Value = storage }).ToList();
+                product.ProductOptions.Add(optStorage);
+            }
+            else
+            {
+                optStorage.ProductOptionValues = [new ProductOptionValue { Value = "Null" }];
+            }
+
+            var optRam = new ProductOption { Name = "RAM" };
+            if (rams != null)
+            {
+                optRam.ProductOptionValues = rams.Select(ram => new ProductOptionValue { Value = ram }).ToList();
+                product.ProductOptions.Add(optRam);
+            }
+            else
+            {
+                optRam.ProductOptionValues = [new ProductOptionValue { Value = "Null" }];
+            }
+
+            var rd = new Random();
+            foreach (var colorVal in optColor.ProductOptionValues)
+            {
+                foreach (var storageVal in optStorage.ProductOptionValues)
                 {
-                    "32GB" => 500_000,
-                    "64GB" => 1_000_000,
-                    "128GB" => 1_500_000,
-                    "256GB" => 3_000_000,
-                    "512GB" => 6_000_000,
-                    "1TB" => 12_000_000,
-                    _ => 0
-                };
-                foreach (var ramVal in optRam.ProductOptionValues)
-                {
-                    var ramSurcharge = ramVal.Value switch
+                    var storageSurcharge = storageVal.Value switch
                     {
-                        "4GB" => 500_000,
-                        "6GB" => 1_000_000,
-                        "8GB" => 2_000_000,
-                        "12GB" => 4_000_000,
-                        "16GB" => 7_000_000,
+                        "32GB" => 500_000,
+                        "64GB" => 1_000_000,
+                        "128GB" => 1_500_000,
+                        "256GB" => 3_000_000,
+                        "512GB" => 6_000_000,
+                        "1TB" => 12_000_000,
                         _ => 0
                     };
-                    var variantOptions = new List<ProductOptionValue>();
-                    if (colorVal.Value != "Null") variantOptions.Add(colorVal);
-                    if (storageVal.Value != "Null") variantOptions.Add(storageVal);
-                    if (ramVal.Value != "Null") variantOptions.Add(ramVal);
-
-                    var finalPrice = basePrice + storageSurcharge + ramSurcharge;
-
-                    var variant = new ProductVariant
+                    foreach (var ramVal in optRam.ProductOptionValues)
                     {
-                        Id = Guid.NewGuid(),
-                        Price = finalPrice,
-                        AvailableStock = rd.Next(36, 169),
-                        ImageUrl = product.MainImageUrl,
-                        ProductOptionValues = variantOptions
-                    };
-                    product.ProductVariants.Add(variant);
+                        var ramSurcharge = ramVal.Value switch
+                        {
+                            "4GB" => 500_000,
+                            "6GB" => 1_000_000,
+                            "8GB" => 2_000_000,
+                            "12GB" => 4_000_000,
+                            "16GB" => 7_000_000,
+                            _ => 0
+                        };
+                        var variantOptions = new List<ProductOptionValue>();
+                        if (colorVal.Value != "Null") variantOptions.Add(colorVal);
+                        if (storageVal.Value != "Null") variantOptions.Add(storageVal);
+                        if (ramVal.Value != "Null") variantOptions.Add(ramVal);
+
+                        var finalPrice = basePrice + storageSurcharge + ramSurcharge;
+
+                        var variant = new ProductVariant
+                        {
+                            Price = finalPrice,
+                            AvailableStock = rd.Next(36, 169),
+                            ImageUrl = product.MainImageUrl,
+                            ProductOptionValues = variantOptions
+                        };
+                        product.ProductVariants.Add(variant);
+                    }
                 }
             }
+
+            product.MinPrice = product.ProductVariants.Min(v => v.Price);
+            product.MaxPrice = product.ProductVariants.Max(v => v.Price);
+
+            return product;
         }
-
-        product.MinPrice = product.ProductVariants.Min(v => v.Price);
-        product.MaxPrice = product.ProductVariants.Max(v => v.Price);
-
-        return product;
     }
-
-    private static string FormatIdentityErrors(IEnumerable<IdentityError> errors) =>
-        string.Join(", ", errors.Select(e => $"{e.Code}: {e.Description}"));
 }
