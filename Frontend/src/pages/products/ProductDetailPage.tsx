@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { productApi } from "../../api/productApi";
+import { cartApi } from "../../api/cartApi";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
+import { PAGES } from "../../config/page";
+import toast from "react-hot-toast";
 import type { ProductDetail } from "../../types/products/productDetail";
 import MainLayout from "../../layouts/MainLayout";
 import ProductGallery from "../../components/products/ProductGallery";
@@ -9,6 +14,7 @@ import ProductOptions from "../../components/products/ProductOptions";
 import ProductDescription from "../../components/products/ProductDescription";
 import ProductHeader from "../../components/products/ProductHeader";
 import { Loader2, AlertCircle } from "lucide-react";
+import { parseApiError } from "../../utils/error";
 
 const ProductDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -20,6 +26,9 @@ const ProductDetailPage = () => {
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, string>
   >({});
+
+  const { refreshCartCount } = useCart();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -251,6 +260,62 @@ const ProductDetailPage = () => {
             <div className="mt-8 border-t border-gray-100 pt-8 dark:border-gray-700">
               <button
                 disabled={isButtonDisabled}
+                onClick={async () => {
+                  if (!selectedVariant) return;
+
+                  if (!user) {
+                    toast.error(
+                      <span>
+                        Vui lòng{" "}
+                        <Link
+                          to={PAGES.IDENTITY.LOGIN.PATH}
+                          className="font-bold underline"
+                        >
+                          đăng nhập
+                        </Link>{" "}
+                        để thêm vào giỏ hàng.
+                      </span>,
+                    );
+                    return;
+                  }
+
+                  try {
+                    await cartApi.addToCart(selectedVariant.id);
+                    toast.success(
+                      <span>
+                        Thêm vào giỏ hàng thành công!{" "}
+                        <Link
+                          to={PAGES.CART.PATH}
+                          className="font-bold underline"
+                        >
+                          Xem giỏ hàng
+                        </Link>
+                      </span>,
+                    );
+                    await refreshCartCount();
+                  } catch (error: any) {
+                    if (error.response && error.response.status === 401) {
+                      toast.error(
+                        <span>
+                          Vui lòng{" "}
+                          <Link
+                            to={PAGES.IDENTITY.LOGIN.PATH}
+                            className="font-bold underline"
+                          >
+                            đăng nhập
+                          </Link>{" "}
+                          để tiếp tục.
+                        </span>,
+                      );
+                    } else {
+                      const apiError = parseApiError(
+                        error,
+                        "Thêm vào giỏ hàng thất bại.",
+                      );
+                      toast.error(apiError.message);
+                    }
+                  }
+                }}
                 className={`w-full flex items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                   !isButtonDisabled
                     ? "bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all"

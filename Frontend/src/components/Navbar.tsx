@@ -8,9 +8,11 @@ import {
   X,
   User as UserIcon,
   ChevronDown,
+  ShoppingCart,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 import { PAGES } from "../config/page";
 import { USER_ROLES } from "../types/common/enums/userRoles";
 
@@ -21,6 +23,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const { cartCount } = useCart();
 
   const handleLogout = async () => {
     await logout();
@@ -77,6 +80,21 @@ export default function Navbar() {
             >
               {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
             </button>
+
+            {user && user.roles && user.roles.includes(USER_ROLES.CUSTOMER) && (
+              <Link
+                to={PAGES.CART.PATH}
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 transition-colors relative"
+                aria-label="Shopping Cart"
+              >
+                <ShoppingCart size={20} />
+                {cartCount > 0 && (
+                  <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {user ? (
               <div className="relative" ref={userMenuRef}>

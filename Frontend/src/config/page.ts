@@ -13,6 +13,10 @@ export const PAGES = {
       TITLE: "Chi tiết sản phẩm",
     },
   },
+  CART: {
+    PATH: "/cart",
+    TITLE: "Giỏ hàng",
+  },
   BRANDS: {
     PRODUCTS: {
       PATH: "/brands/:slug/products",
