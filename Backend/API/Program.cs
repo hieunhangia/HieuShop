@@ -1,7 +1,6 @@
 using API;
 using Application;
 using Infrastructure;
-using Infrastructure.Data;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +15,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    await app.SeedDataAsync();
     app.MapOpenApi();
     app.MapScalarApiReference();
 }

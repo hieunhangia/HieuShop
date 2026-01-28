@@ -1,4 +1,5 @@
 using Domain.Constants;
+using Domain.Entities.Addresses;
 using Domain.Entities.Products;
 using Domain.Entities.Users;
 using Microsoft.AspNetCore.Builder;
@@ -9,31 +10,26 @@ namespace Infrastructure.Data;
 
 public static class SeedDataExtensions
 {
-    public static async Task SeedDataAsync(this WebApplication app, bool dropExistDatabase = false)
+    public static async Task SeedDataAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
         var scopeService = scope.ServiceProvider;
 
         await using var dbContext = scopeService.GetRequiredService<AppDbContext>();
 
-        if (dropExistDatabase)
-        {
-            await dbContext.Database.EnsureDeletedAsync();
-        }
-
+        await dbContext.Database.EnsureDeletedAsync();
         await dbContext.Database.EnsureCreatedAsync();
 
         var roleManager = scopeService.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         var userManager = scopeService.GetRequiredService<UserManager<AppUser>>();
 
-        await using var transaction = await dbContext.Database.BeginTransactionAsync();
-
         await SeedIdentityDataAsync(roleManager, userManager);
 
-        await SeedProductsDataAsync(dbContext);
+        SeedAddressesData(dbContext);
 
-        await dbContext.SaveChangesAsync();
-        await transaction.CommitAsync();
+        SeedUserShippingAddressesData(dbContext, userManager);
+
+        SeedProductsData(dbContext);
     }
 
     private static async Task SeedIdentityDataAsync(RoleManager<IdentityRole<Guid>> roleManager,
@@ -41,16 +37,7 @@ public static class SeedDataExtensions
     {
         foreach (var role in UserRole.All)
         {
-            if (await roleManager.RoleExistsAsync(role))
-            {
-                continue;
-            }
-
-            var roleResult = await roleManager.CreateAsync(new IdentityRole<Guid>(role));
-            if (!roleResult.Succeeded)
-            {
-                throw new Exception($"Create roles failed: {FormatIdentityErrors(roleResult.Errors)}");
-            }
+            await roleManager.CreateAsync(new IdentityRole<Guid>(role));
         }
 
         ICollection<(string Email, string Password, bool LockoutEnabled, string[] Roles)> users =
@@ -66,15 +53,9 @@ public static class SeedDataExtensions
                 "Manager@123",
                 true,
                 [UserRole.Manager]
-            ),
-            (
-                "customer@app.com",
-                "Customer@123",
-                true,
-                [UserRole.Customer]
             )
         ];
-        for (var i = 1; i <= 10; i++)
+        for (var i = 1; i <= 5; i++)
         {
             var item = new ValueTuple<string, string, bool, string[]>
             {
@@ -88,49 +69,91 @@ public static class SeedDataExtensions
 
         foreach (var userData in users)
         {
-            if (await userManager.FindByEmailAsync(userData.Email) != null)
-            {
-                continue;
-            }
-
             var user = new AppUser
             {
                 UserName = userData.Email,
                 Email = userData.Email
             };
-            var userResult = await userManager.CreateAsync(user, userData.Password);
-            if (!userResult.Succeeded)
-            {
-                throw new Exception($"Create user failed: {FormatIdentityErrors(userResult.Errors)}");
-            }
-
-            var lockoutResult = await userManager.SetLockoutEnabledAsync(user, userData.LockoutEnabled);
-            if (!lockoutResult.Succeeded)
-            {
-                throw new Exception($"Set lockout enabled failed: {FormatIdentityErrors(lockoutResult.Errors)}");
-            }
-
-            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmEmailResult = await userManager.ConfirmEmailAsync(user, token);
-            if (!confirmEmailResult.Succeeded)
-            {
-                throw new Exception($"Confirm email failed: {FormatIdentityErrors(confirmEmailResult.Errors)}");
-            }
-
-            var userRoleResult = await userManager.AddToRolesAsync(user, userData.Roles);
-            if (!userRoleResult.Succeeded)
-            {
-                throw new Exception($"Add roles to user failed: {FormatIdentityErrors(userRoleResult.Errors)}");
-            }
+            await userManager.CreateAsync(user, userData.Password);
+            await userManager.SetLockoutEnabledAsync(user, userData.LockoutEnabled);
+            await userManager.ConfirmEmailAsync(user, await userManager.GenerateEmailConfirmationTokenAsync(user));
+            await userManager.AddToRolesAsync(user, userData.Roles);
         }
-
-        return;
-
-        static string FormatIdentityErrors(IEnumerable<IdentityError> errors) =>
-            string.Join(", ", errors.Select(e => $"{e.Code}: {e.Description}"));
     }
 
-    private static async Task SeedProductsDataAsync(AppDbContext dbContext)
+    private static void SeedAddressesData(AppDbContext dbContext)
+    {
+        IReadOnlyCollection<string> hanoiWards =
+        [
+            "Phường Ba Đình", "Phường Ngọc Hà", "Phường Giảng Võ", "Phường Hoàn Kiếm", "Phường Cửa Nam",
+            "Phường Phú Thượng", "Phường Hồng Hà", "Phường Tây Hồ", "Phường Bồ Đề", "Phường Việt Hưng",
+            "Phường Phúc Lợi", "Phường Long Biên", "Phường Nghĩa Đô", "Phường Cầu Giấy", "Phường Yên Hòa",
+            "Phường Ô Chợ Dừa", "Phường Láng", "Phường Văn Miếu - Quốc Tử Giám", "Phường Kim Liên", "Phường Đống Đa",
+            "Phường Hai Bà Trưng", "Phường Vĩnh Tuy", "Phường Bạch Mai", "Phường Vĩnh Hưng", "Phường Định Công",
+            "Phường Tương Mai", "Phường Lĩnh Nam", "Phường Hoàng Mai", "Phường Hoàng Liệt", "Phường Yên Sở",
+            "Phường Phương Liệt", "Phường Khương Đình", "Phường Thanh Xuân", "Xã Sóc Sơn", "Xã Kim Anh", "Xã Trung Giã",
+            "Xã Đa Phúc", "Xã Nội Bài", "Xã Đông Anh", "Xã Phúc Thịnh", "Xã Thư Lâm", "Xã Thiên Lộc", "Xã Vĩnh Thanh",
+            "Xã Phù Đổng", "Xã Thuận An", "Xã Gia Lâm", "Xã Bát Tràng"
+        ];
+        IReadOnlyCollection<string> caobangWards =
+        [
+            "Phường Thục Phán", "Phường Nùng Trí Cao", "Phường Tân Giang", "Xã Bảo Lâm", "Xã Lý Bôn", "Xã Nam Quang",
+            "Xã Quảng Lâm", "Xã Yên Thổ", "Xã Bảo Lạc", "Xã Cốc Pàng", "Xã Cô Ba", "Xã Khánh Xuân", "Xã Xuân Trường",
+            "Xã Hưng Đạo", "Xã Huy Giáp", "Xã Sơn Lộ", "Xã Thông Nông", "Xã Cần Yên", "Xã Thanh Long", "Xã Trường Hà",
+            "Xã Lũng Nặm", "Xã Tổng Cọt", "Xã Hà Quảng", "Xã Trà Lĩnh", "Xã Quang Hán", "Xã Quang Trung",
+            "Xã Trùng Khánh", "Xã Đình Phong", "Xã Đàm Thủy", "Xã Đoài Dương", "Xã Lý Quốc", "Xã Quang Long",
+            "Xã Hạ Lang", "Xã Vinh Quý", "Thành phố Cao Bằng"
+        ];
+        IReadOnlyCollection<string> thanhhoaWards =
+        [
+            "Xã Thanh Quân", "Xã Thượng Ninh", "Xã Như Thanh", "Xã Xuân Du", "Xã Mậu Lâm", "Xã Xuân Thái", "Xã Yên Thọ",
+            "Xã Thanh Kỳ", "Xã Nông Cống", "Xã Trung Chính", "Xã Thắng Lợi", "Xã Thăng Bình", "Xã Trường Văn",
+            "Xã Tượng Lĩnh", "Xã Công Chính", "Phường Đông Sơn", "Phường Đông Quang", "Xã Lưu Vệ", "Xã Quảng Yên",
+            "Xã Quảng Chính", "Xã Quảng Ngọc", "Phường Nam Sầm Sơn", "Phường Quảng Phú", "Phường Sầm Sơn",
+            "Xã Quảng Ninh", "Xã Quảng Bình", "Xã Tiên Trang", "Phường Tĩnh Gia", "Phường Ngọc Sơn", "Xã Các Sơn",
+            "Phường Tân Dân", "Phường Hải Lĩnh", "Phường Đào Duy Từ", "Phường Trúc Lâm", "Xã Trường Lâm",
+            "Phường Hải Bình", "Phường Nghi Sơn"
+        ];
+
+        dbContext.AddRange(new List<Province>
+        {
+            new() { Name = "Thành phố Hà Nội", Wards = hanoiWards.Select(w => new Ward { Name = w }).ToList() },
+            new() { Name = "Tỉnh Cao Bằng", Wards = caobangWards.Select(w => new Ward { Name = w }).ToList() },
+            new() { Name = "Tỉnh Thanh Hóa", Wards = thanhhoaWards.Select(w => new Ward { Name = w }).ToList() }
+        });
+        dbContext.SaveChanges();
+    }
+
+    private static void SeedUserShippingAddressesData(AppDbContext dbContext,
+        UserManager<AppUser> userManager)
+    {
+        var users = userManager.Users.ToList();
+        foreach (var user in users)
+        {
+            user.ShippingAddresses = new List<UserShippingAddress>
+            {
+                new()
+                {
+                    RecipientName = "Tay Trừ Tà",
+                    RecipientPhone = "0888888888",
+                    DetailAddress = "Đường Tàu",
+                    Ward = dbContext.Wards.First(w => w.Name == "Thành phố Cao Bằng")
+                },
+                new()
+                {
+                    RecipientName = "Hóa Thanh Sư",
+                    RecipientPhone = "0363636363",
+                    DetailAddress = "Đường Tàu",
+                    Ward = dbContext.Wards.First(w => w.Name == "Xã Nông Cống")
+                }
+            };
+        }
+
+        dbContext.Users.UpdateRange(users);
+        dbContext.SaveChanges();
+    }
+
+    private static void SeedProductsData(AppDbContext dbContext)
     {
         var displayOrder = 1;
         var appleBrand = CreateBrand("Apple", "apple", displayOrder++);
@@ -140,17 +163,13 @@ public static class SeedDataExtensions
         var googleBrand = CreateBrand("Google Pixel", "google-pixel", displayOrder++);
         var sonyBrand = CreateBrand("Sony", "sony", displayOrder++);
         var nokiaBrand = CreateBrand("Nokia", "nokia", displayOrder);
-        var brands = new List<Brand>
-        {
-            appleBrand,
-            samsungBrand,
-            xiaomiBrand,
-            oppoBrand,
-            googleBrand,
-            sonyBrand,
-            nokiaBrand
-        };
-        await dbContext.Brands.AddRangeAsync(brands.Where(brand => !dbContext.Brands.Any(b => brand.Slug == b.Slug)));
+        dbContext.Brands.Add(appleBrand);
+        dbContext.Brands.Add(samsungBrand);
+        dbContext.Brands.Add(xiaomiBrand);
+        dbContext.Brands.Add(oppoBrand);
+        dbContext.Brands.Add(googleBrand);
+        dbContext.Brands.Add(sonyBrand);
+        dbContext.Brands.Add(nokiaBrand);
 
         displayOrder = 1;
         var iosCategory = CreateCategory("Điện thoại iPhone (iOS)", "dien-thoai-iphone", displayOrder++);
@@ -167,29 +186,22 @@ public static class SeedDataExtensions
         var newCategory = CreateCategory("Sản phẩm mới ra mắt", "moi-ra-mat", displayOrder++);
         var popularCategory = CreateCategory("Điện thoại phổ thông", "dien-thoai-pho-thong", displayOrder++);
         var usedCategory = CreateCategory("Điện thoại cũ (Like New)", "dien-thoai-cu", displayOrder);
+        dbContext.Categories.Add(iosCategory);
+        dbContext.Categories.Add(androidCategory);
+        dbContext.Categories.Add(flagshipCategory);
+        dbContext.Categories.Add(midRangeCategory);
+        dbContext.Categories.Add(budgetCategory);
+        dbContext.Categories.Add(gamingCategory);
+        dbContext.Categories.Add(cameraCategory);
+        dbContext.Categories.Add(batteryCategory);
+        dbContext.Categories.Add(category5g);
+        dbContext.Categories.Add(foldCategory);
+        dbContext.Categories.Add(compactCategory);
+        dbContext.Categories.Add(newCategory);
+        dbContext.Categories.Add(popularCategory);
+        dbContext.Categories.Add(usedCategory);
 
-        var categories = new List<Category>
-        {
-            iosCategory,
-            androidCategory,
-            flagshipCategory,
-            midRangeCategory,
-            budgetCategory,
-            gamingCategory,
-            cameraCategory,
-            batteryCategory,
-            category5g,
-            foldCategory,
-            compactCategory,
-            newCategory,
-            popularCategory,
-            usedCategory
-        };
-
-        await dbContext.Categories.AddRangeAsync(categories.Where(category =>
-            !dbContext.Categories.Any(c => category.Slug == c.Slug)));
-
-        var products = new List<Product>
+        dbContext.Products.AddRange(new List<Product>
         {
             // --- APPLE IPHONE ---
             CreateProduct(
@@ -572,12 +584,9 @@ public static class SeedDataExtensions
                 ["32GB", "64GB", "128GB"],
                 ["3GB", "4GB"]
             ),
-        };
+        });
+        dbContext.SaveChanges();
 
-        var notExistingProducts =
-            products.Where(product => !dbContext.Products.Any(p => product.Slug == p.Slug)).ToList();
-
-        await dbContext.AddRangeAsync(notExistingProducts);
         return;
 
         static Brand CreateBrand(string name, string slug, int displayOrder) =>

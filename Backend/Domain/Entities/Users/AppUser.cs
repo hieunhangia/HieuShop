@@ -7,7 +7,6 @@ namespace Domain.Entities.Users;
 
 public class AppUser : IdentityUser<Guid>, IAuditableEntity
 {
-    public Guid? DefaultShippingAddressId { get; set; }
     public DateTime CreatedAt { get; set; }
     public string? CreatedBy { get; set; }
     public DateTime UpdatedAt { get; set; }
@@ -16,5 +15,4 @@ public class AppUser : IdentityUser<Guid>, IAuditableEntity
     public ICollection<CartItem>? CartItems { get; set; }
     public ICollection<Order>? Orders { get; set; }
     public ICollection<UserShippingAddress>? ShippingAddresses { get; set; }
-    public UserShippingAddress? DefaultShippingAddress { get; set; }
 }

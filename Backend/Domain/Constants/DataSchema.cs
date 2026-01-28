@@ -11,7 +11,7 @@ public static class DataSchema
 
     public static class Province
     {
-        public const int NameMaxLength = 10;
+        public const int NameMaxLength = 30;
     }
 
     public static class Ward
