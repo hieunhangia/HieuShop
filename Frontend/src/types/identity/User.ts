@@ -1,6 +1,6 @@
 export interface User {
   email: string;
-  isEmailConfirmed: boolean;
+  emailConfirmed: boolean;
   hasPassword: boolean;
   roles: string[];
 }

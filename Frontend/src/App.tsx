@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/products/ProductsPage";
 import ProductDetailPage from "./pages/products/ProductDetailPage";
@@ -83,6 +84,7 @@ function App() {
               }
             />
           </Routes>
+          <Toaster position="top-right" reverseOrder={false} />
         </Router>
       </AuthProvider>
     </ThemeProvider>
