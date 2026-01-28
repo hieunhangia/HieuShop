@@ -66,5 +66,9 @@ export const PAGES = {
       PATH: "/cart",
       TITLE: "Giỏ hàng",
     },
+    SHIPPING_ADDRESS: {
+      PATH: "/shipping-addresses",
+      TITLE: "Địa chỉ giao hàng",
+    },
   },
 } as const;

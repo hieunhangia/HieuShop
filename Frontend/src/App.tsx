@@ -17,6 +17,7 @@ import ResetPasswordPage from "./pages/identity/ResetPasswordPage";
 import InfoPage from "./pages/user/account-management/InfoPage";
 import ChangePasswordPage from "./pages/user/account-management/ChangePasswordPage";
 import SetPasswordPage from "./pages/user/account-management/SetPasswordPage";
+import ShippingAddressPage from "./pages/ShippingAddress/ShippingAddressPage";
 
 import GuestOnlyRoute from "./components/route-authorization/GuestOnlyRoute";
 import CustomerOnlyRoute from "./components/route-authorization/CustomerOnlyRoute";
@@ -73,7 +74,10 @@ function App() {
               />
 
               <Route element={<CustomerOnlyRoute />}>
-                <Route path={PAGES.USER.ACCOUNT_MANAGEMENT.INFO.PATH} element={<InfoPage />} />
+                <Route
+                  path={PAGES.USER.ACCOUNT_MANAGEMENT.INFO.PATH}
+                  element={<InfoPage />}
+                />
                 <Route
                   path={PAGES.USER.ACCOUNT_MANAGEMENT.CHANGE_PASSWORD.PATH}
                   element={<ChangePasswordPage />}
@@ -83,6 +87,10 @@ function App() {
                   element={<SetPasswordPage />}
                 />
                 <Route path={PAGES.USER.CARTS.PATH} element={<CartPage />} />
+                <Route
+                  path={PAGES.USER.SHIPPING_ADDRESS.PATH}
+                  element={<ShippingAddressPage />}
+                />
               </Route>
 
               <Route
