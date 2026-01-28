@@ -10,7 +10,7 @@ type ProductSortColumnType =
   (typeof PRODUCT_SORT_COLUMN)[keyof typeof PRODUCT_SORT_COLUMN];
 type SortDirectionType = (typeof SORT_DIRECTION)[keyof typeof SORT_DIRECTION];
 
-interface SearchProductsQuery {
+interface SearchProductsRequest {
   searchText?: string;
   pageIndex?: number;
   pageSize?: number;
@@ -19,12 +19,12 @@ interface SearchProductsQuery {
 }
 
 export const productApi = {
-  searchProducts: (query: SearchProductsQuery) =>
+  searchProducts: (query: SearchProductsRequest) =>
     axiosClient.get<PagedResult<ProductSummary>>("/products", {
       params: query,
     }),
 
-  searchProductsByBrand: (brandSlug: string, query: SearchProductsQuery) =>
+  searchProductsByBrand: (brandSlug: string, query: SearchProductsRequest) =>
     axiosClient.get<PagedResult<ProductSummary>>(
       `/brands/${brandSlug}/products`,
       { params: query },
@@ -32,7 +32,7 @@ export const productApi = {
 
   searchProductsByCategory: (
     categorySlug: string,
-    query: SearchProductsQuery,
+    query: SearchProductsRequest,
   ) =>
     axiosClient.get<PagedResult<ProductSummary>>(
       `/categories/${categorySlug}/products`,
