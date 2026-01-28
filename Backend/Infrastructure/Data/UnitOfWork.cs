@@ -1,6 +1,8 @@
 using Domain.Interfaces;
+using Domain.Interfaces.Repositories.Addresses;
 using Domain.Interfaces.Repositories.Carts;
 using Domain.Interfaces.Repositories.Products;
+using Infrastructure.Data.Repositories.Addresses;
 using Infrastructure.Data.Repositories.Carts;
 using Infrastructure.Data.Repositories.Products;
 
@@ -8,6 +10,8 @@ namespace Infrastructure.Data;
 
 public class UnitOfWork(AppDbContext context) : IUnitOfWork
 {
+    public IProvinceRepository Provinces => field ??= new ProvinceRepository(context);
+    public IWardRepository Wards => field ??= new WardRepository(context);
     public IProductRepository Products => field ??= new ProductRepository(context);
     public IProductVariantRepository ProductVariants => field ??= new ProductVariantRepository(context);
     public IBrandRepository Brands => field ??= new BrandRepository(context);
