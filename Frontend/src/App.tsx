@@ -11,7 +11,7 @@ import RegisterPage from "./pages/identity/RegisterPage";
 import ConfirmEmailPage from "./pages/identity/ConfirmEmailPage";
 import ForgotPasswordPage from "./pages/identity/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/identity/ResetPasswordPage";
-import UserInfo from "./pages/account-management/Info";
+import InfoPage from "./pages/account-management/InfoPage";
 import ChangePasswordPage from "./pages/account-management/ChangePasswordPage";
 import SetPasswordPage from "./pages/account-management/SetPasswordPage";
 
@@ -63,7 +63,7 @@ function App() {
             />
 
             <Route element={<CustomerOnlyRoute />}>
-              <Route path={PAGES.ACCOUNT.INFO.PATH} element={<UserInfo />} />
+              <Route path={PAGES.ACCOUNT.INFO.PATH} element={<InfoPage />} />
               <Route
                 path={PAGES.ACCOUNT.CHANGE_PASSWORD.PATH}
                 element={<ChangePasswordPage />}

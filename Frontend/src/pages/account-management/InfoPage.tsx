@@ -5,7 +5,7 @@ import { PAGES } from '../../config/page';
 import { Link } from 'react-router-dom';
 import { User, Shield, Key } from 'lucide-react';
 
-export default function UserInfo() {
+export default function InfoPage() {
     const { user } = useAuth();
 
     React.useEffect(() => {
