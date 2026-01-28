@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import type { AddUserShippingAddressRequest } from "../../types/shipping-addresses/dtos/AddUserShippingAddressRequest";
-import type { Province } from "../../types/address/dtos/Province";
-import type { Ward } from "../../types/address/dtos/Ward";
-import addressApi from "../../api/addressApi";
-import userShippingAddressApi from "../../api/userShippingAddressApi";
-import { parseApiError } from "../../utils/error";
+import type { AddUserShippingAddressRequest } from "../../../types/user/shipping-addresses/dtos/AddUserShippingAddressRequest";
+import type { Province } from "../../../types/address/dtos/Province";
+import type { Ward } from "../../../types/address/dtos/Ward";
+import addressApi from "../../../api/addressApi";
+import userShippingAddressApi from "../../../api/userShippingAddressApi";
+import { parseApiError } from "../../../utils/error";
 
 const schema = z.object({
   recipientName: z.string().min(1, "Vui lòng nhập tên người nhận"),

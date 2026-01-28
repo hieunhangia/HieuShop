@@ -17,7 +17,7 @@ import ResetPasswordPage from "./pages/identity/ResetPasswordPage";
 import InfoPage from "./pages/user/account-management/InfoPage";
 import ChangePasswordPage from "./pages/user/account-management/ChangePasswordPage";
 import SetPasswordPage from "./pages/user/account-management/SetPasswordPage";
-import ShippingAddressPage from "./pages/ShippingAddress/ShippingAddressPage";
+import ShippingAddressPage from "./pages/user/shipping-address/ShippingAddressPage";
 
 import GuestOnlyRoute from "./components/route-authorization/GuestOnlyRoute";
 import CustomerOnlyRoute from "./components/route-authorization/CustomerOnlyRoute";

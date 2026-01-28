@@ -1,6 +1,6 @@
 import type { CartItem } from "./CartItem.ts";
 
 export interface Cart {
-    cartItems: CartItem[];
-    warningMessage?: string;
+  cartItems: CartItem[];
+  warningMessage?: string;
 }

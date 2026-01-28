@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import type { UserShippingAddressSummary } from "../../types/shipping-addresses/dtos/UserShippingAddressSummary";
-import userShippingAddressApi from "../../api/userShippingAddressApi";
-import { parseApiError } from "../../utils/error";
+import type { UserShippingAddressSummary } from "../../../types/user/shipping-addresses/dtos/UserShippingAddressSummary";
+import userShippingAddressApi from "../../../api/userShippingAddressApi";
+import { parseApiError } from "../../../utils/error";
 import { MapPin, Phone, User, Plus } from "lucide-react";
-import { PAGES } from "../../config/page";
-import Modal from "../../components/Modal";
-import ShippingAddressForm from "./ShippingAddressForm";
+import { PAGES } from "../../../config/page";
+import Modal from "../../../components/Modal";
+import ShippingAddressForm from "../../../components/user/shipping-address/ShippingAddressForm";
 import toast from "react-hot-toast";
-import MainLayout from "../../layouts/MainLayout";
+import MainLayout from "../../../layouts/MainLayout";
 
 export default function ShippingAddressPage() {
   const [addresses, setAddresses] = useState<UserShippingAddressSummary[]>([]);

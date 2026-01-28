@@ -1,5 +1,5 @@
 import axiosClient from "./axiosClient";
-import type { Cart } from "../types/carts/dtos/Cart";
+import type { Cart } from "../types/user/carts/dtos/Cart";
 
 export const cartApi = {
   countCartItems: async () => {

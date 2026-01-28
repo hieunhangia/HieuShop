@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient";
-import type { UserShippingAddressSummary } from "../types/shipping-addresses/dtos/UserShippingAddressSummary";
-import type { UserShippingAddressDetail } from "../types/shipping-addresses/dtos/UserShippingAddressDetail";
-import type { AddUserShippingAddressRequest } from "../types/shipping-addresses/dtos/AddUserShippingAddressRequest";
+import type { UserShippingAddressSummary } from "../types/user/shipping-addresses/dtos/UserShippingAddressSummary";
+import type { UserShippingAddressDetail } from "../types/user/shipping-addresses/dtos/UserShippingAddressDetail";
+import type { AddUserShippingAddressRequest } from "../types/user/shipping-addresses/dtos/AddUserShippingAddressRequest";
 
 const userShippingAddressApi = {
   getUserShippingAddresses: async (): Promise<UserShippingAddressSummary[]> => {

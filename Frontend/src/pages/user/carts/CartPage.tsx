@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Trash2, Minus, Plus, ShoppingBag, ArrowRight } from "lucide-react";
 import MainLayout from "../../../layouts/MainLayout";
 import { cartApi } from "../../../api/cartApi";
-import type { CartItem } from "../../../types/carts/dtos/CartItem";
+import type { CartItem } from "../../../types/user/carts/dtos/CartItem";
 import { useCart } from "../../../context/CartContext";
 import toast from "react-hot-toast";
 import { parseApiError } from "../../../utils/error";
