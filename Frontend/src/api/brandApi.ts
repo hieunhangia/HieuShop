@@ -1,9 +1,6 @@
 import axiosClient from "./axiosClient";
-import type { Brand } from "../types/brands/brand";
-
-interface GetBrandsQuery {
-  top?: number;
-}
+import type { Brand } from "../types/brands/dtos/Brand";
+import type { GetBrandsQuery } from "../types/brands/dtos/GetBrandsQuery";
 
 export const brandApi = {
   getBrands: (query: GetBrandsQuery) =>

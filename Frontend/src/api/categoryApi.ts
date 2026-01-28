@@ -1,9 +1,6 @@
 import axiosClient from "./axiosClient";
-import type { Category } from "../types/categories/category";
-
-interface GetCategoriesQuery {
-  top?: number;
-}
+import type { Category } from "../types/categories/dtos/Category";
+import type { GetCategoriesQuery } from "../types/categories/dtos/GetCategoriesQuery";
 
 export const categoryApi = {
   getCategories: (query: GetCategoriesQuery) =>

@@ -2,7 +2,7 @@
 import type {
   ProductOption,
   ProductVariant,
-} from "../../types/products/productDetail";
+} from "../../types/products/dtos/ProductDetail";
 import clsx from "clsx";
 
 interface ProductOptionsProps {

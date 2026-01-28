@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
 import { productApi } from "../../api/productApi";
 import { brandApi } from "../../api/brandApi";
-import { type Brand } from "../../types/brands/brand";
-import { type ProductSummary } from "../../types/products/product";
+import { type Brand } from "../../types/brands/dtos/Brand";
+import { type ProductSummary } from "../../types/products/dtos/ProductSummary";
 import { useProductFilter } from "../../hooks/useProductFilter";
 import ProductListFeature from "../../components/products/ProductListFeature";
 

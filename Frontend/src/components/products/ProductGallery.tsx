@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { ProductImage } from "../../types/products/productDetail";
+import type { ProductImage } from "../../types/products/dtos/ProductDetail";
 import { clsx } from "clsx";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { ProductSummary } from "../../types/products/product";
+import type { ProductSummary } from "../../types/products/dtos/ProductSummary";
 import { PAGES } from "../../config/page";
 
 interface ProductCardProps {

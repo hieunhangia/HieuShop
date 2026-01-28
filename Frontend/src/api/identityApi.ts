@@ -1,42 +1,22 @@
 import axiosClient from "./axiosClient";
-import type { User } from "../types/identity/User";
+import type { User } from "../types/identity/dtos/User";
+import type { LoginRequest } from "../types/identity/dtos/LoginRequest";
+import type { RegisterRequest } from "../types/identity/dtos/RegisterRequest";
+import type { ConfirmEmailRequest } from "../types/identity/dtos/ConfirmEmailRequest";
+import type { ForgotPasswordRequest } from "../types/identity/dtos/ForgotPasswordRequest";
+import type { ValidateResetPasswordRequest } from "../types/identity/dtos/ValidateResetPasswordRequest";
+import type { ResetPasswordRequest } from "../types/identity/dtos/ResetPasswordRequest";
+import type { GoogleLoginRequest } from "../types/identity/dtos/GoogleLoginRequest";
 
-export interface LoginRequest {
-  email?: string;
-  password?: string;
-  twoFactorCode?: string;
-  twoFactorRecoveryCode?: string;
-}
-
-export interface RegisterRequest {
-  email: string;
-  password?: string;
-}
-
-export interface ConfirmEmailRequest {
-  email: string;
-  code: string;
-  changedEmail?: string;
-}
-
-export interface ForgotPasswordRequest {
-  email: string;
-}
-
-export interface ValidateResetPasswordRequest {
-  email: string;
-  resetCode: string;
-}
-
-export interface ResetPasswordRequest {
-  email: string;
-  resetCode: string;
-  newPassword?: string;
-}
-
-export interface GoogleLoginRequest {
-  idToken: string;
-}
+export type {
+  LoginRequest,
+  RegisterRequest,
+  ConfirmEmailRequest,
+  ForgotPasswordRequest,
+  ValidateResetPasswordRequest,
+  ResetPasswordRequest,
+  GoogleLoginRequest,
+};
 
 export const identityApi = {
   getUserInfo: () => axiosClient.get<User>("/info"),

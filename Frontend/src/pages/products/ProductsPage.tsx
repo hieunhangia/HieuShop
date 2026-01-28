@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 import { PAGES } from "../../config/page";
 import { productApi } from "../../api/productApi";
-import { type ProductSummary } from "../../types/products/product";
+import { type ProductSummary } from "../../types/products/dtos/ProductSummary";
 import { useProductFilter } from "../../hooks/useProductFilter";
 import ProductListFeature from "../../components/products/ProductListFeature";
 

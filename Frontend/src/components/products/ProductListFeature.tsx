@@ -9,7 +9,7 @@ import {
   Loader,
 } from "lucide-react";
 import ProductCard from "./ProductCard";
-import { type ProductSummary } from "../../types/products/product";
+import { type ProductSummary } from "../../types/products/dtos/ProductSummary";
 import { PRODUCT_SORT_COLUMN } from "../../types/products/enums/productSortColumn";
 import { SORT_DIRECTION } from "../../types/common/enums/sortDirection";
 

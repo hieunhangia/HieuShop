@@ -1,22 +1,8 @@
 import axiosClient from "./axiosClient";
-import type { ProductSummary } from "../types/products/product";
-import type { ProductDetail } from "../types/products/productDetail";
-import type { PagedResult } from "../types/common/pageResult";
-import { PRODUCT_SORT_COLUMN } from "../types/products/enums/productSortColumn";
-import { SORT_DIRECTION } from "../types/common/enums/sortDirection";
-
-// Define values for types based on the constant objects values
-type ProductSortColumnType =
-  (typeof PRODUCT_SORT_COLUMN)[keyof typeof PRODUCT_SORT_COLUMN];
-type SortDirectionType = (typeof SORT_DIRECTION)[keyof typeof SORT_DIRECTION];
-
-interface SearchProductsRequest {
-  searchText?: string;
-  pageIndex?: number;
-  pageSize?: number;
-  sortColumn?: ProductSortColumnType;
-  sortDirection?: SortDirectionType;
-}
+import type { ProductSummary } from "../types/products/dtos/ProductSummary";
+import type { ProductDetail } from "../types/products/dtos/ProductDetail";
+import type { PagedResult } from "../types/common/dtos/PagedResult";
+import type { SearchProductsRequest } from "../types/products/dtos/SearchProductsRequest.ts";
 
 export const productApi = {
   searchProducts: (query: SearchProductsRequest) =>

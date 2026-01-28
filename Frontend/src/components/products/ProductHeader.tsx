@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import type { Brand, Category } from "../../types/products/productDetail";
+import type { Brand, Category } from "../../types/products/dtos/ProductDetail";
 
 interface ProductHeaderProps {
   brand?: Brand;

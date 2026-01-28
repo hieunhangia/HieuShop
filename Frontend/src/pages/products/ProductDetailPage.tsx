@@ -6,7 +6,7 @@ import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { PAGES } from "../../config/page";
 import toast from "react-hot-toast";
-import type { ProductDetail } from "../../types/products/productDetail";
+import type { ProductDetail } from "../../types/products/dtos/ProductDetail";
 import MainLayout from "../../layouts/MainLayout";
 import ProductGallery from "../../components/products/ProductGallery";
 import ProductInfo from "../../components/products/ProductInfo";

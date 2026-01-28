@@ -1,25 +1,5 @@
 import axiosClient from "./axiosClient";
-
-export interface CartItemDto {
-  id: string;
-  productVariant: {
-    id: string;
-    imageUrl: string;
-    price: number;
-    productOptionValuesString: string;
-    product: {
-      id: string;
-      name: string;
-      slug: string;
-    };
-  };
-  quantity: number;
-}
-
-export interface CartDto {
-  cartItems: CartItemDto[];
-  warningMessage?: string;
-}
+import type { Cart } from "../types/carts/dtos/Cart";
 
 export const cartApi = {
   countCartItems: async () => {
@@ -29,7 +9,7 @@ export const cartApi = {
     return axiosClient.post("/carts", { productVariantId });
   },
   syncCart: async () => {
-    return axiosClient.post<CartDto>("/carts/sync");
+    return axiosClient.post<Cart>("/carts/sync");
   },
   updateCartItemQuantity: async (cartItemId: string, quantity: number) => {
     return axiosClient.put(`/carts/${cartItemId}/quantity`, { quantity });
