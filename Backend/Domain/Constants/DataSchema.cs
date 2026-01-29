@@ -78,8 +78,6 @@ public static class DataSchema
 
     public static class Coupon
     {
-        public const int CodeMaxLength = 50;
-        public const int NameMaxLength = 100;
         public const int DescriptionMaxLength = 500;
     }
 }

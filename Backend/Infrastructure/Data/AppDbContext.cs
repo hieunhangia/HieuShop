@@ -29,6 +29,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<PaymentMethod> PaymentMethods => Set<PaymentMethod>();
     public DbSet<Coupon> Coupons => Set<Coupon>();
+    public DbSet<UserCoupon> UserCoupons => Set<UserCoupon>();
     public DbSet<CouponApplicable> CouponApplicables => Set<CouponApplicable>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

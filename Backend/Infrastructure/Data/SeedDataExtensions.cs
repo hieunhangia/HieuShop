@@ -1,8 +1,10 @@
 using Domain.Constants;
 using Domain.Entities.Addresses;
+using Domain.Entities.Coupons;
 using Domain.Entities.Orders;
 using Domain.Entities.Products;
 using Domain.Entities.Users;
+using Domain.Enums.Coupons;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +33,10 @@ public static class SeedDataExtensions
         SeedUserShippingAddressesData(dbContext, userManager);
 
         SeedProductsData(dbContext);
+
+        SeedCouponsData(dbContext);
+
+        SeedUserCouponData(dbContext, userManager);
 
         SeedPaymentMethodsData(dbContext);
     }
@@ -175,22 +181,18 @@ public static class SeedDataExtensions
         dbContext.Brands.Add(nokiaBrand);
 
         displayOrder = 1;
-        var iosCategory = CreateCategory("Điện thoại iPhone (iOS)", "dien-thoai-iphone", displayOrder++);
-        var androidCategory = CreateCategory("Điện thoại Android", "dien-thoai-android", displayOrder++);
-        var flagshipCategory = CreateCategory("Flagship - Cao cấp", "dien-thoai-cao-cap", displayOrder++);
-        var midRangeCategory = CreateCategory("Tầm trung", "dien-thoai-tam-trung", displayOrder++);
-        var budgetCategory = CreateCategory("Giá rẻ - Học sinh", "dien-thoai-gia-re", displayOrder++);
+        var flagshipCategory = CreateCategory("Flagship", "flagship", displayOrder++);
+        var midRangeCategory = CreateCategory("Tầm trung", "tam-trung", displayOrder++);
+        var budgetCategory = CreateCategory("Giá rẻ", "gia-re", displayOrder++);
         var gamingCategory = CreateCategory("Gaming Phone", "gaming-phone", displayOrder++);
-        var cameraCategory = CreateCategory("Camera Phone (Chụp ảnh)", "camera-phone", displayOrder++);
-        var batteryCategory = CreateCategory("Pin khủng & Sạc nhanh", "pin-khung", displayOrder++);
-        var category5g = CreateCategory("Hỗ trợ 5G", "ho-tro-5g", displayOrder++);
-        var foldCategory = CreateCategory("Điện thoại gập (Fold)", "dien-thoai-gap", displayOrder++);
-        var compactCategory = CreateCategory("Nhỏ gọn (Compact)", "dien-thoai-nho-gon", displayOrder++);
+        var cameraCategory = CreateCategory("Camera Phone", "camera-phone", displayOrder++);
+        var batteryCategory = CreateCategory("Pin khủng", "pin-khung", displayOrder++);
+        var category5g = CreateCategory("Hỗ trợ 5G", "5g", displayOrder++);
+        var foldCategory = CreateCategory("Điện thoại gập", "fold", displayOrder++);
+        var compactCategory = CreateCategory("Nhỏ gọn", "nho-gon", displayOrder++);
         var newCategory = CreateCategory("Sản phẩm mới ra mắt", "moi-ra-mat", displayOrder++);
-        var popularCategory = CreateCategory("Điện thoại phổ thông", "dien-thoai-pho-thong", displayOrder++);
-        var usedCategory = CreateCategory("Điện thoại cũ (Like New)", "dien-thoai-cu", displayOrder);
-        dbContext.Categories.Add(iosCategory);
-        dbContext.Categories.Add(androidCategory);
+        var popularCategory = CreateCategory("Điện thoại phổ thông", "pho-thong", displayOrder++);
+        var usedCategory = CreateCategory("Điện thoại cũ (Like New)", "like-new", displayOrder);
         dbContext.Categories.Add(flagshipCategory);
         dbContext.Categories.Add(midRangeCategory);
         dbContext.Categories.Add(budgetCategory);
@@ -210,7 +212,7 @@ public static class SeedDataExtensions
             CreateProduct(
                 "iPhone 15 Pro Max", "iphone-15-pro-max", "Vỏ Titan, Chip A17 Pro, Nút Action.",
                 34_990_000,
-                [iosCategory, flagshipCategory, cameraCategory, category5g, newCategory],
+                [flagshipCategory, cameraCategory, category5g, newCategory],
                 appleBrand,
                 ["Titan Tự Nhiên", "Titan Xanh", "Titan Đen", "Titan Trắng"],
                 ["256GB", "512GB", "1TB"]
@@ -218,7 +220,7 @@ public static class SeedDataExtensions
             CreateProduct(
                 "iPhone 15 Pro", "iphone-15-pro", "Nhỏ gọn, mạnh mẽ, Titan Grade 5.",
                 29_990_000,
-                [iosCategory, flagshipCategory, cameraCategory, category5g, newCategory],
+                [flagshipCategory, cameraCategory, category5g, newCategory],
                 appleBrand,
                 ["Titan Tự Nhiên", "Titan Xanh"],
                 ["128GB", "256GB", "512GB"]
@@ -226,7 +228,7 @@ public static class SeedDataExtensions
             CreateProduct(
                 "iPhone 15 Plus", "iphone-15-plus", "Màn hình lớn, Pin trâu nhất dòng iPhone.",
                 24_990_000,
-                [iosCategory, flagshipCategory, batteryCategory, category5g, newCategory],
+                [flagshipCategory, batteryCategory, category5g, newCategory],
                 appleBrand,
                 ["Hồng", "Vàng", "Xanh lá", "Đen"],
                 ["128GB", "256GB"]
@@ -234,7 +236,7 @@ public static class SeedDataExtensions
             CreateProduct(
                 "iPhone 15", "iphone-15", "Dynamic Island, Camera 48MP, USB-C.",
                 19_990_000,
-                [iosCategory, flagshipCategory, cameraCategory, category5g, newCategory],
+                [flagshipCategory, cameraCategory, category5g, newCategory],
                 appleBrand,
                 ["Hồng", "Xanh Blue", "Đen"],
                 ["128GB", "256GB"]
@@ -242,7 +244,7 @@ public static class SeedDataExtensions
             CreateProduct(
                 "iPhone 14 Pro Max", "iphone-14-pro-max", "Flagship đời trước, vẫn cực mạnh.",
                 23_990_000,
-                [iosCategory, flagshipCategory, cameraCategory, category5g],
+                [flagshipCategory, cameraCategory, category5g],
                 appleBrand,
                 ["Tím Deep Purple", "Vàng Gold", "Đen"],
                 ["128GB", "256GB", "512GB", "1TB"]
@@ -250,7 +252,7 @@ public static class SeedDataExtensions
             CreateProduct(
                 "iPhone 14", "iphone-14", "Thiết kế bền bỉ, pin ổn định.",
                 14_990_000,
-                [iosCategory, midRangeCategory, category5g],
+                [midRangeCategory, category5g],
                 appleBrand,
                 ["Tím", "Đỏ", "Xanh", "Trắng"],
                 ["128GB", "256GB"]
@@ -258,7 +260,7 @@ public static class SeedDataExtensions
             CreateProduct(
                 "iPhone 13", "iphone-13", "Chiếc iPhone quốc dân, giá tốt nhất.",
                 11_990_000,
-                [iosCategory, midRangeCategory, category5g],
+                [midRangeCategory, category5g],
                 appleBrand,
                 ["Hồng", "Trắng", "Xanh Midnight"],
                 ["64GB", "128GB"]
@@ -266,7 +268,7 @@ public static class SeedDataExtensions
             CreateProduct(
                 "iPhone 12", "iphone-12", "Thiết kế vuông vức, màn hình OLED.",
                 9_990_000,
-                [iosCategory, midRangeCategory, category5g],
+                [midRangeCategory, category5g],
                 appleBrand,
                 ["Tím", "Xanh Mint", "Đen"],
                 ["64GB", "128GB"]
@@ -274,7 +276,7 @@ public static class SeedDataExtensions
             CreateProduct(
                 "iPhone SE 2022", "iphone-se-2022", "Nhỏ gọn, nút Home, Chip A15.",
                 7_490_000,
-                [iosCategory, budgetCategory, compactCategory, category5g],
+                [budgetCategory, compactCategory, category5g],
                 appleBrand,
                 ["Đỏ", "Trắng", "Đen"],
                 ["64GB", "128GB", "256GB"]
@@ -289,7 +291,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy S24 Ultra 5G", "samsung-galaxy-s24-ultra",
                 "Quyền năng Galaxy AI, Khung viền Titan, Camera 200MP zoom 100x.",
                 29_990_000,
-                [androidCategory, flagshipCategory, cameraCategory, category5g, newCategory],
+                [flagshipCategory, cameraCategory, category5g, newCategory],
                 samsungBrand,
                 ["Xám Titan", "Đen Titan", "Tím Titan", "Vàng Titan"],
                 ["256GB", "512GB", "1TB"]
@@ -298,7 +300,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy S24+ 5G", "samsung-galaxy-s24-plus",
                 "Màn hình QHD+ sắc nét, Galaxy AI, Pin 4900mAh.",
                 23_990_000,
-                [androidCategory, flagshipCategory, category5g, newCategory],
+                [flagshipCategory, category5g, newCategory],
                 samsungBrand,
                 ["Đen Onyx", "Xám Marble", "Tím Cobalt", "Vàng Amber"],
                 ["256GB", "512GB"]
@@ -307,7 +309,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy S24 5G", "samsung-galaxy-s24",
                 "Thiết kế nhỏ gọn, hiệu năng mạnh mẽ với Exynos 2400.",
                 19_990_000,
-                [androidCategory, flagshipCategory, compactCategory, category5g],
+                [flagshipCategory, compactCategory, category5g],
                 samsungBrand,
                 ["Đen Onyx", "Xám Marble", "Tím Cobalt", "Vàng Amber"],
                 ["256GB", "512GB"]
@@ -316,7 +318,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy S23 Ultra 5G", "samsung-galaxy-s23-ultra",
                 "Siêu phẩm mắt thần bóng đêm, bút S-Pen quyền năng.",
                 21_990_000,
-                [androidCategory, flagshipCategory, cameraCategory, category5g],
+                [flagshipCategory, cameraCategory, category5g],
                 samsungBrand,
                 ["Xanh Botanic", "Đen Phantom", "Tím Lilac", "Kem Cotton"],
                 ["256GB", "512GB"]
@@ -325,7 +327,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy S23 FE 5G", "samsung-galaxy-s23-fe",
                 "Phiên bản Fan Edition, thiết kế cao cấp, hiệu năng ổn định.",
                 11_890_000,
-                [androidCategory, midRangeCategory, category5g],
+                [midRangeCategory, category5g],
                 samsungBrand,
                 ["Xanh Mint", "Trắng Cream", "Xám Graphite", "Tím Purple"],
                 ["128GB", "256GB"]
@@ -334,7 +336,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy Z Fold6 5G", "samsung-galaxy-z-fold6",
                 "Gập mở quyền năng AI, thiết kế mỏng nhẹ nhất dòng Fold.",
                 41_990_000,
-                [androidCategory, foldCategory, flagshipCategory, category5g, newCategory],
+                [foldCategory, flagshipCategory, category5g, newCategory],
                 samsungBrand,
                 ["Xám Metal", "Hồng Rosé", "Xanh Navy"],
                 ["256GB", "512GB", "1TB"]
@@ -343,7 +345,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy Z Flip6 5G", "samsung-galaxy-z-flip6",
                 "Biểu tượng thời trang, Camera 50MP, FlexCam thông minh.",
                 26_990_000,
-                [androidCategory, foldCategory, compactCategory, flagshipCategory, newCategory],
+                [foldCategory, compactCategory, flagshipCategory, newCategory],
                 samsungBrand,
                 ["Xanh Maya", "Vàng Solar", "Xám Metal", "Xanh Mint"],
                 ["256GB", "512GB"]
@@ -352,7 +354,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy Z Fold5 5G", "samsung-galaxy-z-fold5",
                 "Bản lề Flex không kẽ hở, đa nhiệm cực đỉnh.",
                 30_990_000,
-                [androidCategory, foldCategory, flagshipCategory, category5g],
+                [foldCategory, flagshipCategory, category5g],
                 samsungBrand,
                 ["Xanh Icy", "Đen Phantom", "Kem Ivory"],
                 ["256GB", "512GB"]
@@ -361,7 +363,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy Z Flip5 5G", "samsung-galaxy-z-flip5",
                 "Màn hình phụ Flex Window lớn 3.4 inch tiện lợi.",
                 16_990_000,
-                [androidCategory, foldCategory, compactCategory, midRangeCategory],
+                [foldCategory, compactCategory, midRangeCategory],
                 samsungBrand,
                 ["Xanh Mint", "Tím Fancy", "Kem Latte", "Xám Indie"],
                 ["256GB", "512GB"]
@@ -370,7 +372,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy A55 5G", "samsung-galaxy-a55",
                 "Viền kim loại sang trọng, chụp đêm Nightography ấn tượng.",
                 9_690_000,
-                [androidCategory, midRangeCategory, category5g, cameraCategory],
+                [midRangeCategory, category5g, cameraCategory],
                 samsungBrand,
                 ["Tím Lilac", "Xanh Iceblue", "Xanh Navy"],
                 ["128GB", "256GB"],
@@ -380,7 +382,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy A35 5G", "samsung-galaxy-a35",
                 "Mặt lưng kính cao cấp, màn hình Super AMOLED 120Hz.",
                 7_990_000,
-                [androidCategory, midRangeCategory, category5g],
+                [midRangeCategory, category5g],
                 samsungBrand,
                 ["Xanh Iceblue", "Tím Lilac", "Xanh Navy"],
                 ["128GB", "256GB"]
@@ -389,7 +391,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy A25 5G", "samsung-galaxy-a25",
                 "Màn hình Super AMOLED, Camera chống rung OIS.",
                 6_290_000,
-                [androidCategory, midRangeCategory, budgetCategory, category5g],
+                [midRangeCategory, budgetCategory, category5g],
                 samsungBrand,
                 ["Vàng", "Xanh", "Đen", "Xanh Nhạt"],
                 rams: ["6GB", "8GB"]
@@ -398,7 +400,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy A15 5G", "samsung-galaxy-a15-5g",
                 "Điện thoại 5G giá rẻ nhất, hiệu năng ổn định.",
                 5_490_000,
-                [androidCategory, budgetCategory, category5g],
+                [budgetCategory, category5g],
                 samsungBrand,
                 ["Vàng", "Xanh", "Đen"]
             ),
@@ -406,7 +408,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy A15 LTE", "samsung-galaxy-a15",
                 "Màn hình Super AMOLED sống động, pin 5000mAh.",
                 4_490_000,
-                [androidCategory, budgetCategory, batteryCategory],
+                [budgetCategory, batteryCategory],
                 samsungBrand,
                 ["Vàng", "Xanh", "Đen"],
                 rams: ["4GB", "6GB", "8GB"]
@@ -415,7 +417,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy A05s", "samsung-galaxy-a05s",
                 "Chip Snapdragon 680 mạnh mẽ trong tầm giá, màn hình 90Hz.",
                 3_590_000,
-                [androidCategory, budgetCategory, popularCategory],
+                [budgetCategory, popularCategory],
                 samsungBrand,
                 ["Xanh", "Bạc", "Đen"],
                 rams: ["4GB", "6GB"]
@@ -424,7 +426,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy A05", "samsung-galaxy-a05",
                 "Màn hình lớn 6.7 inch, sạc nhanh 25W.",
                 2_890_000,
-                [androidCategory, budgetCategory, popularCategory, batteryCategory],
+                [budgetCategory, popularCategory, batteryCategory],
                 samsungBrand,
                 ["Xanh", "Bạc", "Đen"],
                 rams: ["4GB", "6GB"]
@@ -433,7 +435,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy M54 5G", "samsung-galaxy-m54",
                 "Mãnh thú pin 6000mAh, Camera 108MP chống rung OIS.",
                 8_990_000,
-                [androidCategory, midRangeCategory, batteryCategory, category5g],
+                [midRangeCategory, batteryCategory, category5g],
                 samsungBrand,
                 ["Xanh Navy", "Bạc"]
             ),
@@ -441,7 +443,7 @@ public static class SeedDataExtensions
                 "Samsung Galaxy M34 5G", "samsung-galaxy-m34",
                 "Pin khủng 6000mAh dùng thả ga, màn hình 120Hz.",
                 6_990_000,
-                [androidCategory, budgetCategory, batteryCategory, category5g],
+                [budgetCategory, batteryCategory, category5g],
                 samsungBrand,
                 ["Xanh Midnight", "Xanh Waterfall"]
             ),
@@ -451,7 +453,7 @@ public static class SeedDataExtensions
                 "Xiaomi 14 Ultra", "xiaomi-14-ultra",
                 "Ống kính Leica huyền thoại, cảm biến 1 inch, quay 8K.",
                 29_990_000,
-                [androidCategory, flagshipCategory, cameraCategory, category5g, newCategory],
+                [flagshipCategory, cameraCategory, category5g, newCategory],
                 xiaomiBrand,
                 ["Đen", "Trắng", "Xanh Dragon Crystal"],
                 ["256GB", "512GB"]
@@ -460,7 +462,7 @@ public static class SeedDataExtensions
                 "Xiaomi Redmi Note 13 Pro+ 5G", "xiaomi-redmi-note-13-pro-plus",
                 "Camera 200MP, màn hình cong 1.5K, sạc 120W.",
                 10_990_000,
-                [androidCategory, midRangeCategory, category5g],
+                [midRangeCategory, category5g],
                 xiaomiBrand,
                 ["Đen Bán Dạ", "Trắng Ngọc", "Tím Cực Quang"],
                 rams: ["8GB", "12GB"]
@@ -469,7 +471,7 @@ public static class SeedDataExtensions
                 "Xiaomi Redmi A3", "xiaomi-redmi-a3",
                 "Thiết kế lưng kính sang trọng trong tầm giá rẻ, màn hình 90Hz.",
                 2_490_000,
-                [androidCategory, budgetCategory, popularCategory, batteryCategory],
+                [budgetCategory, popularCategory, batteryCategory],
                 xiaomiBrand,
                 ["Xanh", "Đen", "Xanh Lá"],
                 ["32GB", "64GB", "128GB"]
@@ -480,7 +482,7 @@ public static class SeedDataExtensions
                 "OPPO Find N3 5G", "oppo-find-n3",
                 "Bậc thầy gập mở, Camera Hasselblad chuyên nghiệp.",
                 41_990_000,
-                [androidCategory, foldCategory, flagshipCategory, cameraCategory, category5g],
+                [foldCategory, flagshipCategory, cameraCategory, category5g],
                 oppoBrand,
                 ["Vàng Cổ Điển", "Đen Kim Cương"],
                 ["512GB", "1TB"]
@@ -489,7 +491,7 @@ public static class SeedDataExtensions
                 "OPPO Reno11 F 5G", "oppo-reno11-f",
                 "Chuyên gia chân dung, thiết kế mặt lưng vân đá tự nhiên.",
                 8_990_000,
-                [androidCategory, midRangeCategory, category5g, cameraCategory],
+                [midRangeCategory, category5g, cameraCategory],
                 oppoBrand,
                 ["Xanh Dương", "Tím", "Xanh Đen"]
             ),
@@ -497,7 +499,7 @@ public static class SeedDataExtensions
                 "OPPO A18", "oppo-a18",
                 "Thiết kế rực rỡ, pin lớn 5000mAh, hoạt động mượt mà.",
                 3_290_000,
-                [androidCategory, budgetCategory, batteryCategory, popularCategory],
+                [budgetCategory, batteryCategory, popularCategory],
                 oppoBrand,
                 ["Xanh", "Đen"],
                 ["64GB", "128GB"]
@@ -508,7 +510,7 @@ public static class SeedDataExtensions
                 "Google Pixel 8 Pro", "google-pixel-8-pro",
                 "Sức mạnh AI từ Google Tensor G3, camera chụp đêm đỉnh cao.",
                 22_500_000,
-                [androidCategory, flagshipCategory, cameraCategory, category5g, newCategory],
+                [flagshipCategory, cameraCategory, category5g, newCategory],
                 googleBrand,
                 ["Xanh Bay", "Đen Obsidian", "Kem Porcelain"],
                 ["128GB", "256GB", "512GB"]
@@ -517,7 +519,7 @@ public static class SeedDataExtensions
                 "Google Pixel 8", "google-pixel-8",
                 "Nhỏ gọn, mạnh mẽ, cập nhật Android sớm nhất.",
                 15_900_000,
-                [androidCategory, flagshipCategory, compactCategory, category5g],
+                [flagshipCategory, compactCategory, category5g],
                 googleBrand,
                 ["Hồng Rose", "Xám Hazel", "Đen Obsidian"],
                 ["128GB", "256GB"]
@@ -526,7 +528,7 @@ public static class SeedDataExtensions
                 "Google Pixel 7a", "google-pixel-7a",
                 "Vua tầm trung, camera xuất sắc nhất phân khúc.",
                 9_500_000,
-                [androidCategory, midRangeCategory, compactCategory, cameraCategory],
+                [midRangeCategory, compactCategory, cameraCategory],
                 googleBrand,
                 ["Xanh Sea", "Cam Coral", "Trắng", "Đen"]
             ),
@@ -536,7 +538,7 @@ public static class SeedDataExtensions
                 "Sony Xperia 1 V", "sony-xperia-1-v",
                 "Cảm biến Exmor T mới, màn hình 4K OLED tỉ lệ 21:9.",
                 29_990_000,
-                [androidCategory, flagshipCategory, cameraCategory, category5g],
+                [flagshipCategory, cameraCategory, category5g],
                 sonyBrand,
                 ["Đen", "Bạc Platinum", "Xanh Khaki"],
                 ["256GB", "512GB"]
@@ -545,7 +547,7 @@ public static class SeedDataExtensions
                 "Sony Xperia 5 V", "sony-xperia-5-v",
                 "Flagship nhỏ gọn, pin trâu, âm thanh Hi-Res.",
                 22_490_000,
-                [androidCategory, flagshipCategory, compactCategory, category5g],
+                [flagshipCategory, compactCategory, category5g],
                 sonyBrand,
                 ["Đen", "Xanh", "Bạc"],
                 ["128GB", "256GB"]
@@ -554,7 +556,7 @@ public static class SeedDataExtensions
                 "Sony Xperia 10 V", "sony-xperia-10-v",
                 "Siêu nhẹ 159g, pin 5000mAh dùng 2 ngày.",
                 10_490_000,
-                [androidCategory, midRangeCategory, batteryCategory, compactCategory],
+                [midRangeCategory, batteryCategory, compactCategory],
                 sonyBrand,
                 ["Tím Lavender", "Xanh Sage", "Trắng", "Đen"]
             ),
@@ -564,7 +566,7 @@ public static class SeedDataExtensions
                 "Nokia XR21 5G", "nokia-xr21",
                 "Siêu bền chuẩn quân đội, chống nước IP69K, chịu va đập.",
                 12_990_000,
-                [androidCategory, midRangeCategory, category5g, batteryCategory],
+                [midRangeCategory, category5g, batteryCategory],
                 nokiaBrand,
                 ["Đen Midnight", "Xanh Pine"]
             ),
@@ -572,7 +574,7 @@ public static class SeedDataExtensions
                 "Nokia G42 5G", "nokia-g42",
                 "Thiết kế QuickFix dễ sửa chữa, bảo hành 3 năm.",
                 4_990_000,
-                [androidCategory, budgetCategory, category5g],
+                [budgetCategory, category5g],
                 nokiaBrand,
                 ["Tím So Purple", "Xám So Grey"],
                 ["128GB", "256GB"]
@@ -581,7 +583,7 @@ public static class SeedDataExtensions
                 "Nokia C32", "nokia-c32",
                 "Mặt lưng kính cường lực, pin 3 ngày, giá siêu rẻ.",
                 2_190_000,
-                [androidCategory, budgetCategory, popularCategory, batteryCategory],
+                [budgetCategory, popularCategory, batteryCategory],
                 nokiaBrand,
                 ["Xanh Beach", "Hồng", "Đen Charcoal"],
                 ["32GB", "64GB", "128GB"],
@@ -715,6 +717,65 @@ public static class SeedDataExtensions
 
             return product;
         }
+    }
+
+    private static void SeedCouponsData(AppDbContext dbContext)
+    {
+        dbContext.Coupons.AddRange(new List<Coupon>
+        {
+            new()
+            {
+                Description = "Giảm 50.000đ cho tất cả sản phẩm cho đơn từ 500.000đ",
+                DiscountType = DiscountType.FixedAmount,
+                DiscountValue = 50_000,
+                MinOrderAmount = 500_000,
+                CouponApplicables = [new CouponApplicableAll()],
+                LoyaltyPointsCost = 500,
+            },
+            new()
+            {
+                Description = "Giảm 10% cho các sản phẩm Apple và Sony, tối đa 1.000.000đ cho đơn từ 20.000.000đ",
+                DiscountType = DiscountType.Percentage,
+                DiscountValue = 10,
+                MaxDiscountAmount = 1_000_000,
+                MinOrderAmount = 20_000_000,
+                CouponApplicables =
+                [
+                    new CouponApplicableBrand { Brand = dbContext.Brands.First(b => b.Slug == "apple") },
+                    new CouponApplicableBrand { Brand = dbContext.Brands.First(b => b.Slug == "sony") }
+                ],
+                LoyaltyPointsCost = 1000,
+            },
+            new()
+            {
+                Description =
+                    "Giảm 15% cho các sản phẩm thuộc danh mục Tầm trung và Giá rẻ, tối đa 500.000đ cho đơn từ 2.000.000đ",
+                DiscountType = DiscountType.Percentage,
+                DiscountValue = 15,
+                MaxDiscountAmount = 500_000,
+                MinOrderAmount = 2_000_000,
+                CouponApplicables =
+                [
+                    new CouponApplicableCategory
+                        { Category = dbContext.Categories.First(c => c.Slug == "tam-trung") },
+                    new CouponApplicableCategory { Category = dbContext.Categories.First(c => c.Slug == "gia-re") }
+                ],
+                LoyaltyPointsCost = 300,
+            },
+        });
+        dbContext.SaveChanges();
+    }
+
+    private static void SeedUserCouponData(AppDbContext dbContext, UserManager<AppUser> userManager)
+    {
+        var users = userManager.Users.ToList();
+        foreach (var user in users)
+        {
+            user.Coupons = dbContext.Coupons.Select(c => new UserCoupon { Coupon = c }).ToList();
+        }
+
+        dbContext.Users.UpdateRange(users);
+        dbContext.SaveChanges();
     }
 
     private static void SeedPaymentMethodsData(AppDbContext dbContext)

@@ -12,6 +12,9 @@ public class AppUser : IdentityUser<Guid>, IAuditableEntity
     public DateTime UpdatedAt { get; set; }
     public string? UpdatedBy { get; set; }
 
+    public long LoyaltyPoints { get; set; }
+
+    public ICollection<UserCoupon>? Coupons { get; set; }
     public ICollection<CartItem>? CartItems { get; set; }
     public ICollection<Order>? Orders { get; set; }
     public ICollection<UserShippingAddress>? ShippingAddresses { get; set; }
