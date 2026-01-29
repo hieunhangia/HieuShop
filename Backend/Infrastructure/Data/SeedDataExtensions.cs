@@ -30,13 +30,13 @@ public static class SeedDataExtensions
 
         SeedAddressesData(dbContext);
 
-        SeedUserShippingAddressesData(dbContext, userManager);
+        SeedUserShippingAddressesData(dbContext);
 
         SeedProductsData(dbContext);
 
         SeedCouponsData(dbContext);
 
-        SeedUserCouponData(dbContext, userManager);
+        SeedUserCouponData(dbContext);
 
         SeedPaymentMethodsData(dbContext);
     }
@@ -69,7 +69,7 @@ public static class SeedDataExtensions
             var item = new ValueTuple<string, string, bool, string[]>
             {
                 Item1 = "customer" + i + "@app.com",
-                Item2 = "Customer" + i + "@123",
+                Item2 = "Customer@123",
                 Item3 = true,
                 Item4 = [UserRole.Customer]
             };
@@ -133,10 +133,9 @@ public static class SeedDataExtensions
         dbContext.SaveChanges();
     }
 
-    private static void SeedUserShippingAddressesData(AppDbContext dbContext,
-        UserManager<AppUser> userManager)
+    private static void SeedUserShippingAddressesData(AppDbContext dbContext)
     {
-        var users = userManager.Users.ToList();
+        var users = dbContext.Users.ToList();
         foreach (var user in users)
         {
             user.ShippingAddresses = new List<UserShippingAddress>
@@ -145,7 +144,7 @@ public static class SeedDataExtensions
                 {
                     RecipientName = "Tay Trừ Tà",
                     RecipientPhone = "0888888888",
-                    DetailAddress = "Đường Tàu",
+                    DetailAddress = "Biên giới",
                     Ward = dbContext.Wards.First(w => w.Name == "Thành phố Cao Bằng")
                 },
                 new()
@@ -725,26 +724,26 @@ public static class SeedDataExtensions
         {
             new()
             {
-                Description = "Giảm 50.000đ cho tất cả sản phẩm cho đơn từ 500.000đ",
+                Description = "Giảm 200.000đ cho tất cả sản phẩm cho đơn từ 1.000.000đ",
                 DiscountType = DiscountType.FixedAmount,
-                DiscountValue = 50_000,
-                MinOrderAmount = 500_000,
+                DiscountValue = 200_000,
+                MinOrderAmount = 1_000_000,
                 CouponApplicables = [new CouponApplicableAll()],
-                LoyaltyPointsCost = 500,
+                LoyaltyPointsCost = 300,
             },
             new()
             {
-                Description = "Giảm 10% cho các sản phẩm Apple và Sony, tối đa 1.000.000đ cho đơn từ 20.000.000đ",
+                Description = "Giảm 5% cho các sản phẩm Apple và Sony, tối đa 1.000.000đ cho đơn từ 10.000.000đ",
                 DiscountType = DiscountType.Percentage,
-                DiscountValue = 10,
+                DiscountValue = 5,
                 MaxDiscountAmount = 1_000_000,
-                MinOrderAmount = 20_000_000,
+                MinOrderAmount = 10_000_000,
                 CouponApplicables =
                 [
                     new CouponApplicableBrand { Brand = dbContext.Brands.First(b => b.Slug == "apple") },
                     new CouponApplicableBrand { Brand = dbContext.Brands.First(b => b.Slug == "sony") }
                 ],
-                LoyaltyPointsCost = 1000,
+                LoyaltyPointsCost = 800,
             },
             new()
             {
@@ -760,18 +759,19 @@ public static class SeedDataExtensions
                         { Category = dbContext.Categories.First(c => c.Slug == "tam-trung") },
                     new CouponApplicableCategory { Category = dbContext.Categories.First(c => c.Slug == "gia-re") }
                 ],
-                LoyaltyPointsCost = 300,
+                LoyaltyPointsCost = 500,
             },
         });
         dbContext.SaveChanges();
     }
 
-    private static void SeedUserCouponData(AppDbContext dbContext, UserManager<AppUser> userManager)
+    private static void SeedUserCouponData(AppDbContext dbContext)
     {
-        var users = userManager.Users.ToList();
+        var users = dbContext.Users.ToList();
         foreach (var user in users)
         {
             user.Coupons = dbContext.Coupons.Select(c => new UserCoupon { Coupon = c }).ToList();
+            user.LoyaltyPoints = 5000;
         }
 
         dbContext.Users.UpdateRange(users);
