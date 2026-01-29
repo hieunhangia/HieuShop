@@ -1,5 +1,6 @@
 using Domain.Constants;
 using Domain.Entities.Addresses;
+using Domain.Entities.Orders;
 using Domain.Entities.Products;
 using Domain.Entities.Users;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,8 @@ public static class SeedDataExtensions
         SeedUserShippingAddressesData(dbContext, userManager);
 
         SeedProductsData(dbContext);
+
+        SeedPaymentMethodsData(dbContext);
     }
 
     private static async Task SeedIdentityDataAsync(RoleManager<IdentityRole<Guid>> roleManager,
@@ -712,5 +715,27 @@ public static class SeedDataExtensions
 
             return product;
         }
+    }
+
+    private static void SeedPaymentMethodsData(AppDbContext dbContext)
+    {
+        dbContext.PaymentMethods.AddRange(new List<PaymentMethod>
+        {
+            new()
+            {
+                Name = "Thanh toán khi nhận hàng (COD)",
+                Code = PaymentMethodCode.COD,
+                Description = "Thanh toán trực tiếp cho nhân viên giao hàng khi bạn nhận được sản phẩm.",
+                IsActive = true
+            },
+            new()
+            {
+                Name = "Chuyển khoản bằng mã QR (payOS)",
+                Code = PaymentMethodCode.PayOsQr,
+                Description = "Quét mã QR payOS để thanh toán nhanh chóng và an toàn qua ứng dụng ngân hàng của bạn.",
+                IsActive = true
+            }
+        });
+        dbContext.SaveChanges();
     }
 }
