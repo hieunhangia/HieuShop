@@ -12,6 +12,4 @@ public class Coupon : BaseAuditableEntity<Guid>
     public long? MinOrderAmount { get; set; }
     public required long LoyaltyPointsCost { get; set; }
     public bool IsActive { get; set; } = true;
-
-    public ICollection<CouponApplicable>? CouponApplicables { get; set; }
 }

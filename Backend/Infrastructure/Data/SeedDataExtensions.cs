@@ -720,49 +720,76 @@ public static class SeedDataExtensions
 
     private static void SeedCouponsData(AppDbContext dbContext)
     {
-        dbContext.Coupons.AddRange(new List<Coupon>
+        var fixedAmountCoupons = new List<Coupon>();
+        var fixedAmountNoMinOrderAmountCoupons = new List<Coupon>();
+        var percentageCoupons = new List<Coupon>();
+        var percentageUnlimitedMaxDiscountAmountCoupons = new List<Coupon>();
+        var percentageNoMinOrderAmountCoupons = new List<Coupon>();
+        var percentageUnlimitedMaxDiscountAmountNoMinOrderAmountCoupons = new List<Coupon>();
+        for (var i = 1; i <= 6; i++)
         {
-            new()
+            fixedAmountCoupons.Add(new Coupon
             {
-                Description = "Giảm 200.000đ cho tất cả sản phẩm cho đơn từ 1.000.000đ",
+                Description = $"Giảm {i * 50_000}đ cho đơn từ {i * 500_000}đ",
                 DiscountType = DiscountType.FixedAmount,
-                DiscountValue = 200_000,
-                MaxDiscountAmount = 200_000,
-                MinOrderAmount = 1_000_000,
-                CouponApplicables = [new CouponApplicableAll()],
-                LoyaltyPointsCost = 300,
-            },
-            new()
+                DiscountValue = i * 50_000,
+                MaxDiscountAmount = i * 50_000,
+                MinOrderAmount = i * 500_000,
+                LoyaltyPointsCost = i * 300
+            });
+            fixedAmountNoMinOrderAmountCoupons.Add(new Coupon
             {
-                Description = "Giảm 5% cho các sản phẩm Apple và Sony, tối đa 1.000.000đ cho đơn từ 10.000.000đ",
-                DiscountType = DiscountType.Percentage,
-                DiscountValue = 5,
-                MaxDiscountAmount = 1_000_000,
-                MinOrderAmount = 10_000_000,
-                CouponApplicables =
-                [
-                    new CouponApplicableBrand { Brand = dbContext.Brands.First(b => b.Slug == "apple") },
-                    new CouponApplicableBrand { Brand = dbContext.Brands.First(b => b.Slug == "sony") }
-                ],
-                LoyaltyPointsCost = 800,
-            },
-            new()
+                Description = $"Giảm {i * 100_000}đ cho đơn hàng từ 0đ",
+                DiscountType = DiscountType.FixedAmount,
+                DiscountValue = i * 10_000,
+                MaxDiscountAmount = i * 10_000,
+                MinOrderAmount = null,
+                LoyaltyPointsCost = i * 1000
+            });
+            percentageCoupons.Add(new Coupon
             {
-                Description =
-                    "Giảm 15% cho các sản phẩm thuộc danh mục Tầm trung và Giá rẻ, tối đa 500.000đ cho đơn từ 2.000.000đ",
+                Description = $"Giảm {i * 5}% tối đa {i * 200_000}đ cho đơn từ {i * 2_000_000}đ",
                 DiscountType = DiscountType.Percentage,
-                DiscountValue = 15,
-                MaxDiscountAmount = 500_000,
-                MinOrderAmount = 2_000_000,
-                CouponApplicables =
-                [
-                    new CouponApplicableCategory
-                        { Category = dbContext.Categories.First(c => c.Slug == "tam-trung") },
-                    new CouponApplicableCategory { Category = dbContext.Categories.First(c => c.Slug == "gia-re") }
-                ],
-                LoyaltyPointsCost = 500,
-            },
-        });
+                DiscountValue = i * 5,
+                MaxDiscountAmount = i * 200_000,
+                MinOrderAmount = i * 2_000_000,
+                LoyaltyPointsCost = i * 120,
+            });
+            percentageUnlimitedMaxDiscountAmountCoupons.Add(new Coupon
+            {
+                Description = $"Giảm {i * 5}% cho đơn từ {i * 1_000_000}đ",
+                DiscountType = DiscountType.Percentage,
+                DiscountValue = i * 5,
+                MaxDiscountAmount = null,
+                MinOrderAmount = i * 1_000_000,
+                LoyaltyPointsCost = i * 150,
+            });
+            percentageNoMinOrderAmountCoupons.Add(new Coupon
+            {
+                Description = $"Giảm {i * 2}% tối đa {i * 100_000}đ cho đơn hàng từ 0đ",
+                DiscountType = DiscountType.Percentage,
+                DiscountValue = i * 2,
+                MaxDiscountAmount = i * 100_000,
+                MinOrderAmount = null,
+                LoyaltyPointsCost = i * 50
+            });
+            percentageUnlimitedMaxDiscountAmountNoMinOrderAmountCoupons.Add(new Coupon
+            {
+                Description = $"Giảm {i * 2}% cho mọi đơn hàng",
+                DiscountType = DiscountType.Percentage,
+                DiscountValue = i * 2,
+                MaxDiscountAmount = null,
+                MinOrderAmount = null,
+                LoyaltyPointsCost = i * 200
+            });
+        }
+
+        dbContext.Coupons.AddRange(fixedAmountCoupons);
+        dbContext.Coupons.AddRange(fixedAmountNoMinOrderAmountCoupons);
+        dbContext.Coupons.AddRange(percentageCoupons);
+        dbContext.Coupons.AddRange(percentageUnlimitedMaxDiscountAmountCoupons);
+        dbContext.Coupons.AddRange(percentageNoMinOrderAmountCoupons);
+        dbContext.Coupons.AddRange(percentageUnlimitedMaxDiscountAmountNoMinOrderAmountCoupons);
         dbContext.SaveChanges();
     }
 
@@ -771,7 +798,7 @@ public static class SeedDataExtensions
         var users = dbContext.Users.ToList();
         foreach (var user in users)
         {
-            user.Coupons = dbContext.Coupons.Select(c => new UserCoupon { Coupon = c }).ToList();
+            user.Coupons = dbContext.Coupons.Take(5).Select(c => new UserCoupon { Coupon = c }).ToList();
             user.LoyaltyPoints = 5000;
         }
 
