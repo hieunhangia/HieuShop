@@ -1,5 +1,6 @@
 using Domain.Interfaces.Repositories.Addresses;
 using Domain.Interfaces.Repositories.Carts;
+using Domain.Interfaces.Repositories.Coupons;
 using Domain.Interfaces.Repositories.Orders;
 using Domain.Interfaces.Repositories.Products;
 using Domain.Interfaces.Repositories.Users;
@@ -10,6 +11,7 @@ public interface IUnitOfWork
 {
     IProvinceRepository Provinces { get; }
     IWardRepository Wards { get; }
+    IUserRepository Users { get; }
     IUserShippingAddressRepository UserShippingAddresses { get; }
     IProductRepository Products { get; }
     IProductVariantRepository ProductVariants { get; }
@@ -17,6 +19,8 @@ public interface IUnitOfWork
     ICategoryRepository Categories { get; }
     ICartItemRepository CartItems { get; }
     IPaymentMethodRepository PaymentMethods { get; }
+    ICouponRepository Coupons { get; }
+    IUserCouponRepository UserCoupons { get; }
 
     Task<int> CompleteAsync();
 }
