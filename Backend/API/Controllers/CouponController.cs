@@ -1,8 +1,8 @@
 using API.Extensions;
 using Application.Features.Coupons.Commands.PurchaseCoupon;
 using Application.Features.Coupons.Queries.GetLoyaltyPoints;
-using Application.Features.Coupons.Queries.GetUserCoupons;
 using Application.Features.Coupons.Queries.SearchActiveCoupons;
+using Application.Features.Coupons.Queries.SearchUserCoupons;
 using Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -20,8 +20,17 @@ public class CouponController(ISender sender) : ControllerBase
         Ok(await sender.Send(query));
 
     [HttpGet("/users/coupons")]
-    public async Task<IActionResult> GetUserCoupons() =>
-        Ok(await sender.Send(new GetUserCouponsQuery { UserId = User.GetUserId() }));
+    public async Task<IActionResult> GetUserCoupons([FromQuery] SearchUserCouponsRequest request) =>
+        Ok(await sender.Send(new SearchUserCouponsQuery
+        {
+            UserId = User.GetUserId(),
+            SearchText = request.SearchText,
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
+            DiscountType = request.DiscountType,
+            SortDirection = request.SortDirection,
+            SortColumn = request.SortColumn
+        }));
 
     [HttpGet("/loyalty-points")]
     public async Task<IActionResult> GetLoyaltyPoints() =>

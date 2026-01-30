@@ -727,6 +727,7 @@ public static class SeedDataExtensions
                 Description = "Giảm 200.000đ cho tất cả sản phẩm cho đơn từ 1.000.000đ",
                 DiscountType = DiscountType.FixedAmount,
                 DiscountValue = 200_000,
+                MaxDiscountAmount = 200_000,
                 MinOrderAmount = 1_000_000,
                 CouponApplicables = [new CouponApplicableAll()],
                 LoyaltyPointsCost = 300,

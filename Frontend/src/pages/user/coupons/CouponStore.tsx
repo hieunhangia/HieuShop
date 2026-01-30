@@ -235,6 +235,9 @@ export default function CouponStore() {
                   <option value={COUPON_SORT_COLUMN.MIN_ORDER_AMOUNT}>
                     Đơn tối thiểu
                   </option>
+                  <option value={COUPON_SORT_COLUMN.MAX_DISCOUNT_AMOUNT}>
+                    Số tiền tối đa giảm
+                  </option>
                 </select>
               </div>
               <div className="relative">
@@ -316,26 +319,26 @@ export default function CouponStore() {
                           : "đ"}
                       </span>
                     </div>
-                    {coupon.maxDiscountAmount && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-500 dark:text-gray-400">
-                          Giảm tối đa:
-                        </span>
-                        <span className="font-medium text-gray-900 dark:text-white">
-                          {coupon.maxDiscountAmount.toLocaleString()}đ
-                        </span>
-                      </div>
-                    )}
-                    {coupon.minOrderAmount && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-500 dark:text-gray-400">
-                          Đơn tối thiểu:
-                        </span>
-                        <span className="font-medium text-gray-900 dark:text-white">
-                          {coupon.minOrderAmount.toLocaleString()}đ
-                        </span>
-                      </div>
-                    )}
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Giảm tối đa:
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {coupon.maxDiscountAmount
+                          ? `${coupon.maxDiscountAmount.toLocaleString()}đ`
+                          : "Không giới hạn"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Đơn tối thiểu:
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {coupon.minOrderAmount
+                          ? `${coupon.minOrderAmount.toLocaleString()}đ`
+                          : "0đ"}
+                      </span>
+                    </div>
                   </div>
 
                   <button
@@ -425,26 +428,26 @@ export default function CouponStore() {
                       : "đ"}
                   </span>
                 </div>
-                {selectedCoupon.maxDiscountAmount && (
-                  <div className="flex justify-between items-center py-1 border-t border-gray-100 dark:border-gray-700/50 pt-2">
-                    <span className="text-gray-500 dark:text-gray-400 text-sm">
-                      Giảm tối đa
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {selectedCoupon.maxDiscountAmount.toLocaleString()}đ
-                    </span>
-                  </div>
-                )}
-                {selectedCoupon.minOrderAmount && (
-                  <div className="flex justify-between items-center py-1 border-t border-gray-100 dark:border-gray-700/50 pt-2">
-                    <span className="text-gray-500 dark:text-gray-400 text-sm">
-                      Đơn tối thiểu
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {selectedCoupon.minOrderAmount.toLocaleString()}đ
-                    </span>
-                  </div>
-                )}
+                <div className="flex justify-between items-center py-1 border-t border-gray-100 dark:border-gray-700/50 pt-2">
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    Giảm tối đa
+                  </span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {selectedCoupon.maxDiscountAmount
+                      ? `${selectedCoupon.maxDiscountAmount.toLocaleString()}đ`
+                      : "Không giới hạn"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-1 border-t border-gray-100 dark:border-gray-700/50 pt-2">
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    Đơn tối thiểu
+                  </span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {selectedCoupon.minOrderAmount
+                      ? `${selectedCoupon.minOrderAmount.toLocaleString()}đ`
+                      : "0đ"}
+                  </span>
+                </div>
               </div>
 
               <div className="flex w-full gap-3">

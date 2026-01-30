@@ -1,8 +1,9 @@
 import axiosClient from "./axiosClient";
 import type { PagedAndSortedResult } from "../types/common/dtos/PagedAndSortedResult";
 import type { SearchActiveCouponsQuery } from "../types/user/coupons/dtos/SearchActiveCouponsQuery";
-import type { Coupon } from "../types/user/coupons/dtos/Coupon.ts";
-import type { UserCoupon } from "../types/user/coupons/dtos/UserCoupon.ts";
+import type { Coupon } from "../types/user/coupons/dtos/Coupon";
+import type { UserCoupon } from "../types/user/coupons/dtos/UserCoupon";
+import type { SearchUserCouponsRequest } from "../types/user/coupons/dtos/SearchUserCouponsRequest";
 
 const couponApi = {
   getActiveCoupons: async (
@@ -17,8 +18,10 @@ const couponApi = {
     return response.data;
   },
 
-  getUserCoupons: async () => {
-    const response = await axiosClient.get<UserCoupon[]>("/users/coupons");
+  getUserCoupons: async (
+    query: SearchUserCouponsRequest,
+  ): Promise<PagedAndSortedResult<UserCoupon>> => {
+    const response = await axiosClient.get("/users/coupons", { params: query });
     return response.data;
   },
 

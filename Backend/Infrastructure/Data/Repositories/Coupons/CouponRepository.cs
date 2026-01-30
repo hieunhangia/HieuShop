@@ -33,8 +33,18 @@ public class CouponRepository(AppDbContext context) : GenericRepository<Coupon, 
             return ([], 0);
         }
 
+        if (sortColumn == nameof(Coupon.MaxDiscountAmount))
+        {
+            query = sortDirection == SortDirection.Asc
+                ? query.OrderBy(c => c.MaxDiscountAmount ?? long.MaxValue)
+                : query.OrderByDescending(c => c.MaxDiscountAmount ?? long.MaxValue);
+        }
+        else
+        {
+            query = query.OrderBy(sortColumn, sortDirection);
+        }
+
         return (await query
-                .OrderBy(sortColumn, sortDirection)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(),

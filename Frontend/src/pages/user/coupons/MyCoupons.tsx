@@ -1,34 +1,82 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Loader2, Ticket, Info } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  Filter,
+  Info,
+  Loader2,
+  Search,
+  Ticket,
+} from "lucide-react";
 import MainLayout from "../../../layouts/MainLayout";
 import { PAGES } from "../../../config/page";
 import couponApi from "../../../api/couponApi";
-import type { UserCoupon } from "../../../types/user/coupons/dtos/UserCoupon.ts";
-import { DISCOUNT_TYPE } from "../../../types/user/coupons/enums/DiscountType";
+import type { UserCoupon } from "../../../types/user/coupons/dtos/UserCoupon";
+import {
+  DISCOUNT_TYPE,
+  type DiscountType,
+} from "../../../types/user/coupons/enums/DiscountType";
 import Modal from "../../../components/Modal";
-import type { Coupon } from "../../../types/user/coupons/dtos/Coupon.ts";
+
+import type { SearchUserCouponsRequest } from "../../../types/user/coupons/dtos/SearchUserCouponsRequest";
+import {
+  USER_COUPON_SORT_COLUMN,
+  type UserCouponSortColumn,
+} from "../../../types/user/coupons/enums/UserCouponSortColumn";
+import { SORT_DIRECTION } from "../../../types/common/enums/sortDirection";
+import debounce from "lodash/debounce";
 
 export default function MyCoupons() {
   const [coupons, setCoupons] = useState<UserCoupon[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
+  const [selectedCoupon, setSelectedCoupon] = useState<UserCoupon | null>(null);
 
-  useEffect(() => {
-    document.title = `${PAGES.USER.COUPONS.MY.TITLE} | HieuShop`;
-    const fetchCoupons = async () => {
+  const [query, setQuery] = useState<SearchUserCouponsRequest>({
+    pageIndex: 1,
+    pageSize: 9,
+    searchText: "",
+    sortColumn: USER_COUPON_SORT_COLUMN.CREATED_AT,
+    sortDirection: SORT_DIRECTION.DESC,
+  });
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const fetchCoupons = useCallback(
+    async (searchQuery: SearchUserCouponsRequest) => {
       try {
-        const data = await couponApi.getUserCoupons();
-        setCoupons(data);
+        setLoading(true);
+        const data = await couponApi.getUserCoupons(searchQuery);
+        setCoupons(data.items);
+        setTotalPages(data.totalPages);
+        setTotalCount(data.totalCount);
       } catch (error) {
         console.error("Failed to fetch user coupons:", error);
       } finally {
         setLoading(false);
       }
-    };
+    },
+    [],
+  );
 
-    fetchCoupons();
-  }, []);
+  useEffect(() => {
+    document.title = `${PAGES.USER.COUPONS.MY.TITLE} | HieuShop`;
+    fetchCoupons(query);
+  }, [query, fetchCoupons]);
+
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      setQuery((prev) => ({ ...prev, searchText: value, pageIndex: 1 }));
+    }, 500),
+    [],
+  );
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setQuery((prev) => ({ ...prev, pageIndex: newPage }));
+    }
+  };
 
   return (
     <MainLayout>
@@ -42,14 +90,117 @@ export default function MyCoupons() {
               Danh sách các mã giảm giá bạn đã đổi
             </p>
           </div>
-          <div className="mt-4 md:mt-0 flex gap-2">
-            <Link
-              to={PAGES.USER.COUPONS.STORE.PATH}
-              className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
-            >
-              <Ticket size={18} />
-              Đến cửa hàng
-            </Link>
+          <div className="mt-4 md:mt-0 flex items-center gap-4">
+            <div className="relative flex gap-2">
+              <Link
+                to={PAGES.USER.COUPONS.STORE.PATH}
+                className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
+              >
+                <Ticket size={18} />
+                <span className="hidden sm:inline">Đến cửa hàng</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Filters & Search */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 mb-8 border border-gray-100 dark:border-gray-700 relative">
+          <div className="flex flex-col md:flex-row gap-4 pt-2 md:pt-0">
+            <div className="flex-1 relative">
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={20}
+              />
+              <input
+                type="text"
+                placeholder="Tìm mã giảm giá..."
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all"
+                onChange={(e) => debouncedSearch(e.target.value)}
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <div className="relative min-w-[160px]">
+                <Filter
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
+                <select
+                  value={query.discountType || ""}
+                  onChange={(e) =>
+                    setQuery((prev) => ({
+                      ...prev,
+                      discountType: e.target.value
+                        ? (e.target.value as DiscountType)
+                        : undefined,
+                      pageIndex: 1,
+                    }))
+                  }
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none appearance-none cursor-pointer"
+                >
+                  <option value="">Tất cả</option>
+                  <option value={DISCOUNT_TYPE.PERCENTAGE}>Giảm theo %</option>
+                  <option value={DISCOUNT_TYPE.FIXED_AMOUNT}>
+                    Giảm số tiền
+                  </option>
+                </select>
+              </div>
+
+              <div className="relative min-w-[180px]">
+                <ArrowUpDown
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
+                <select
+                  value={query.sortColumn}
+                  onChange={(e) =>
+                    setQuery((prev) => ({
+                      ...prev,
+                      sortColumn: e.target.value as UserCouponSortColumn,
+                    }))
+                  }
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none appearance-none cursor-pointer"
+                >
+                  <option value={USER_COUPON_SORT_COLUMN.CREATED_AT}>
+                    Thời gian mua
+                  </option>
+                  <option value={USER_COUPON_SORT_COLUMN.DISCOUNT_VALUE}>
+                    Giá trị giảm
+                  </option>
+                  <option value={USER_COUPON_SORT_COLUMN.MIN_ORDER_AMOUNT}>
+                    Đơn tối thiểu
+                  </option>
+                  <option value={USER_COUPON_SORT_COLUMN.MAX_DISCOUNT_AMOUNT}>
+                    Số tiền tối đa giảm
+                  </option>
+                </select>
+              </div>
+
+              <div className="relative">
+                <button
+                  onClick={() =>
+                    setQuery((prev) => ({
+                      ...prev,
+                      sortDirection:
+                        prev.sortDirection === SORT_DIRECTION.ASC
+                          ? SORT_DIRECTION.DESC
+                          : SORT_DIRECTION.ASC,
+                    }))
+                  }
+                  className="h-full flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                >
+                  {query.sortDirection === SORT_DIRECTION.ASC ? (
+                    <>
+                      <ArrowUp size={18} />
+                    </>
+                  ) : (
+                    <>
+                      <ArrowDown size={18} />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -121,7 +272,22 @@ export default function MyCoupons() {
                   <div className="space-y-2 mb-6 flex-grow">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500 dark:text-gray-400">
-                        Giá trị:
+                        Thời gian mua
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {new Date(userCoupon.createdAt).toLocaleDateString(
+                          "vi-VN",
+                        ) +
+                          " " +
+                          new Date(userCoupon.createdAt).toLocaleTimeString(
+                            "vi-VN",
+                            { hour: "2-digit", minute: "2-digit" },
+                          )}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Giá trị giảm
                       </span>
                       <span className="font-semibold text-gray-900 dark:text-white">
                         {userCoupon.coupon.discountValue.toLocaleString()}
@@ -131,31 +297,30 @@ export default function MyCoupons() {
                           : "đ"}
                       </span>
                     </div>
-                    {userCoupon.coupon.maxDiscountAmount && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-500 dark:text-gray-400">
-                          Tối đa:
-                        </span>
-                        <span className="font-medium text-gray-900 dark:text-white">
-                          {userCoupon.coupon.maxDiscountAmount.toLocaleString()}
-                          đ
-                        </span>
-                      </div>
-                    )}
-                    {userCoupon.coupon.minOrderAmount && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-500 dark:text-gray-400">
-                          Đơn tối thiểu:
-                        </span>
-                        <span className="font-medium text-gray-900 dark:text-white">
-                          {userCoupon.coupon.minOrderAmount.toLocaleString()}đ
-                        </span>
-                      </div>
-                    )}
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Giảm tối đa
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {userCoupon.coupon.maxDiscountAmount
+                          ? `${userCoupon.coupon.maxDiscountAmount.toLocaleString()}đ`
+                          : "Không giới hạn"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Đơn tối thiểu:
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {userCoupon.coupon.minOrderAmount
+                          ? `${userCoupon.coupon.minOrderAmount.toLocaleString()}đ`
+                          : "0đ"}
+                      </span>
+                    </div>
                   </div>
 
                   <button
-                    onClick={() => setSelectedCoupon(userCoupon.coupon)}
+                    onClick={() => setSelectedCoupon(userCoupon)}
                     className="w-full mt-4 flex items-center justify-center space-x-2 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 font-medium transition-colors"
                   >
                     <Info size={18} />
@@ -167,62 +332,125 @@ export default function MyCoupons() {
           </div>
         )}
 
+        {/* Pagination */}
+        {!loading && totalPages > 1 && (
+          <div className="flex justify-center mt-8">
+            <nav className="flex items-center space-x-2 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+              <button
+                onClick={() => handlePageChange(query.pageIndex! - 1)}
+                disabled={query.pageIndex === 1}
+                className="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Trước
+              </button>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Trang {query.pageIndex} / {totalPages} ({totalCount} kết quả)
+              </span>
+              <button
+                onClick={() => handlePageChange(query.pageIndex! + 1)}
+                disabled={query.pageIndex === totalPages}
+                className="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Sau
+              </button>
+            </nav>
+          </div>
+        )}
+
         <Modal
           isOpen={!!selectedCoupon}
           onClose={() => setSelectedCoupon(null)}
-          title="Thông tin mã giảm giá"
+          title={
+            selectedCoupon?.used
+              ? "Thông tin mã giảm giá (Đã dùng)"
+              : "Thông tin mã giảm giá"
+          }
         >
           {selectedCoupon && (
             <div className="flex flex-col items-center">
-              <div className="w-full mb-6">
+              <div className="w-full mb-6 text-center">
                 <span
                   className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold mb-3 ${
-                    selectedCoupon.discountType === DISCOUNT_TYPE.PERCENTAGE
-                      ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300"
-                      : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                    selectedCoupon.used
+                      ? "bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                      : selectedCoupon.coupon.discountType ===
+                          DISCOUNT_TYPE.PERCENTAGE
+                        ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300"
+                        : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
                   }`}
                 >
-                  {selectedCoupon.discountType === DISCOUNT_TYPE.PERCENTAGE
-                    ? "Giảm %"
-                    : "Giảm tiền"}
+                  {selectedCoupon.used
+                    ? "Đã sử dụng"
+                    : selectedCoupon.coupon.discountType ===
+                        DISCOUNT_TYPE.PERCENTAGE
+                      ? "Giảm %"
+                      : "Giảm tiền"}
                 </span>
-                <h4 className="text-xl font-bold text-gray-900 dark:text-white leading-snug">
-                  {selectedCoupon.description}
+                <h4
+                  className={`text-xl font-bold leading-snug ${
+                    selectedCoupon.used
+                      ? "text-gray-500 dark:text-gray-400 line-through"
+                      : "text-gray-900 dark:text-white"
+                  }`}
+                >
+                  {selectedCoupon.coupon.description}
                 </h4>
               </div>
 
-              <div className="w-full bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700/50 mb-6 space-y-3">
+              <div
+                className={`w-full rounded-xl p-4 border mb-6 space-y-3 ${
+                  selectedCoupon.used
+                    ? "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 opacity-80"
+                    : "bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700/50"
+                }`}
+              >
                 <div className="flex justify-between items-center py-1">
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    Thời gian mua
+                  </span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {new Date(selectedCoupon.createdAt).toLocaleDateString(
+                      "vi-VN",
+                    ) +
+                      " " +
+                      new Date(selectedCoupon.createdAt).toLocaleTimeString(
+                        "vi-VN",
+                        { hour: "2-digit", minute: "2-digit" },
+                      )}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-1 border-t border-gray-100 dark:border-gray-700/50 pt-2">
                   <span className="text-gray-500 dark:text-gray-400 text-sm">
                     Giá trị giảm
                   </span>
                   <span className="font-semibold text-gray-900 dark:text-white">
-                    {selectedCoupon.discountValue.toLocaleString()}
-                    {selectedCoupon.discountType === DISCOUNT_TYPE.PERCENTAGE
+                    {selectedCoupon.coupon.discountValue.toLocaleString()}
+                    {selectedCoupon.coupon.discountType ===
+                    DISCOUNT_TYPE.PERCENTAGE
                       ? "%"
                       : "đ"}
                   </span>
                 </div>
-                {selectedCoupon.maxDiscountAmount && (
-                  <div className="flex justify-between items-center py-1 border-t border-gray-100 dark:border-gray-700/50 pt-2">
-                    <span className="text-gray-500 dark:text-gray-400 text-sm">
-                      Giảm tối đa
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {selectedCoupon.maxDiscountAmount.toLocaleString()}đ
-                    </span>
-                  </div>
-                )}
-                {selectedCoupon.minOrderAmount && (
-                  <div className="flex justify-between items-center py-1 border-t border-gray-100 dark:border-gray-700/50 pt-2">
-                    <span className="text-gray-500 dark:text-gray-400 text-sm">
-                      Đơn tối thiểu
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {selectedCoupon.minOrderAmount.toLocaleString()}đ
-                    </span>
-                  </div>
-                )}
+                <div className="flex justify-between items-center py-1 border-t border-gray-100 dark:border-gray-700/50 pt-2">
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    Giảm tối đa
+                  </span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {selectedCoupon.coupon.maxDiscountAmount
+                      ? `${selectedCoupon.coupon.maxDiscountAmount.toLocaleString()}đ`
+                      : "Không giới hạn"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-1 border-t border-gray-100 dark:border-gray-700/50 pt-2">
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    Đơn tối thiểu
+                  </span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {selectedCoupon.coupon.minOrderAmount
+                      ? `${selectedCoupon.coupon.minOrderAmount.toLocaleString()}đ`
+                      : "0đ"}
+                  </span>
+                </div>
               </div>
 
               <div className="w-full">
