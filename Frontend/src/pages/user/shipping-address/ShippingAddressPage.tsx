@@ -20,6 +20,7 @@ export default function ShippingAddressPage() {
   );
 
   useEffect(() => {
+    document.title = `${PAGES.USER.SHIPPING_ADDRESS.TITLE} | HieuShop`;
     fetchAddresses();
   }, []);
 

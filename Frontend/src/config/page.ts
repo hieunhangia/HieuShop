@@ -70,5 +70,15 @@ export const PAGES = {
       PATH: "/shipping-addresses",
       TITLE: "Địa chỉ giao hàng",
     },
+    COUPONS: {
+      STORE: {
+        PATH: "/coupons-store",
+        TITLE: "Cửa hàng mã giảm giá",
+      },
+      MY: {
+        PATH: "/my-coupons",
+        TITLE: "Mã giảm giá của tôi",
+      },
+    },
   },
 } as const;

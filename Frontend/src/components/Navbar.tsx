@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ShoppingCart,
   MapPin,
+  Ticket,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
@@ -130,30 +131,41 @@ export default function Navbar() {
                     </div>
 
                     {user.roles && user.roles.includes(USER_ROLES.CUSTOMER) && (
-                      <div className="py-1">
-                        <Link
-                          to={PAGES.USER.ACCOUNT_MANAGEMENT.INFO.PATH}
+                    <div className="py-1">
+                      <Link
+                        to={PAGES.USER.ACCOUNT_MANAGEMENT.INFO.PATH}
+                        className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        <UserIcon
+                          size={16}
+                          className="mr-3 text-gray-400 group-hover:text-brand-500"
+                        />
+                        {PAGES.USER.ACCOUNT_MANAGEMENT.INFO.TITLE}
+                      </Link>
+                      <Link
+                        to={PAGES.USER.SHIPPING_ADDRESS.PATH}
+                        className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        <MapPin
+                          size={16}
+                          className="mr-3 text-gray-400 group-hover:text-brand-500"
+                        />
+                        {PAGES.USER.SHIPPING_ADDRESS.TITLE}
+                      </Link>
+                      <Link
+                          to={PAGES.USER.COUPONS.STORE.PATH}
                           className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
                           onClick={() => setIsUserMenuOpen(false)}
                         >
-                          <UserIcon
+                          <Ticket
                             size={16}
                             className="mr-3 text-gray-400 group-hover:text-brand-500"
                           />
-                          {PAGES.USER.ACCOUNT_MANAGEMENT.INFO.TITLE}
+                          {PAGES.USER.COUPONS.STORE.TITLE}
                         </Link>
-                        <Link
-                          to={PAGES.USER.SHIPPING_ADDRESS.PATH}
-                          className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          <MapPin
-                            size={16}
-                            className="mr-3 text-gray-400 group-hover:text-brand-500"
-                          />
-                          {PAGES.USER.SHIPPING_ADDRESS.TITLE}
-                        </Link>
-                      </div>
+                    </div>
                     )}
 
                     <div className="border-t border-gray-100 dark:border-gray-800 my-1"></div>

@@ -9,6 +9,8 @@ import ProductDetailPage from "./pages/products/ProductDetailPage";
 import ProductsByBrandPage from "./pages/products/ProductsByBrandPage";
 import ProductsByCategoryPage from "./pages/products/ProductsByCategoryPage";
 import CartPage from "./pages/user/carts/CartPage";
+import CouponStore from "./pages/user/coupons/CouponStore";
+import MyCoupons from "./pages/user/coupons/MyCoupons";
 import LoginPage from "./pages/identity/LoginPage";
 import RegisterPage from "./pages/identity/RegisterPage";
 import ConfirmEmailPage from "./pages/identity/ConfirmEmailPage";
@@ -90,6 +92,14 @@ function App() {
                 <Route
                   path={PAGES.USER.SHIPPING_ADDRESS.PATH}
                   element={<ShippingAddressPage />}
+                />
+                <Route
+                  path={PAGES.USER.COUPONS.STORE.PATH}
+                  element={<CouponStore />}
+                />
+                <Route
+                  path={PAGES.USER.COUPONS.MY.PATH}
+                  element={<MyCoupons />}
                 />
               </Route>
 
