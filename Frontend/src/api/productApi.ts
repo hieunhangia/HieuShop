@@ -1,17 +1,17 @@
 import axiosClient from "./axiosClient";
 import type { ProductSummary } from "../types/products/dtos/ProductSummary";
 import type { ProductDetail } from "../types/products/dtos/ProductDetail";
-import type { PagedResult } from "../types/common/dtos/PagedResult";
+import type { PagedAndSortedResult } from "../types/common/dtos/PagedAndSortedResult.ts";
 import type { SearchProductsRequest } from "../types/products/dtos/SearchProductsRequest.ts";
 
 export const productApi = {
   searchProducts: (query: SearchProductsRequest) =>
-    axiosClient.get<PagedResult<ProductSummary>>("/products", {
+    axiosClient.get<PagedAndSortedResult<ProductSummary>>("/products", {
       params: query,
     }),
 
   searchProductsByBrand: (brandSlug: string, query: SearchProductsRequest) =>
-    axiosClient.get<PagedResult<ProductSummary>>(
+    axiosClient.get<PagedAndSortedResult<ProductSummary>>(
       `/brands/${brandSlug}/products`,
       { params: query },
     ),
@@ -20,7 +20,7 @@ export const productApi = {
     categorySlug: string,
     query: SearchProductsRequest,
   ) =>
-    axiosClient.get<PagedResult<ProductSummary>>(
+    axiosClient.get<PagedAndSortedResult<ProductSummary>>(
       `/categories/${categorySlug}/products`,
       { params: query },
     ),
